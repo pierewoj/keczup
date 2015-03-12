@@ -1,0 +1,9 @@
+/*
+ * Rotate
+ */
+
+void stateRotate(void)
+{
+
+}
+
