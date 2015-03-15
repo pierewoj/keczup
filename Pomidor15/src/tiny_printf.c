@@ -70,7 +70,7 @@ int ts_formatlength(const char *fmt, va_list va);
 void ts_itoa(char **buf, unsigned int d, int base)
 {
 	int div = 1;
-	while (d/div >= base)
+	while ((int) d/div >= base)
 		div *= base;
 
 	while (div != 0)
@@ -134,6 +134,8 @@ int ts_formatstring(char *buf, const char *fmt, va_list va)
 				break;
 			  case '%':
 				  *buf++ = '%';
+				  break;
+			  default:
 				  break;
 			}
 			fmt++;
