@@ -5,15 +5,22 @@
 #ifndef GLOBAL_H_
 #define GLOBAL_H_
 
-#define STATE_INIT (-1)
-#define STATE_STOP 0
-#define STATE_GO 1
-#define STATE_ROTATE 2
-#define STATE_TAKE_CAN 3
-#define STATE_LEAVE_CAN 4
-#define STATE_MANUAL 5
-
 #include<stdbool.h>
+
+//-----------------State variables------------------//
+
+/* important variables which denote state of FSM.
+ * these variables shouldn't be aceccssed manually, changing states should be
+ * done using changeState(int,int) defined in "state.h"
+ * Used unit of time is MICROSECONDS
+ */
+int state, prevState, reasonChangeState;
+void (*driveFunction)(void); //pointer to a function which controls motors
+unsigned long time; //time since reset in microseconds
+unsigned long loopWaitTime; //time in micros to wait between main loop iteratinos
+unsigned long lastLoopTime; //time of last loop execution in microseconds
+
+//-----------------Controllers-------------------//
 
 //struct def for PID controllers
 struct controllerState
@@ -42,19 +49,42 @@ struct controllerState
 	unsigned long lastTimeDiff;
 };
 
-int state; //important variable which denotes state of FSM
-void (*driveFunction)(void); //pointer to a function which controls motors
-unsigned long time; //time since reset in microseconds
-unsigned int loopWaitTime; //time in microseconds to wait between main loop iteratinos
-unsigned long lastLoopTime; //time of last loop execution in microseconds
-
-//controllers
 struct controllerState
 	controllerForward,
 	controllerBackward,
 	controllerRightWheelSpeed,
 	controllerLeftWheelSpeed;
 
+//-----------------Sensors-------------------//
+/* Values are updated either during interrupts or by using
+ * readSensors() function defined in "sensors.h"
+ */
+
+/* KTIR readings. KTIRs are numerated clockwise looking at the top of the robot.
+ * For example ktirFront[0] is the "most left" front KTIR, while ktirBack[0]
+ * is the "most right" back KTIR. True is BLACK, false means WHITE.
+ */
+bool ktirFront[7],
+	 ktirRigth[3],
+	 ktirBack[7],
+	 ktirLeft[3];
+
+/* approx cm to the object. 1000 if no object detected. */
+int sharp;
+
+/* approx cm to the enemy. Clockwise numeration. ultra[0] is front. */
+int ultra[4];
+
+/* encoder redings from the left and right wheel*/
+int velocityLeft, velocityRight; // mm/s
+long totalDistanceLeft, totalDistanceRight; //mm since the restart
+
+/* current direction from gyro. Its value is an angle [-180 .. 180) deg.
+ 90 is north, 0 is east, -90 is south and +-180 is west. */
+double gyroDirection;
+
+
+//-----------------Functions------------------//
 void initializeGlobalVariables(void);
 
 #endif /* GLOBAL_H_ */

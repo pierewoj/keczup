@@ -7,26 +7,34 @@
 #include <stddef.h>
 #include "stm32f10x.h"
 #include "global.h"
+#include "state.h"
 #include "stateStop.h"
 #include "stateGo.h"
 #include "stateRotate.h"
 #include "stateTakeCan.h"
 #include "stateLeaveCan.h"
 #include "stateManual.h"
+#include "config.h"
+#include "sensors.h"
 
 int main(void)
 {
-	//Configure peripherals
-	// (...)
+	//Configuration of all peripherials (GPIO, UART, I2C, TIMERS etc)
+	configurePeripherials();
 
 	//Initialize global variables
-	state = STATE_INIT;
+	changeState( STATE_INIT, REASON_PROGRAM_RESET);
 
 	//Endless loop
 	while(1)
 	{
+		//wait loopWaitTime between iterations
+		while(time - lastLoopTime < loopWaitTime)
+		{}
+		lastLoopTime = time;
+
 		//Update sensor readings
-		// (...)
+		readSensors();
 
 		//Finite state machine
 		switch(state)
@@ -34,7 +42,7 @@ int main(void)
 			//Set default values to all global variables
 			case STATE_INIT:
 				initializeGlobalVariables();
-				state = STATE_STOP;
+				changeState( STATE_STOP, REASON_VARIABLES_INITIALIZED );
 				break;
 
 			//Stop and wait till user presses button

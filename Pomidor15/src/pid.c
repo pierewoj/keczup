@@ -34,11 +34,8 @@ void PID(struct controllerState* s)
 	s->integral = fmin ( s->integral ,    s->integralMax * s->ti);
 
 	//count output from P, I and D
-	s->propSignal =
-			s->enabledP * s->kp * error;
-
+	s->propSignal = s->enabledP * s->kp * error;
 	s->integralSignal = s->enabledI * s->kp / s->ti * s->integral ;
-
 	s->diffSignal = s->enabledD * s->kp * s->td * d;
 
 	//count total controller output
