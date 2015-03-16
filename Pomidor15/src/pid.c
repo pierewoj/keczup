@@ -11,16 +11,14 @@
  * counts the value of steering signal (output) of the PID controller
  * based on its state (kp,ti,td,feedback...).
  */
-void PID(struct controllerState* s)
+void PID(struct controllerState* s, bool currentlyRunning)
 {
 	double error = s->target - s->feedback;
 
-	//reset integral and last error if controller
-	//has not been recalculated for a long time
-	if( time - s->lastTimeDiff > 10 * loopWaitTime )
+	//if controller is not enabled right now, don't count I
+	if( !currentlyRunning  || !(s->enabledI) )
 	{
 		s -> integral = 0;
-		s -> lastError = error;
 	}
 
 	//update history for D every "diffInterval" iterations
@@ -51,7 +49,7 @@ void PID(struct controllerState* s)
  * updates the value of feedback in controller s with an average position of
  * line under ktir[]. value is not updated if ktir[i]=false for all i.
  */
-void updateFeedbackKTir(struct controllerState *s, bool *ktir, int numKtir)
+void updateFeedbackKtir(struct controllerState *s, bool *ktir, int numKtir)
 {
 	int numBlack = 0;
 	double sum = 0;
@@ -66,3 +64,73 @@ void updateFeedbackKTir(struct controllerState *s, bool *ktir, int numKtir)
 	if(numBlack > 0)
 		s -> feedback = sum / numBlack;
 }
+
+void setPIDForward(double vmax)
+{
+
+}
+
+void motorPIDForward(void)
+{
+
+}
+
+void motorPIDBackward(void)
+{
+
+}
+
+void setPIDBackward(double vmax)
+{
+
+}
+
+void motorWheelPWM(void)
+{
+
+}
+
+void setWheelPWM(double pwmLeft, double pwmRight)
+{
+
+}
+
+void motorWheelVelocity(void)
+{
+
+}
+
+void setWheelVelocity(double velLeft, double velRight)
+{
+
+}
+
+void countControllers(void)
+{
+	updateFeedbackKtir(&controllerForward, ktirFront, 7);
+	updateFeedbackKtir(&controllerBackward, ktirBack, 7);
+	updateFeedbackKtir(&controllerRightWheelSpeed, ktirRight, 3);
+	updateFeedbackKtir(&controllerLeftWheelSpeed, ktirLeft, 3);
+
+	PID(&controllerForward, driveFunction == motorPIDForward);
+	PID(&controllerBackward, driveFunction == motorPIDBackward);
+	PID(&controllerRightWheelSpeed, driveFunction == motorWheelVelocity);
+	PID(&controllerLeftWheelSpeed, driveFunction == motorWheelVelocity);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

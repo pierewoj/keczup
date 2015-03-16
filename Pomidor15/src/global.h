@@ -27,7 +27,6 @@ struct controllerState
 {
 	double target,
 		feedback,
-		lastError,
 		kp,
 		ti,
 		td,
@@ -65,7 +64,7 @@ struct controllerState
  * is the "most right" back KTIR. True is BLACK, false means WHITE.
  */
 bool ktirFront[7],
-	 ktirRigth[3],
+	 ktirRight[3],
 	 ktirBack[7],
 	 ktirLeft[3];
 
@@ -84,6 +83,15 @@ long totalDistanceLeft, totalDistanceRight; //mm since the restart
  90 is north, 0 is east, -90 is south and +-180 is west. */
 double gyroDirection;
 
+/*
+ * true only if start button is pressed
+ */
+bool buttonStart;
+
+/*
+ * current voltage of battery in volts
+ */
+double battery;
 
 //-----------------Functions------------------//
 

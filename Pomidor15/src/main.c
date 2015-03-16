@@ -18,6 +18,7 @@
 #include "sensors.h"
 #include "effectors.h"
 #include "communication.h"
+#include "pid.h"
 
 int main(void)
 {
@@ -37,6 +38,7 @@ int main(void)
 
 		//Update sensor readings
 		readSensors();
+		countControllers();
 
 		//Finite state machine
 		switch(state)
