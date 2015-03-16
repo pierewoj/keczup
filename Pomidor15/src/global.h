@@ -51,6 +51,8 @@ struct controllerState
 struct controllerState
 	controllerForward,
 	controllerBackward,
+	controllerLeftKtir,
+	controllerRightKtir,
 	controllerRightWheelSpeed,
 	controllerLeftWheelSpeed;
 
@@ -76,7 +78,7 @@ int sharp;
 int ultra[4];
 
 /* encoder redings from the left and right wheel*/
-int velocityLeft, velocityRight; // mm/s
+double velocityLeft, velocityRight; // mm/s
 long totalDistanceLeft, totalDistanceRight; //mm since the restart
 
 /* current direction from gyro. Its value is an angle [-180 .. 180) deg.
