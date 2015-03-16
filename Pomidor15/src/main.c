@@ -16,6 +16,8 @@
 #include "stateManual.h"
 #include "config.h"
 #include "sensors.h"
+#include "effectors.h"
+#include "communication.h"
 
 int main(void)
 {

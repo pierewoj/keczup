@@ -8,7 +8,7 @@
 #ifndef COMMUNICATION_H_
 #define COMMUNICATION_H_
 
-//processes a message received by UART. Messages shuold end with '\n'.
+//processes a message received by UART. Messages shuold end with '\n'
 void messageProcessor(char* msg, int msgLength);
 
 //sends a message via UART

@@ -7,6 +7,10 @@
 #include "global.h"
 #include <math.h>
 
+/*
+ * counts the value of steering signal (output) of the PID controller
+ * based on its state (kp,ti,td,feedback...).
+ */
 void PID(struct controllerState* s)
 {
 	double error = s->target - s->feedback;
@@ -40,4 +44,25 @@ void PID(struct controllerState* s)
 
 	//count total controller output
 	s->output = s->propSignal + s->integralSignal + s->diffSignal;
+}
+
+
+/*
+ * updates the value of feedback in controller s with an average position of
+ * line under ktir[]. value is not updated if ktir[i]=false for all i.
+ */
+void updateFeedbackKTir(struct controllerState *s, bool *ktir, int numKtir)
+{
+	int numBlack = 0;
+	double sum = 0;
+	int i;
+	for(i=0; i<numKtir; i++)
+		if (ktir[i])
+		{
+			numBlack++;
+			sum += i;
+		}
+
+	if(numBlack > 0)
+		s -> feedback = sum / numBlack;
 }

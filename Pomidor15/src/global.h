@@ -17,7 +17,7 @@
 int state, prevState, reasonChangeState;
 void (*driveFunction)(void); //pointer to a function which controls motors
 unsigned long time; //time since reset in microseconds
-unsigned long loopWaitTime; //time in micros to wait between main loop iteratinos
+unsigned long loopWaitTime; //time to wait between main loop iteratinos
 unsigned long lastLoopTime; //time of last loop execution in microseconds
 
 //-----------------Controllers-------------------//
@@ -69,10 +69,11 @@ bool ktirFront[7],
 	 ktirBack[7],
 	 ktirLeft[3];
 
-/* approx cm to the object. 1000 if no object detected. */
+/* approx cm to the object. 1000 if no object detected or invalid input. */
 int sharp;
 
-/* approx cm to the enemy. Clockwise numeration. ultra[0] is front. */
+/* approx cm to the enemy. Clockwise numeration. ultra[0] is front.
+ * 1000 is no enemy detected or reading is not valid */
 int ultra[4];
 
 /* encoder redings from the left and right wheel*/
@@ -85,6 +86,11 @@ double gyroDirection;
 
 
 //-----------------Functions------------------//
+
+/*
+ * sets the default values of all variables, function called at the
+ * beginning of the program
+ */
 void initializeGlobalVariables(void);
 
 #endif /* GLOBAL_H_ */
