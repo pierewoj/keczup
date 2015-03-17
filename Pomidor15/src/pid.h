@@ -9,13 +9,17 @@
 #define PID_H_
 
 /*
- * File pid.c includes implementation of motor controllers.
+ * File pid.c includes implementation of motor controllers. Pointer driveFunction
+ * points to one of the functions declared in pid.c. This function is executed every
+ * iteration of the main loop.
+ *
  * To set robot drive mode you should only use functions from "user interface"
  * (that functions which names begin with "set").
  * For example to make robot follow the line forward you should call
  * 		setDrivePIDForward(0.5);
  * 	You MUST NOT assign driveFunction pointer to any function manually!!!
  */
+
 
 /*
  * follow the line forward, PWMMax is the maximum PWM value [0, 1.0]
@@ -47,12 +51,12 @@ void setDriveWheelPWM(double pwmLeft, double pwmRight);
 /*
  * Fast stop
  */
-void setDriveFastStop(void);
+void setDriveStopFast(void);
 
 /*
  * Slow stop
  */
-void setDriveSlowStop(void);
+void setDriveStopSlow(void);
 
 /*
  * Update controller feedback and calculate output

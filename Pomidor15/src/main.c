@@ -7,6 +7,12 @@
 #include <stddef.h>
 #include "stm32f10x.h"
 #include "global.h"
+#include "config.h"
+#include "sensors.h"
+#include "effectors.h"
+#include "communication.h"
+#include "pid.h"
+#include "strategy.h"
 #include "state.h"
 #include "stateStop.h"
 #include "stateGo.h"
@@ -14,11 +20,7 @@
 #include "stateTakeCan.h"
 #include "stateLeaveCan.h"
 #include "stateManual.h"
-#include "config.h"
-#include "sensors.h"
-#include "effectors.h"
-#include "communication.h"
-#include "pid.h"
+
 
 int main(void)
 {

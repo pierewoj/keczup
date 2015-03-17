@@ -103,7 +103,7 @@ void removeRecentTarget(void)
  * initializes robotStrategy
  * this function needs to be called at the beginning of the program!
  */
-void strategyInit()
+void strategyInit(void)
 {
 	robotStrategy.size = 0;
 	robotStrategy.loopIndex = 0;
@@ -117,5 +117,4 @@ void strategyInit()
 
 	addNewTarget(1,2);
 	addNewTarget(3,2);
-
 }

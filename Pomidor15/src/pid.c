@@ -66,6 +66,7 @@ void updateFeedbackKtir(ControllerState *s, bool *ktir, int numKtir)
 		s -> feedback = sum / numBlack;
 }
 
+
 /*
  * function used to calculate pwm signal from PID controller output
  * plot of this function is file "pid.nb"
@@ -181,28 +182,28 @@ void setDriveWheelPWM(double pwmLeft, double pwmRight)
 /*
  * Fast stop motor drive functions
  */
-void driveFastStop(void)
+void driveStopFast(void)
 {
 	stopFast();
 }
 
-void setDriveFastStop(void)
+void setDriveStopFast(void)
 {
-	driveFunction = driveFastStop;
+	driveFunction = driveStopFast;
 }
 
 /*
  * Slow stop motor drive functions
  */
 
-void driveSlowStop(void)
+void driveStopSlow(void)
 {
 	stopSlow();
 }
 
-void setDriveSlowStop(void)
+void setDriveStopSlow(void)
 {
-	driveFunction = driveSlowStop;
+	driveFunction = driveStopSlow;
 }
 
 /*
