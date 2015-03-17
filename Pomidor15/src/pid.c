@@ -5,6 +5,7 @@
  *      Author: Kuba
  */
 #include "global.h"
+#include "effectors.h"
 #include <math.h>
 
 /*
@@ -65,72 +66,172 @@ void updateFeedbackKtir(struct controllerState *s, bool *ktir, int numKtir)
 		s -> feedback = sum / numBlack;
 }
 
-void setPIDForward(double vmax)
+/*
+ * function used to calculate pwm signal from PID controller output
+ * plot of this function is file "pid.nb"
+ */
+double followLineFunction(double x)
 {
-
+	if( x<=-1 )
+		return 0;
+	else if ( x<=0 )
+		return x+1;
+	else
+		return 1;
 }
 
-void motorPIDForward(void)
-{
+//----------------Functions for specific drive modes-------------------
 
+/*
+ * Follow the line forward drive functions
+ */
+double drivePIDForwardPWMMax;
+
+void drivePIDForward(void)
+{
+	double s = controllerForward.output;
+
+	double sl=followLineFunction(s),
+			sr = followLineFunction(-s);
+
+	setLeftPWM(sl * drivePIDForwardPWMMax);
+	setRightPWM(sr *drivePIDForwardPWMMax);
 }
 
-void motorPIDBackward(void)
+void setDrivePIDForward(double PWMMax)
 {
-
+	driveFunction = drivePIDForward;
+	drivePIDForwardPWMMax = PWMMax;
+	controllerForward.target = 3;
 }
 
-void setPIDBackward(double vmax)
-{
+/*
+ * Follow the line backward drive functions
+ */
+double drivePIDBackwardPWMMax;
 
+void drivePIDBackward(void)
+{
+	double s = controllerBackward.output;
+
+	double sl=followLineFunction(s),
+			sr = followLineFunction(-s);
+
+	setLeftPWM(-sl * drivePIDBackwardPWMMax);
+	setRightPWM(-sr * drivePIDBackwardPWMMax);
 }
 
-void motorWheelPWM(void)
+void setDrivePIDBackward(double PWMMax)
 {
-
+	driveFunction = drivePIDBackward;
+	drivePIDBackwardPWMMax = PWMMax;
+	controllerBackward.target = 3;
 }
 
-void setWheelPWM(double pwmLeft, double pwmRight)
+/*
+ * Wheel velocity controller drive functions
+ */
+void driveWheelVelocity(void)
 {
-
+	setLeftPWM( controllerLeftWheelSpeed.output );
+	setRightPWM( controllerRightWheelSpeed.output );
 }
 
-void motorWheelVelocity(void)
+void setDriveWheelVelocity(double velLeft, double velRight)
 {
-
+	driveFunction = driveWheelVelocity;
+	controllerLeftWheelSpeed.target = velLeft;
+	controllerRightWheelSpeed.target = velRight;
 }
 
-void setWheelVelocity(double velLeft, double velRight)
+/*
+ * Line under middle left/right ktir controller drive functions
+ */
+void driveSideKtir(void)
 {
-
+	setLeftPWM( controllerLeftWheelSpeed.output );
+	setRightPWM( controllerRightWheelSpeed.output );
 }
 
+void setDriveSideKtir(void)
+{
+	driveFunction = driveSideKtir;
+	controllerLeftKtir.target = 1;
+	controllerRightKtir.target = 1;
+}
+
+/*
+ * Constant PWM on motors drive function
+ */
+double driveWheelPWMLeft, driveWheelPWMRight;
+
+void driveWheelPWM(void)
+{
+	setLeftPWM(driveWheelPWMLeft);
+	setRightPWM(driveWheelPWMRight);
+}
+
+void setDriveWheelPWM(double pwmLeft, double pwmRight)
+{
+	driveFunction = driveWheelPWM;
+	driveWheelPWMLeft = pwmLeft;
+	driveWheelPWMRight = pwmRight;
+}
+
+/*
+ * Fast stop motor drive functions
+ */
+void driveFastStop(void)
+{
+	stopFast();
+}
+
+void setDriveFastStop(void)
+{
+	driveFunction = driveFastStop;
+}
+
+/*
+ * Slow stop motor drive functions
+ */
+
+void driveSlowStop(void)
+{
+	stopSlow();
+}
+
+void setDriveSlowStop(void)
+{
+	driveFunction = driveSlowStop;
+}
+
+/*
+ * update feedback and recalculate output in all controllers
+ */
 void countControllers(void)
 {
+	/*
+	 * counting average position under KTIR lines and updating controller states
+	 */
 	updateFeedbackKtir(&controllerForward, ktirFront, 7);
 	updateFeedbackKtir(&controllerBackward, ktirBack, 7);
-	updateFeedbackKtir(&controllerRightWheelSpeed, ktirRight, 3);
-	updateFeedbackKtir(&controllerLeftWheelSpeed, ktirLeft, 3);
+	updateFeedbackKtir(&controllerRightKtir, ktirRight, 3);
+	updateFeedbackKtir(&controllerLeftKtir, ktirLeft, 3);
 
-	PID(&controllerForward, driveFunction == motorPIDForward);
-	PID(&controllerBackward, driveFunction == motorPIDBackward);
-	PID(&controllerRightWheelSpeed, driveFunction == motorWheelVelocity);
-	PID(&controllerLeftWheelSpeed, driveFunction == motorWheelVelocity);
+	/*
+	 * feedback for wheel speed controllers are encoder readings
+	 */
+	controllerRightWheelSpeed.feedback = velocityRight;
+	controllerLeftWheelSpeed.feedback = velocityLeft;
+
+
+	/*
+	 * updating PID controller outputs
+	 */
+	PID(&controllerForward, driveFunction == drivePIDForward);
+	PID(&controllerBackward, driveFunction == drivePIDBackward);
+	PID(&controllerRightKtir, driveFunction == driveSideKtir);
+	PID(&controllerLeftKtir, driveFunction == driveSideKtir);
+	PID(&controllerRightWheelSpeed, driveFunction == driveWheelVelocity);
+	PID(&controllerLeftWheelSpeed, driveFunction == driveWheelVelocity);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

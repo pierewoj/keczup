@@ -9,10 +9,60 @@
 #define PID_H_
 
 /*
+ * File pid.c includes implementation of motor controllers.
+ * To set robot drive mode you should only use functions from "user interface"
+ * (that functions which names begin with "set").
+ * For example to make robot follow the line forward you should call
+ * 		setDrivePIDForward(0.5);
+ * 	You MUST NOT assign driveFunction pointer to any function manually!!!
+ */
+
+//----------------User interface-------------------
+
+/*
+ * follow the line forward, PWMMax is the maximum PWM value [0, 1.0]
+ */
+void setDrivePIDForward(double PWMMax);
+
+/*
+ * follow the line backward, PWMMax is the maximum PWM value [0, 1.0]
+ */
+void setDrivePIDBackward(double PWMMax);
+
+/*
+ * control the velocity of wheels.
+ * velLeft, velRight - desired velocities in mm/s
+ */
+void setDriveWheelVelocity(double velLeft, double velRight);
+
+/*
+ * Control position of the line under left/right ktirs
+ */
+void setDriveSideKtir(void);
+
+/*
+ * Set constant PWM values on both motors.
+ * pwmLeft, pwmRight are in [-1.0, 1.0]
+ */
+void setDriveWheelPWM(double pwmLeft, double pwmRight);
+
+/*
+ * Fast stop
+ */
+void setDriveFastStop(void);
+
+/*
+ * Slow stop
+ */
+void setDriveSlowStop(void);
+
+
+//----------------Controller functions-------------------
+/*
  * counts the value of steering signal (output) of the PID controller
  * based on its state (kp,ti,td,feedback...).
  */
-void PID(struct controllerState* s);
+void PID(struct controllerState* s, bool currentlyRunning);
 
 /*
  * updates the value of feedback in controller s with an average position of
@@ -20,22 +70,56 @@ void PID(struct controllerState* s);
  */
 void updateFeedbackKtir(struct controllerState *s, bool *ktir, int numKtir);
 
+/*
+ * function used to calculate pwm signal from PID controller output
+ * plot of this function is file "pid.nb"
+ */
+double followLineFunction(double x);
+
+/*
+ * update feedback and recalculate output in all controllers
+ */
 void countControllers(void);
 
-void motorPIDForward(void);
 
-void setPIDForward(double vmax);
+//----------------Drive functions-------------------
 
-void motorPIDBackward(void);
+/*
+ * Follow the line forward drive functions
+ */
+double drivePIDForwardPWMMax;
+void drivePIDForward(void);
 
-void setPIDBackward(double vmax);
+/*
+ * Follow the line backward drive functions
+ */
+double drivePIDBackwardPWMMax;
+void drivePIDBackward(void);
 
-void motorWheelPWM(void);
+/*
+ * Wheel velocity controller drive functions
+ */
+void driveWheelVelocity(void);
 
-void setWheelPWM(double pwmLeft, double pwmRight);
+/*
+ * Line under middle left/right ktir controller drive functions
+ */
+void driveSideKtir(void);
 
-void motorWheelVelocity(void);
+/*
+ * Constant PWM on motors drive function
+ */
+double driveWheelPWMLeft, driveWheelPWMRight;
+void driveWheelPWM(void);
 
-void setWheelVelocity(double velLeft, double velRight);
+/*
+ * Fast stop motor drive functions
+ */
+void driveFastStop(void);
+
+/*
+ * Slow stop motor drive functions
+ */
+void driveSlowStop(void);
 
 #endif /* PID_H_ */
