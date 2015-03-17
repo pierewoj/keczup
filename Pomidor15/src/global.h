@@ -23,7 +23,7 @@ unsigned long lastLoopTime; //time of last loop execution in microseconds
 //-----------------Controllers-------------------//
 
 //struct def for PID controllers
-struct controllerState
+typedef struct controllerState
 {
 	double target,
 		feedback,
@@ -46,9 +46,9 @@ struct controllerState
 
 	int diffInteral;
 	unsigned long lastTimeDiff;
-};
+} ControllerState;
 
-struct controllerState
+ControllerState
 	controllerForward,
 	controllerBackward,
 	controllerLeftKtir,

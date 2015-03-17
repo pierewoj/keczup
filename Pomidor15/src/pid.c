@@ -12,7 +12,7 @@
  * counts the value of steering signal (output) of the PID controller
  * based on its state (kp,ti,td,feedback...).
  */
-void PID(struct controllerState* s, bool currentlyRunning)
+void PID(ControllerState* s, bool currentlyRunning)
 {
 	double error = s->target - s->feedback;
 
@@ -50,7 +50,7 @@ void PID(struct controllerState* s, bool currentlyRunning)
  * updates the value of feedback in controller s with an average position of
  * line under ktir[]. value is not updated if ktir[i]=false for all i.
  */
-void updateFeedbackKtir(struct controllerState *s, bool *ktir, int numKtir)
+void updateFeedbackKtir(ControllerState *s, bool *ktir, int numKtir)
 {
 	int numBlack = 0;
 	double sum = 0;
