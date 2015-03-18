@@ -21,7 +21,6 @@
 #include "stateLeaveCan.h"
 #include "stateManual.h"
 
-
 int main(void)
 {
 	//Configuration of all peripherials (GPIO, UART, I2C, TIMERS etc)
@@ -31,11 +30,12 @@ int main(void)
 	changeState( STATE_INIT, REASON_PROGRAM_RESET);
 
 	//Endless loop
-	while(1)
+	while (1)
 	{
 		//wait loopWaitTime between iterations
-		while(time - lastLoopTime < loopWaitTime)
-		{}
+		while (time - lastLoopTime < loopWaitTime)
+		{
+		}
 		lastLoopTime = time;
 
 		//Update sensor readings
@@ -43,46 +43,46 @@ int main(void)
 		countControllers();
 
 		//Finite state machine
-		switch(state)
+		switch (state)
 		{
-			//Set default values to all global variables
-			case STATE_INIT:
-				initializeGlobalVariables();
-				changeState( STATE_STOP, REASON_VARIABLES_INITIALIZED );
-				break;
+		//Set default values to all global variables
+		case STATE_INIT:
+			initializeGlobalVariables();
+			changeState( STATE_STOP, REASON_VARIABLES_INITIALIZED);
+			break;
 
 			//Stop and wait till user presses button
-			case STATE_STOP:
-				stateStop();
-				break;
+		case STATE_STOP:
+			stateStop();
+			break;
 
 			//Drive between crossroads
-			case STATE_GO:
-				stateGo();
-				break;
+		case STATE_GO:
+			stateGo();
+			break;
 
 			//Rotating
-			case STATE_ROTATE:
-				stateRotate();
-				break;
+		case STATE_ROTATE:
+			stateRotate();
+			break;
 
 			//Approach new can and take it
-			case STATE_TAKE_CAN:
-				stateTakeCan();
-				break;
+		case STATE_TAKE_CAN:
+			stateTakeCan();
+			break;
 
 			//Put can on a base line
-			case STATE_LEAVE_CAN:
-				stateLeaveCan();
-				break;
+		case STATE_LEAVE_CAN:
+			stateLeaveCan();
+			break;
 
 			//Steer robot manually using Bluetooth
-			case STATE_MANUAL:
-				stateManual();
-				break;
+		case STATE_MANUAL:
+			stateManual();
+			break;
 
-			default:
-				break;
+		default:
+			break;
 
 		}
 

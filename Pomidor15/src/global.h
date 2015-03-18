@@ -25,36 +25,21 @@ unsigned long lastLoopTime; //time of last loop execution in microseconds
 //struct def for PID controllers
 typedef struct controllerState
 {
-	double target,
-		feedback,
-		kp,
-		ti,
-		td,
-		integralMax,
-		integral,
-		output;
+	double target, feedback, kp, ti, td, integralMax, integral, output;
 
-	double integralSignal,
-		propSignal,
-		diffSignal;
+	double integralSignal, propSignal, diffSignal;
 
 	double history[2];
 
-	bool enabledP,
-		enabledI,
-		enabledD;
+	bool enabledP, enabledI, enabledD;
 
 	int diffInteral;
 	unsigned long lastTimeDiff;
 } ControllerState;
 
-ControllerState
-	controllerForward,
-	controllerBackward,
-	controllerLeftKtir,
-	controllerRightKtir,
-	controllerRightWheelSpeed,
-	controllerLeftWheelSpeed;
+ControllerState controllerForward, controllerBackward, controllerLeftKtir,
+		controllerRightKtir, controllerRightWheelSpeed,
+		controllerLeftWheelSpeed;
 
 //-----------------Sensors-------------------//
 /* Values are updated either during interrupts or by using
@@ -65,10 +50,7 @@ ControllerState
  * For example ktirFront[0] is the "most left" front KTIR, while ktirBack[0]
  * is the "most right" back KTIR. True is BLACK, false means WHITE.
  */
-bool ktirFront[7],
-	 ktirRight[3],
-	 ktirBack[7],
-	 ktirLeft[3];
+bool ktirFront[7], ktirRight[3], ktirBack[7], ktirLeft[3];
 
 /* approx cm to the object. 1000 if no object detected or invalid input. */
 int sharp;

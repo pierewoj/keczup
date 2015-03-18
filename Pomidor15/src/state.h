@@ -21,5 +21,4 @@
 
 void changeState(int newState, int reason);
 
-
 #endif /* STATE_H_ */

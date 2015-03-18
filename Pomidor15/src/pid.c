@@ -17,34 +17,33 @@ void PID(ControllerState* s, bool currentlyRunning)
 	double error = s->target - s->feedback;
 
 	//if controller is not enabled right now, don't count I
-	if( !currentlyRunning  || !(s->enabledI) )
+	if (!currentlyRunning || !(s->enabledI))
 	{
-		s -> integral = 0;
+		s->integral = 0;
 	}
 
-	//update history for D every "diffInterval" iterations
-	if(time - s->lastTimeDiff > s->diffInteral * loopWaitTime )
+//update history for D every "diffInterval" iterations
+	if (time - s->lastTimeDiff > s->diffInteral * loopWaitTime)
 	{
-		s -> history[1] = s -> history[0];
-		s -> history[0] = error;
-		s -> lastTimeDiff = time;
+		s->history[1] = s->history[0];
+		s->history[0] = error;
+		s->lastTimeDiff = time;
 	}
 	double d = (s->history[0]) - (s->history[1]);
 
 	//count integral
 	s->integral += error;
-	s->integral = fmax ( s->integral ,  - s->integralMax * s->ti);
-	s->integral = fmin ( s->integral ,    s->integralMax * s->ti);
+	s->integral = fmax(s->integral, -s->integralMax * s->ti);
+	s->integral = fmin(s->integral, s->integralMax * s->ti);
 
 	//count output from P, I and D
 	s->propSignal = s->enabledP * s->kp * error;
-	s->integralSignal = s->enabledI * s->kp / s->ti * s->integral ;
+	s->integralSignal = s->enabledI * s->kp / s->ti * s->integral;
 	s->diffSignal = s->enabledD * s->kp * s->td * d;
 
 	//count total controller output
 	s->output = s->propSignal + s->integralSignal + s->diffSignal;
 }
-
 
 /*
  * updates the value of feedback in controller s with an average position of
@@ -55,17 +54,16 @@ void updateFeedbackKtir(ControllerState *s, bool *ktir, int numKtir)
 	int numBlack = 0;
 	double sum = 0;
 	int i;
-	for(i=0; i<numKtir; i++)
+	for (i = 0; i < numKtir; i++)
 		if (ktir[i])
 		{
 			numBlack++;
 			sum += i;
 		}
 
-	if(numBlack > 0)
-		s -> feedback = sum / numBlack;
+	if (numBlack > 0)
+		s->feedback = sum / numBlack;
 }
-
 
 /*
  * function used to calculate pwm signal from PID controller output
@@ -73,10 +71,10 @@ void updateFeedbackKtir(ControllerState *s, bool *ktir, int numKtir)
  */
 double followLineFunction(double x)
 {
-	if( x<=-1 )
+	if (x <= -1)
 		return 0;
-	else if ( x<=0 )
-		return x+1;
+	else if (x <= 0)
+		return x + 1;
 	else
 		return 1;
 }
@@ -92,11 +90,10 @@ void drivePIDForward(void)
 {
 	double s = controllerForward.output;
 
-	double sl=followLineFunction(s),
-			sr = followLineFunction(-s);
+	double sl = followLineFunction(s), sr = followLineFunction(-s);
 
 	setLeftPWM(sl * drivePIDForwardPWMMax);
-	setRightPWM(sr *drivePIDForwardPWMMax);
+	setRightPWM(sr * drivePIDForwardPWMMax);
 }
 
 void setDrivePIDForward(double PWMMax)
@@ -115,8 +112,7 @@ void drivePIDBackward(void)
 {
 	double s = controllerBackward.output;
 
-	double sl=followLineFunction(s),
-			sr = followLineFunction(-s);
+	double sl = followLineFunction(s), sr = followLineFunction(-s);
 
 	setLeftPWM(-sl * drivePIDBackwardPWMMax);
 	setRightPWM(-sr * drivePIDBackwardPWMMax);
@@ -134,8 +130,8 @@ void setDrivePIDBackward(double PWMMax)
  */
 void driveWheelVelocity(void)
 {
-	setLeftPWM( controllerLeftWheelSpeed.output );
-	setRightPWM( controllerRightWheelSpeed.output );
+	setLeftPWM(controllerLeftWheelSpeed.output);
+	setRightPWM(controllerRightWheelSpeed.output);
 }
 
 void setDriveWheelVelocity(double velLeft, double velRight)
@@ -150,8 +146,8 @@ void setDriveWheelVelocity(double velLeft, double velRight)
  */
 void driveSideKtir(void)
 {
-	setLeftPWM( controllerLeftWheelSpeed.output );
-	setRightPWM( controllerRightWheelSpeed.output );
+	setLeftPWM(controllerLeftWheelSpeed.output);
+	setRightPWM(controllerRightWheelSpeed.output);
 }
 
 void setDriveSideKtir(void)
@@ -224,7 +220,6 @@ void countControllers(void)
 	 */
 	controllerRightWheelSpeed.feedback = velocityRight;
 	controllerLeftWheelSpeed.feedback = velocityLeft;
-
 
 	/*
 	 * updating PID controller outputs

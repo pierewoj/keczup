@@ -20,7 +20,6 @@
  * 	You MUST NOT assign driveFunction pointer to any function manually!!!
  */
 
-
 /*
  * follow the line forward, PWMMax is the maximum PWM value [0, 1.0]
  */
@@ -63,6 +62,5 @@ void setDriveStopSlow(void);
  */
 
 void countControllers(void);
-
 
 #endif /* PID_H_ */

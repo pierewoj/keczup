@@ -18,7 +18,6 @@
 #define SAMPLE_TIME_71_5	6
 #define SAMPLE_TIME_239_5	7
 
-
 #define ADC_SAMPLE_TIME0(x)			(x << 0)
 #define ADC_SAMPLE_TIME1(x)			(x << 3)
 #define ADC_SAMPLE_TIME2(x)			(x << 6)
@@ -38,7 +37,6 @@
 #define ADC_SAMPLE_TIME15(x)		(x << 15)
 #define ADC_SAMPLE_TIME16(x)		(x << 18)
 #define ADC_SAMPLE_TIME17(x)		(x << 21)
-
 
 #define ADC_SEQUENCE_LENGTH(x)	(x << 20)
 

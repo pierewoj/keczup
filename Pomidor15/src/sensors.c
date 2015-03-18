@@ -5,7 +5,6 @@
  *      Author: Kuba
  */
 
-
 void readSensors(void)
 {
 }

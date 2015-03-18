@@ -35,5 +35,4 @@ void removeRecentTarget(void);
  */
 void strategyInit();
 
-
 #endif /* STRATEGY_H_ */

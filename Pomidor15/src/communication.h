@@ -14,5 +14,4 @@ void messageProcessor(char* msg, int msgLength);
 //sends a message via UART
 void sendMessage(char* msg, int msgLength);
 
-
 #endif /* COMMUNICATION_H_ */

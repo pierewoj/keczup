@@ -6,7 +6,6 @@
  */
 #include "global.h"
 
-
 //Changing states MUST be only changed using this function
 void changeState(int newState, int reason)
 {

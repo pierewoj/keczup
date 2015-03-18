@@ -2,5 +2,6 @@
  * Drive between crossroads
  */
 
-
-void stateGo(void){}
+void stateGo(void)
+{
+}

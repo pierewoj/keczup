@@ -65,11 +65,10 @@ void stackPop(Strategy* stack)
 Point stackPeek(Strategy* stack)
 {
 	if (stack->size > 0)
-		return (stack->stack)[ stack->size - 1 ];
+		return (stack->stack)[stack->size - 1];
 	else
 		return (stack->loop)[stack->loopIndex];
 }
-
 
 /*
  * adds new elem on top of the stack
@@ -109,12 +108,20 @@ void strategyInit(void)
 	robotStrategy.loopIndex = 0;
 
 	//initializing loop
-	struct point t[STACK_LOOP_SIZE] = { { 4, 1 }, { 4, 2 }, { 0, 2 }, { 0, 3 },
-			{ 4, 3 }, { 4, 4 }, { 0, 4 }, { 0, 1 } };
+	struct point t[STACK_LOOP_SIZE] =
+	{
+	{ 4, 1 },
+	{ 4, 2 },
+	{ 0, 2 },
+	{ 0, 3 },
+	{ 4, 3 },
+	{ 4, 4 },
+	{ 0, 4 },
+	{ 0, 1 } };
 	int i;
 	for (i = 0; i < STACK_LOOP_SIZE; i++)
-			robotStrategy.loop[i] = t[i];
+		robotStrategy.loop[i] = t[i];
 
-	addNewTarget(1,2);
-	addNewTarget(3,2);
+	addNewTarget(1, 2);
+	addNewTarget(3, 2);
 }
