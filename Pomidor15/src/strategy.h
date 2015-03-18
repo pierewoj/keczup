@@ -8,11 +8,7 @@
 #ifndef STRATEGY_H_
 #define STRATEGY_H_
 
-typedef struct point
-{
-	int i;
-	int j;
-} Point;
+#include "geometry.h"
 
 /*
  * adds new priority target

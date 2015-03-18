@@ -6,6 +6,7 @@
 #define GLOBAL_H_
 
 #include<stdbool.h>
+#include<geometry.h>
 
 //-----------------State variables------------------//
 
@@ -19,6 +20,12 @@ void (*driveFunction)(void); //pointer to a function which controls motors
 unsigned long time; //time since reset in microseconds
 unsigned long loopWaitTime; //time to wait between main loop iteratinos
 unsigned long lastLoopTime; //time of last loop execution in microseconds
+
+//-----------------Location variables------------------//
+PointMM position; //in mm
+double direction; //[-180,180], 90 is NORTH
+unsigned long enemyTimes[5][5]; //enemy detection times in ms
+unsigned long visitTimes[5][5]; //visit times of crossroads in ms
 
 //-----------------Controllers-------------------//
 

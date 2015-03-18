@@ -9,6 +9,7 @@
 #define STACK_LOOP_SIZE 8
 #include "strategy.h"
 
+
 /*
  * This structure is a stack + list with cycle (loop)
  * It allows to place priority targets on the stack, if there are no priotiy
