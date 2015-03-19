@@ -12,7 +12,7 @@ Point nextCrossroad;
 
 /*
  * last value of gyroDirection reading. Difference between current and las value
- * is used tu update "direction"
+ * is used tu update "direction".
  */
 double lastGyroDirection;
 
@@ -44,6 +44,15 @@ bool pointValid(Point p)
  */
 void updateOurPosition(void)
 {
+	//updating time of crossroad visit
+	PointMM nearestCrossroadMM = getNearestCrossroad(position);
+	Point nearestCrossroad = ofPointMM(nearestCrossroadMM);
+
+	if (distance(position, nearestCrossroadMM) < 50
+			&& pointValid(nearestCrossroad))
+		visitTimes[nearestCrossroad.i][nearestCrossroad.j] = time/1000; //ms
+
+
 	//updating direction
 	direction += angleDifference(lastGyroDirection, gyroDirection);
 	direction = angleMakeInRange(direction);
@@ -87,7 +96,7 @@ void updateOurPosition(void)
 
 /*
  * detects enemy using sonars. That information is used to count path to the
- * target.
+ * target. Enemy detection times are saved in enemyTimes[][] array.
  */
 void updateEnemyPosition(void)
 {
