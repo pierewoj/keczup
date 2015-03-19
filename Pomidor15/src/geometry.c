@@ -7,9 +7,6 @@
 #include "geometry.h"
 #include "math.h"
 
-#define DEG_TO_RAD (0.01745329251)
-#define RAD_TO_DEG (57.2957795130)
-
 /*
  * returns the nearest multiple of "mulfipleOf" to "a"
  * tested: http://ideone.com/vPpGfL
@@ -55,7 +52,7 @@ Point ofPointMM(PointMM p)
 }
 
 /*
- * Distance between points
+ * Distance between points (Euclidean)
  */
 double distance(PointMM a, PointMM b)
 {
@@ -64,6 +61,15 @@ double distance(PointMM a, PointMM b)
 	 * http://www.cplusplus.com/reference/cmath/hypot/
 	 */
 	return hypot(a.x - b.x, a.y - b.y);
+}
+
+/*
+ * Distance between points in manhattan metric
+ * d(a,b) = |a.x-b.x| + |a.y-b.y|
+ */
+double distanceManhattan(PointMM a, PointMM b)
+{
+	return fabs(a.x-b.x) + fabs(a.y-b.y);
 }
 
 /*

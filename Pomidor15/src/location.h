@@ -17,13 +17,13 @@ void updateOurPosition(void);
  * detects enemy using sonars. That information is used to count path to the
  * target.
  */
-void v(void);
+void updateEnemyPosition(void);
 
 /*
  * updates next crossroads based on the location of enemy, can possession,
  * time of crossroads' visit
  */
-void updateNextCrossroads(void);
+void updateNextCrossroad(void);
 
 /*
  * returns the distance to current next crossroads (mm)

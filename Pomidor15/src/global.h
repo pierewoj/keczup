@@ -20,6 +20,7 @@ void (*driveFunction)(void); //pointer to a function which controls motors
 unsigned long time; //time since reset in microseconds
 unsigned long loopWaitTime; //time to wait between main loop iteratinos
 unsigned long lastLoopTime; //time of last loop execution in microseconds
+bool carryingCan; //does the robot "have" the can
 
 //-----------------Location variables------------------//
 PointMM position; //in mm

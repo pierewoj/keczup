@@ -5,7 +5,7 @@
  *      Author: Kuba
  */
 #include "global.h"
-#include "effectors.h"
+#include "lowlevel/effectors.h"
 #include <math.h>
 
 /*

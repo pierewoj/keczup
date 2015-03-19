@@ -4,8 +4,23 @@
 #include "geometry.h"
 #include "math.h"
 
+/*
+ * position of next crossroad to be visited. Should be accessed directly from
+ * current position
+ */
 Point nextCrossroad;
 
+/*
+ * last value of gyroDirection reading. Difference between current and las value
+ * is used tu update "direction"
+ */
+double lastGyroDirection;
+
+/*
+ * last values of total mm traveled by left/right wheel. Differences between
+ * current and last values are used to update location.
+ */
+long lastTotalDistanceLeft, lastTotalDistanceRight;
 /*
  * returns the nearest crossroad to "point"
  */
@@ -30,7 +45,20 @@ bool pointValid(Point p)
 void updateOurPosition(void)
 {
 	//updating direction
-	direction = gyroDirection;
+	direction += angleDifference(lastGyroDirection, gyroDirection);
+	direction = angleMakeInRange(direction);
+
+	//updating position
+	int dR = totalDistanceRight - lastTotalDistanceRight, dL = totalDistanceLeft
+			- lastTotalDistanceLeft;
+	double dMid = (dR + dL) / 2;
+	position.x += dMid * cos(DEG_TO_RAD * direction);
+	position.y += dMid * sin(DEG_TO_RAD * direction);
+
+	//saving current values
+	lastGyroDirection = gyroDirection;
+	lastTotalDistanceLeft = totalDistanceLeft;
+	lastTotalDistanceRight = totalDistanceRight;
 
 	//snap
 	int i, numBlackFrontKtir = 0;
@@ -63,7 +91,6 @@ void updateOurPosition(void)
  */
 void updateEnemyPosition(void)
 {
-
 	Vector ultraDirections[4] =
 	{
 	{ 0, 1 },
@@ -97,15 +124,107 @@ void updateEnemyPosition(void)
 		Point enemy = enemyPositions[i];
 		enemyTimes[enemy.i][enemy.j] = time / 1000; //ms
 	}
+}
 
+/*
+ *	It is a cost function for finding next neighbour
+ *	its value is minimized (best neighbour = small value)
+ */
+double countCrossradCost(Point p)
+{
+	double result = 0;
+
+	// distance to the target via this crossroad
+	double distanceToTheTarget = distanceManhattan(position, ofPoint(p))
+			+ distanceManhattan(ofPoint(p), ofPoint(getRecentTarget()));
+	result += settingLocationWeightDistance * distanceToTheTarget;
+
+	// robot should prefer crossroads which were visited ealier
+	double msSinceLastVisit = time / 1000 - visitTimes[p.i][p.j];
+	result -= settingLocationWeightVisitTime * msSinceLastVisit;
+
+	// avoiding going to our baseline if we are not carrying can
+	if (p.j == 0 && !carryingCan)
+		result += settingLocationWeightBaseline;
+
+	// avoiding enemies
+	if (time / 1000 - enemyTimes[p.i][p.j] < settingLocationTimeEnemy)
+		result += settingLocationWeightEnemy;
+
+	return result;
+}
+
+/*
+ * helper function used to add candidates for next crossroads to the array
+ */
+void addCandidate(Point* candidates, int* numCandidates, PointMM candidate)
+{
+	if (pointValid(ofPointMM(candidate)))
+	{
+		candidates[*numCandidates] = ofPointMM(candidate);
+		(*numCandidates)++;
+	}
 }
 
 /*
  * updates next crossroads based on the location of enemy, can possession,
  * time of crossroads' visit
  */
-void updateNextCrossroads(void)
+void updateNextCrossroad(void)
 {
+	Point candidates[5];
+	int numCandidates = 0;
+
+	PointMM nearestCrossroad = getNearestCrossroad(position);
+
+	//nearest crossroad is always a candidate
+	addCandidate(candidates, &numCandidates, nearestCrossroad);
+
+	//robot is between crossroads, only 2 candidates.
+	if (distance(position, nearestCrossroad) > 50)
+	{
+		//counting position of the other crossroad on the current line
+		Vector v = vectorBetweenPoints(position, nearestCrossroad);
+		v = vectorNormalize(v);
+		v = vectorMultiplyByScalar(v, -300); //300mm in the rev. direction
+		PointMM otherCrossroad = translateByVector(nearestCrossroad, v);
+
+		addCandidate(candidates, &numCandidates, otherCrossroad);
+	}
+
+	/*
+	 * robot is on a crossroad, add all neighbour crossroads, checking if
+	 * position is valid (for ex if point is not (-500,-600)) is done in
+	 * addCandidate() function
+	 */
+	else
+	{
+		Vector neighbourDirections[4] =
+		{
+		{ 0, 300 },
+		{ 300, 0 },
+		{ 0, -300 },
+		{ -300, 0 } };
+
+		//add all
+		int i;
+		for (i = 0; i < 4; i++)
+			addCandidate(candidates, &numCandidates,
+					translateByVector(nearestCrossroad,
+							neighbourDirections[i]));
+
+	}
+
+	//finding a candidate for crossroad as the one with the lowest cost
+	double minCost = countCrossradCost(nextCrossroad);
+	int i;
+	for (i = 0; i < numCandidates; i++)
+		if (countCrossradCost(candidates[i]) < minCost)
+		{
+			nextCrossroad = candidates[i];
+			minCost = countCrossradCost(candidates[i]);
+		}
+
 }
 
 /*
@@ -122,7 +241,7 @@ double distanceToNextCrossroad(void)
  */
 double angleToNextCrossroad(void)
 {
-	if (distanceToNextCrossRoad() < 50) //Setting?
+	if (distanceToNextCrossroad() < 50) //Setting?
 		return 0;
 	else
 	{
@@ -137,5 +256,6 @@ double angleToNextCrossroad(void)
  */
 bool targetReached()
 {
-	//not implemented
+	double dst = distance(ofPoint(getRecentTarget()), position);
+	return dst < 50;
 }

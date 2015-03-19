@@ -8,6 +8,9 @@
 #ifndef GEOMETRY_H_
 #define GEOMETRY_H_
 
+#define DEG_TO_RAD (0.01745329251)
+#define RAD_TO_DEG (57.2957795130)
+
 typedef struct pointMM
 {
 	double x;
@@ -43,10 +46,15 @@ Point ofPointMM(PointMM p);
 int roundToTheMultipleOf(double a, int multipleOf);
 
 /*
- * Distance between points
+ * Distance between points (Euclidean metric)
  */
 double distance(PointMM a, PointMM b);
 
+/*
+ * Distance between points in manhattan metric
+ * d(a,b) = |a.x-b.x| + |a.y-b.y|
+ */
+double distanceManhattan(PointMM a, PointMM b);
 /*
  * Every angle in this program should be [-180; 180].
  * For any angle a it makes sure is within this range.
