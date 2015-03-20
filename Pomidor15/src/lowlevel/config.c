@@ -299,7 +299,7 @@ void TIMERs_Config(void)
 
 		//ultrasonic sensor echo capturing timer
 		TIM3->PSC = 49;                 //preskaler ustawiony na 1
-		TIM3->ARR = 65535;             //wartosc do której zlicza licznik i po tym sie zeruje
+		TIM3->ARR = ultra_distance_max;             //wartosc do której zlicza licznik i po tym sie zeruje
 		TIM3->CR1 = 0;                 //reset controls register
 		TIM3->CCMR1 |= TIM_CCMR1_CC2S_0;                   //timer przepe³nia siê co 24 ms
 		TIM3->CCMR2 |= TIM_CCMR2_CC3S_0 | TIM_CCMR2_CC4S_0;       //TI3 as input - detecting edge

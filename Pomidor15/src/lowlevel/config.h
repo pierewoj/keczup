@@ -26,7 +26,7 @@ void RCC_Config(void);
 void I2C_Config(void);
 void ADC_Config(volatile unsigned int *tab);
 void TIMERs_Config(void);
-void DMA_Config(void)
+void DMA_Config(void);
 
 //External devices configurations
 void gyro_config(void);

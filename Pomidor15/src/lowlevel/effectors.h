@@ -6,6 +6,7 @@
  */
 
 #include "communication.h"
+#include <math.h>
 
 #ifndef EFFECTORS_H_
 #define EFFECTORS_H_

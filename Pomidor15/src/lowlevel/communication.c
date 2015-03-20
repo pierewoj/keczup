@@ -124,10 +124,7 @@ void dynamixel_ustawPozycje(double procent)
 
 	if (procent < 0 || procent > 1)
 		return;
-	if (procent < 0.6)
-		RAMKA = 0;
-	else
-		RAMKA = 1;
+
 	unsigned int a = procent * 0x03FF;
 	int i = 0;
 

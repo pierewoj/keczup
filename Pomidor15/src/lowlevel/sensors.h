@@ -28,6 +28,7 @@ unsigned int ultra__[3], ultraIt, ultra_pom[3];
 double ultraMM[3], ultraDev[3], ultraMean[3], ultraHistory[3][41], ultraMax[3];
 unsigned int ultra1, ultra2, ultra3;
 char pierwsze_zbocze[3];
+#define ultra_distance_max 65535
 
 //KTIRs
 void read_ktirs(void);

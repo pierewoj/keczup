@@ -23,8 +23,7 @@ void closeFrame(void)
 //set PWM values controlling engines. Values [-1.0 .. +1.0]. + is forward.
 void setRightPWM(double v)
 {
-	PWM_R=a;
-	double modul = fabs(a);
+	double modul = fabs(v);
 
 	if(a<0)
 	{
@@ -41,10 +40,9 @@ void setRightPWM(double v)
 		TIM2->CCR4 = modul*500;
 }
 
-void setLeftPWM(double a)
+void setLeftPWM(double v)
 {
-	PWM_L=a;
-	double modul = fabs(a);
+	double modul = fabs(v);
 
 	if(a>0){
 		GPIO_ResetBits(GPIOC,GPIO_Pin_7);
@@ -63,8 +61,6 @@ void setLeftPWM(double a)
 //Motor stop functions using low/high impedance
 void stopFast(void)
 {
-	PWM_R=0;
-	PWM_L=0;
 	TIM2->CCR4 = 500;
 	TIM2->CCR3 = 500;
 	GPIO_ResetBits(GPIOC,GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9);
@@ -72,8 +68,6 @@ void stopFast(void)
 
 void stopSlow(void)
 {
-	PWM_R=0;
-	PWM_L=0;
 	TIM2->CCR4 = 500;
 	TIM2->CCR3 = 500;
 	GPIO_SetBits(GPIOC,GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9);
