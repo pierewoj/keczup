@@ -5,6 +5,8 @@
  *      Author: Kuba
  */
 
+#include "communication.h"
+
 #ifndef EFFECTORS_H_
 #define EFFECTORS_H_
 

@@ -7,6 +7,8 @@
 
 #include<stdbool.h>
 #include<geometry.h>
+#include "lowlevel/sensors.h"
+#include "lowlevel/communication.h"
 
 //-----------------State variables------------------//
 
