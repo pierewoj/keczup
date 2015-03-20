@@ -71,7 +71,7 @@ int ultra[4];
 
 /* encoder redings from the left and right wheel*/
 double velocityLeft, velocityRight; // mm/s
-long totalDistanceLeft, totalDistanceRight; //mm since the restart
+double totalDistanceLeft, totalDistanceRight; //mm since the restart
 
 /* current direction from gyro. Its value is an angle [-180 .. 180) deg.
  90 is north, 0 is east, -90 is south and +-180 is west. */
