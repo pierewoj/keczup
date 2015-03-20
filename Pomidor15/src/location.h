@@ -1,6 +1,7 @@
 #ifndef LOCATION_H_
 #define LOCATION_H_
 
+#include "stdbool.h"
 /*
  * functions in this file provide finding a way to the recent target
  * (Point getRecentTarget() from "staregy.c")

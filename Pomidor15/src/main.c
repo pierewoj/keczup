@@ -12,6 +12,7 @@
 #include "lowlevel/effectors.h"
 #include "lowlevel/communication.h"
 #include "pid.h"
+#include "location.h"
 #include "strategy.h"
 #include "states/state.h"
 #include "states/stateStop.h"
@@ -38,9 +39,13 @@ int main(void)
 		}
 		lastLoopTime = time;
 
-		//Update sensor readings
+		//Update sensor readings and controller output
 		readSensors();
 		countControllers();
+
+		//Update position of Pomidor and enemy
+		updateOurPosition();
+		updateEnemyPosition();
 
 		//Finite state machine
 		switch (state)
@@ -87,6 +92,7 @@ int main(void)
 		}
 
 		//Motor control
-		driveFunction();
+		if(driveFunction != NULL)
+			driveFunction();
 	}
 }
