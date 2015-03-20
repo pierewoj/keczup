@@ -1,6 +1,7 @@
 #include "global.h"
 #include "lowlevel/sensors.h"
 
+//jakies tam komentarze dupa dupa dupa...
 /*
  * sets the default values of all variables, function called at the
  * beginning of the program
