@@ -395,7 +395,7 @@ void DMA_Config(void)
 	DMA1_Channel7->CCR |= DMA_CCR7_EN; //Enable DMA Channel1
 }
 
-void ADC_Config(vu32 *tab)
+void ADC_Config(volatile unsigned int *tab)
 {
 	//*******************__ADC_configuration__******************************//
 

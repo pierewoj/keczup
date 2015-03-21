@@ -244,5 +244,5 @@ void sendAllVariables(void)
 	char messageBuffer[400];
 	snprintf(messageBuffer, 400, "%d\n", state);
 
-	sendMessageNewline(messageBuffer);
+	sendMessage(messageBuffer);
 }

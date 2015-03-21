@@ -15,6 +15,7 @@ void messageProcessor(char* msg, int msgLength);
 
 //sends a message via USART
 void sendMessage(char* msg);
+void sendAllVariables(void);
 
 //***********************__USART__*********************************//
 
@@ -28,14 +29,6 @@ unsigned short int U3_buforTx[200],U2_buforTx[250];
 
 
 void dynamixel_ustawPozycje(double procent);
-
-void otrzymanoPolecenie(char* MSG, int MSG_size);
-
-void spacja(unsigned short int *tab, int *i);
-
-void printINT(int a, unsigned short int *tab, int *i);
-
-void melduj();
 
 void USART3_IRQHandler(void);
 

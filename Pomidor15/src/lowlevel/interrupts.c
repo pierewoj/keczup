@@ -30,7 +30,7 @@ void TIM1_TRG_COM_TIM17_IRQHandler(void) //timer od wysylania rzeczy przez bluet
 	}
 }
 
-void TIM15_IRQHandler(void)
+void TIM1_BRK_TIM15_IRQHandler(void)
 {
 	if (TIM15->SR & TIM_SR_CC2IF) // if CC2IF flag is set
 	{
@@ -47,7 +47,7 @@ void TIM15_IRQHandler(void)
 		{
 			if (pierwsze_zbocze[a])
 			{
-				ultra__[a] = distance_max;
+				ultra__[a] = ultra_distance_max;
 			}
 		}
 	}
@@ -113,10 +113,10 @@ void TIM7_IRQHandler(void)
 		//ENKODERY
 		encodersRead();
 		//Time update
-		TIME += ENC_READ;
+		time += TIM7_interrupt_time;
 
 		//Gyroscope
-		if (TIME > 1000)
+		if (time > 1000)
 		{
 
 		}
