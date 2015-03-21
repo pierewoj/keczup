@@ -145,7 +145,7 @@ void dynamixel_ustawPozycje(double procent)
 void messageProcessor(char* msg, int msgLength)
 {
 	char command[20]; //maximum command length is 20
-	sscanf(msg, "%20s", &command);
+	sscanf(msg, "%20s", command);
 	if (!strcmp(command, "START")) //received "START" command
 	{
 		//do something

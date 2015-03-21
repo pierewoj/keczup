@@ -19,8 +19,8 @@ void sendAllVariables(void);
 
 //***********************__USART__*********************************//
 
-unsigned short int U3_bufTxIndex=0,U3_bufTxMaxIndex=1;
-unsigned short int U2_bufTxIndex=0,U2_bufTxMaxIndex=1;
+unsigned short int U3_bufTxIndex,U3_bufTxMaxIndex;
+unsigned short int U2_bufTxIndex,U2_bufTxMaxIndex;
 char U2_buforRx[200];
 int U2_buforRx_Size;
 int U2_bufRxIndex;
