@@ -6,6 +6,8 @@
  * sets the default values of all variables, function called at the
  * beginning of the program
  */
+
+
 void initializeGlobalVariables(void)
 {
 	loopWaitTime = 0; 					//time to wait between main loop iteratinos
@@ -18,3 +20,12 @@ void initializeGlobalVariables(void)
 	gyro_initial_values[2] = 0;
 }
 
+unsigned int getMicroseconds(void)
+{
+	return ((((RTC->CNTH) << 16) + RTC->CNTL) * 16);               //time - current time value [us]
+}
+
+unsigned int getMiliseconds(void)
+{
+	return getMicroseconds() / 1000;
+}

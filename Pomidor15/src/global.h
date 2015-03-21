@@ -9,7 +9,7 @@
 #include<geometry.h>
 #include "lowlevel/sensors.h"
 #include "lowlevel/communication.h"
-#define time ((((RTC->CNTH) << 16) + RTC->CNTL) * 16)               //time - current time value [us]
+
 
 //-----------------State variables------------------//
 
