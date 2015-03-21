@@ -9,6 +9,7 @@
 #include<geometry.h>
 #include "lowlevel/sensors.h"
 #include "lowlevel/communication.h"
+#define time (((RTC->CNTH) << 16) + RTC->CNTL)
 
 //-----------------State variables------------------//
 
@@ -19,7 +20,7 @@
  */
 int state, prevState, reasonChangeState;
 void (*driveFunction)(void); //pointer to a function which controls motors
-unsigned long time; //time since reset in microseconds
+//unsigned long time; //time since reset in microseconds
 unsigned long loopWaitTime; //time to wait between main loop iteratinos
 unsigned long lastLoopTime; //time of last loop execution in microseconds
 bool carryingCan; //does the robot "have" the can

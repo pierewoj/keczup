@@ -81,7 +81,7 @@ void USART2_IRQHandler(void)
 		{
 			U2_buforRx_Size = U2_bufRxIndex - 2;
 			U2_bufRxIndex = 0;
-			otrzymanoPolecenie(U2_buforRx, U2_buforRx_Size);
+			messageProcessor(U2_buforRx, U2_buforRx_Size);
 		}
 
 		//a = USART_ReceiveData(USART2);
@@ -126,7 +126,6 @@ void dynamixel_ustawPozycje(double procent)
 		return;
 
 	unsigned int a = procent * 0x03FF;
-	int i = 0;
 
 	unsigned short int dynamixelData[11] =
 	{ 0xFF, 0xFF, 0xFE, 0x07, 0x03, 0x1E, 0x00, 0x01, 0x00, 0x00, 0xD6 };
@@ -145,7 +144,7 @@ void dynamixel_ustawPozycje(double procent)
 void messageProcessor(char* msg, int msgLength)
 {
 	char command[20]; //maximum command length is 20
-	sscanf(msg, "%20s", &command);
+	sscanf(msg, "%20s", command);
 	if (!strcmp(command, "START")) //received "START" command
 	{
 		//do something

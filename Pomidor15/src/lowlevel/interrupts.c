@@ -11,7 +11,7 @@ void TIM1_UP_TIM16_IRQHandler(void) //timer od wysylania rzeczy przez bluetooth 
 	if (TIM16->SR & TIM_SR_UIF) // if UIF flag is set
 	{
 		TIM16->SR &= ~TIM_SR_UIF; // clear UIF flag
-		melduj();
+		//melduj();
 		DMA_Config();
 		//loopCounter = 0;
 	}
@@ -112,8 +112,6 @@ void TIM7_IRQHandler(void)
 		TIM7->SR &= ~TIM_SR_UIF; // clear UIF flag
 		//ENKODERY
 		encodersRead();
-		//Time update
-		time += TIM7_interrupt_time;
 
 		//Gyroscope
 		if (time > 1000)
