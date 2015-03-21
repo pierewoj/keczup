@@ -25,7 +25,7 @@ void sendMessage(char* msg)
 		}
 	}
 
-	uart2_sendArray(msg, i + 1);
+	uart2_sendArray(msg, i + 1 );
 }
 
 //****************************************************//
@@ -114,6 +114,7 @@ void uart2_sendArray(char *arr, unsigned short int n)
 	}
 	usart_data_number = n;
 	U2_bufTxIndex = 0;
+	DMA_Config();
 	//USART_ITConfig(USART2, USART_IT_TXE, ENABLE);
 }
 
@@ -145,9 +146,9 @@ void messageProcessor(char* msg, int msgLength)
 {
 	char command[20]; //maximum command length is 20
 	sscanf(msg, "%20s", command);
-	if (!strcmp(command, "START")) //received "START" command
+	if (strcmp(command, "START") == 0) //received "START" command
 	{
-		//do something
+		sendMessage("JAZDA!!!!!!!\n");
 	}
 }
 
@@ -155,8 +156,11 @@ void messageProcessor(char* msg, int msgLength)
 //***************__I2C_protocol__*********************//
 //****************************************************//
 
-//write one byte to slave device; adress - device adress, data - array name, length - length of the array
-//function used only in gyro config (once at the begining of the main program)
+/*
+ * write one byte to slave device; adress - device adress, data - array name, length - length of the array
+ * function called only in gyro config (once at the begining of the main program)
+ */
+
 void __i2c_write(uint8_t address, uint8_t* data, uint32_t length)
 {
 	uint32_t dummy;

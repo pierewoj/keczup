@@ -12,7 +12,7 @@ void TIM1_UP_TIM16_IRQHandler(void) //timer od wysylania rzeczy przez bluetooth 
 	{
 		TIM16->SR &= ~TIM_SR_UIF; // clear UIF flag
 		//melduj();
-		DMA_Config();
+		//DMA_Config();
 		//loopCounter = 0;
 	}
 }
@@ -118,9 +118,7 @@ void TIM7_IRQHandler(void)
 		{
 
 		}
-
 		//SHARPY
-
 	}
 
 }

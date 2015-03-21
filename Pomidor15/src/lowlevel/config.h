@@ -19,8 +19,11 @@
 //Invoked once, at the beginning of the program
 void configurePeripherials(void);
 
+unsigned int time__;
+
 //STM32 internal peripherials configurations
 void GPIO_Config(void);
+void RTC_Config(void);
 void NVIC_Config(void);
 void RCC_Config(void);
 void I2C_Config(void);
