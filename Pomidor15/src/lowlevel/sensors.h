@@ -23,6 +23,8 @@ int gyro_x, gyro_y, gyro_z;
 int gyro_initial_values[3];
 #define gyro_calibration_sample_number 50
 
+void gyro_update_direction(void);
+
 //ULTRADZWIEKI
 unsigned int ultra__[3], ultra_pom[3];
 unsigned int ultra1, ultra2, ultra3;
