@@ -44,7 +44,7 @@ void encodersRead(void);
 
 double V_L, V_R;
 #define REV_COUNT 				1021
-#define IMP_DIST				0.131946864
+#define IMP_DIST				0.1122226619
 #define ENC_L_TIM              	TIM1                     // timer's macros#define ENC_R_TIM              	TIM4
 
 volatile int16_t leftCount;								//speeds

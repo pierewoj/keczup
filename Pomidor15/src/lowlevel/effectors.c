@@ -10,7 +10,7 @@
 
 void openFrame(void)
 {
-	dynamixel_ustawPozycje(0.51);
+	dynamixel_ustawPozycje(0.54);
 }
 
 //locks the can
@@ -24,7 +24,7 @@ void setRightPWM(double v)
 {
 	double modul = fabs(v);
 
-	if (v < 0)
+	if (v > 0)
 	{
 		GPIO_ResetBits(GPIOC, GPIO_Pin_9);
 		GPIO_SetBits(GPIOC, GPIO_Pin_8);
@@ -63,12 +63,12 @@ void stopFast(void)
 {
 	TIM2->CCR4 = 500;
 	TIM2->CCR3 = 500;
-	GPIO_ResetBits(GPIOC, GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9);
+	GPIO_SetBits(GPIOC, GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9);
 }
 
 void stopSlow(void)
 {
 	TIM2->CCR4 = 500;
 	TIM2->CCR3 = 500;
-	GPIO_SetBits(GPIOC, GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9);
+	GPIO_ResetBits(GPIOC, GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9);
 }

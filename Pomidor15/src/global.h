@@ -18,6 +18,10 @@
  * done using changeState(int,int) defined in "state.h"
  * Used unit of time is MICROSECONDS
  */
+
+unsigned int getMiliseconds(void);
+unsigned int getMicroseconds(void);
+unsigned int time_old;
 int state, prevState, reasonChangeState;
 void (*driveFunction)(void); //pointer to a function which controls motors
 //unsigned long time; //time since reset in microseconds

@@ -50,7 +50,7 @@ void updateOurPosition(void)
 
 	if (distance(position, nearestCrossroadMM) < 50
 			&& pointValid(nearestCrossroad))
-		visitTimes[nearestCrossroad.i][nearestCrossroad.j] = time/1000; //ms
+		visitTimes[nearestCrossroad.i][nearestCrossroad.j] = getMiliseconds(); //ms
 
 
 	//updating direction
@@ -131,7 +131,7 @@ void updateEnemyPosition(void)
 	for (i = 0; i < enemyCount; i++)
 	{
 		Point enemy = enemyPositions[i];
-		enemyTimes[enemy.i][enemy.j] = time / 1000; //ms
+		enemyTimes[enemy.i][enemy.j] = getMiliseconds(); //ms
 	}
 }
 
@@ -149,7 +149,7 @@ double countCrossradCost(Point p)
 	result += settingLocationWeightDistance * distanceToTheTarget;
 
 	// robot should prefer crossroads which were visited ealier
-	double msSinceLastVisit = time / 1000 - visitTimes[p.i][p.j];
+	double msSinceLastVisit = getMiliseconds() - visitTimes[p.i][p.j];
 	result -= settingLocationWeightVisitTime * msSinceLastVisit;
 
 	// avoiding going to our baseline if we are not carrying can
@@ -157,7 +157,7 @@ double countCrossradCost(Point p)
 		result += settingLocationWeightBaseline;
 
 	// avoiding enemies
-	if (time / 1000 - enemyTimes[p.i][p.j] < settingLocationTimeEnemy)
+	if (getMiliseconds() - enemyTimes[p.i][p.j] < settingLocationTimeEnemy)
 		result += settingLocationWeightEnemy;
 
 	return result;

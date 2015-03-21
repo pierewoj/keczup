@@ -114,22 +114,20 @@ void TIM7_IRQHandler(void)
 		encodersRead();
 
 		//Gyroscope
-		if (time > 1000)
-		{
 
-		}
 		//SHARPY
 	}
 
 }
 
-void EXTI15_10_IRQHandler(void)
+void EXTI0_IRQHandler(void)
 {
-	if (( EXTI->PR & EXTI_PR_PR13) != 0)
+	if (( EXTI->PR & EXTI_PR_PR0) != 0)
 	{
-
+		buttonStart = !buttonStart;
+		sendMessage("asdasdw\n");
 	}
-	EXTI->PR |= EXTI_PR_PR13;
+	EXTI->PR |= EXTI_PR_PR0;
 }
 
 void DMA1_Channel7_IRQHandler(void)

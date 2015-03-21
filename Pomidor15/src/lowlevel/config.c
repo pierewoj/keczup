@@ -73,7 +73,6 @@ void RCC_Config(void)
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM16, ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM17, ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6, ENABLE);
-	RCC_APB1PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, ENABLE);
 	RCC->APB2ENR |= RCC_APB2ENR_ADC1EN;
@@ -119,8 +118,7 @@ void NVIC_Config(void)
 #ifdef  VECT_TAB_RAM
 	// Jezeli tablica wektorow w RAM, to ustaw jej adres na 0x20000000
 	NVIC_SetVectorTable(NVIC_VectTab_RAM, 0x0);
-#else  // VECT_TAB_FLASH	// W przeciwnym wypadku ustaw na 0x08000000	NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x0);
-#endif
+#else  // VECT_TAB_FLASH	// W przeciwnym wypadku ustaw na 0x08000000	NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x0);#endif
 
 	//Wybranie grupy priorytetów
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
@@ -165,7 +163,7 @@ void NVIC_Config(void)
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
-	NVIC_InitStructure.NVIC_IRQChannel = EXTI15_10_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannel = EXTI0_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
@@ -202,8 +200,8 @@ void GPIO_Config(void)
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 
-	//adc - gpio configuration: PC0 - VBat, PC1 - analog_distance_sensor
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
+	//adc - gpio configuration: PC0 - VBat, PC3 - analog_distance_sensor
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_3;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOC, &GPIO_InitStructure);
@@ -264,22 +262,20 @@ void GPIO_Config(void)
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
 	//KTIRs A0/A1/A4/A5/A11/A12/A15
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_4
-			| GPIO_Pin_5 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_15;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6 |  GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_15;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
 	//KTIRs B3/B4/B5/B12/B13/B14
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5
-			| GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_12 | GPIO_Pin_13 |
+			GPIO_Pin_15 | GPIO_Pin_8 | GPIO_Pin_9 ;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 
 	//KTIRs C2/C3/C4/C5/C14/C15
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4
-			| GPIO_Pin_5 | GPIO_Pin_14 | GPIO_Pin_15;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOC, &GPIO_InitStructure);
@@ -305,7 +301,7 @@ void GPIO_Config(void)
 	AFIO->MAPR |= AFIO_MAPR_TIM2_REMAP_PARTIALREMAP2; //channels: 3,4 remapped (to: PB10, PB11)
 	AFIO->MAPR |= AFIO_MAPR_USART3_REMAP_0; //usart rx,tx remapped (to: PC10, PC11)
 	AFIO->MAPR |= AFIO_MAPR_I2C1_REMAP;            //I2C remapped (to: PB8, PB9)
-	AFIO->MAPR2 |= AFIO_MAPR2_TIM15_REMAP;              //TIM15 remap (to: PB15)
+	//AFIO->MAPR2 |= AFIO_MAPR2_TIM15_REMAP;              //TIM15 remap (to: PB15)
 }
 
 //
@@ -352,7 +348,7 @@ void TIMERs_Config(void)
 	TIM7->ARR = 10;	     // Auto reload value [ms]
 	TIM7->DIER = TIM_DIER_UIE; // Enable update interrupt (timer level)
 	TIM7->CR1 = TIM_CR1_CEN;   // Enable timer
-
+/*
 	//configuration of ultrasonic sensors trigger (PWM)
 	TIM15->PSC = 399;	 					// Set prescaler to 400 (PSC + 1)
 	TIM15->ARR = 1200;									// Auto reload value 500
@@ -361,7 +357,7 @@ void TIMERs_Config(void)
 	TIM15->CCR2 = 0;
 	TIM15->DIER |= TIM_DIER_CC2IE; //Capture Compare interrupt enable (after each PWM pulse)
 	TIM15->CR1 = TIM_CR1_CEN;	 						// Enable timer
-
+*/
 	//TIMER OD WYSYLANIA PRZEZ BLUETOOTH (MELDOWANIA)
 	TIM16->PSC = 39999;	         // Set prescaler to 40 000 (PSC + 1)
 	TIM16->ARR = 150;	           // Auto reload value 1000
@@ -379,7 +375,7 @@ void TIMERs_Config(void)
 //External interrupt configuration - user button
 void EXTI_Config(void)
 {
-	AFIO->EXTICR[3] |= AFIO_EXTICR4_EXTI13_PC;         //manual strona 124, 4V3!
+	AFIO->EXTICR[0] |= AFIO_EXTICR1_EXTI0_PC;         //manual strona 124, 4V3!
 	EXTI->IMR |= EXTI_IMR_MR1;           				//interrupt (not ivent)
 	EXTI->RTSR |= EXTI_RTSR_TR1;        			//Raising edge - interrupt
 }
@@ -427,7 +423,8 @@ void DMA_Config(void)
 	DMA1_Channel7->CNDTR = usart_data_number;   // number of data to transfer
 	DMA1_Channel7->CCR |= DMA_CCR7_MSIZE_0 | DMA_CCR7_TCIE | DMA_CCR7_MINC
 			| DMA_CCR7_PSIZE_0 | DMA_CCR7_DIR | DMA_CCR7_PL_1;
-	//memory size - half | periph size - half | Periph to memory: 0x00000000 | circular mode | memory increment | enable | priority
+	//memory size - half | periph size - half | Periph to memory: 0x00000000
+	// | circular mode | memory increment | enable | priority
 
 	USART2->SR &= ~USART_SR_TC;
 
@@ -441,7 +438,7 @@ void ADC_Config(volatile unsigned int *tab)
 	ADC1->CR2 = ADC_CR2_ADON | ADC_CR2_CONT | ADC_CR2_DMA; // Turn on ADC, enable continuos mode, DMA mode
 	ADC1->CR1 = ADC_CR1_SCAN;          // interrupt - end of conv.  ,  scan mode
 	ADC1->SQR1 = ADC_SEQUENCE_LENGTH(1);         // two channel in sequence
-	ADC1->SQR3 = ADC_SEQ1(10) | ADC_SEQ2(11); // ADC channel 10 is first in sequence, channel 11 is second in sequence and so on...
+	ADC1->SQR3 = ADC_SEQ1(10) | ADC_SEQ2(13); // ADC channel 10 is first in sequence, channel 11 is second in sequence and so on...
 	ADC1->SMPR1 = ADC_SAMPLE_TIME0(SAMPLE_TIME_41_5) | // sample time for first channel
 			ADC_SAMPLE_TIME1(SAMPLE_TIME_41_5); // sample time for second channel in sequence
 
@@ -452,7 +449,8 @@ void ADC_Config(volatile unsigned int *tab)
 	DMA1_Channel1->CNDTR = 2; // number of data to transfer
 	DMA1_Channel1->CCR |= DMA_CCR1_MSIZE_1 | DMA_CCR1_CIRC | DMA_CCR1_MINC
 			| DMA_CCR1_PSIZE_0;
-	//memory size - half | periph size - half | Periph to memory| circular mode | memory increment | enable
+	//memory size - half | periph size - half | Periph to memory| circular mode
+	// | memory increment | enable
 	DMA1_Channel1->CCR |= DMA_CCR1_EN; //Enable DMA Channel1
 	ADC1->CR2 |= ADC_CR2_ADON;         //Enable ADC
 }

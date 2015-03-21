@@ -21,37 +21,34 @@
 #include "states/stateTakeCan.h"
 #include "states/stateLeaveCan.h"
 #include "states/stateManual.h"
+#include "stdio.h"
 
 int main(void)
 {
 	//Configuration of all peripherials (GPIO, UART, I2C, TIMERS etc)
 	initializeGlobalVariables();
-	time__ = 0;
 	configurePeripherials();
 
 	//Initialize global variables
 	changeState( STATE_INIT, REASON_PROGRAM_RESET);
 
-	sendMessage("twojstary\n");
-	int a,b = 0;
 	//Endless loop
 	while (1)
 	{
-		for (a = 0; a < 5000; a++)
-			;
-		time__ = time;
-		//gyro_update_direction();
-		sharp_update();
-		battery_update();
-		b++;
-		if(!(b%50000))
-			sendMessage("heheszki ! ..\n");
-		/*
-		 //wait loopWaitTime between iterations
-		 while(time - lastLoopTime < loopWaitTime)
+		//wait loopWaitTime between iterations
+		 while(getMicroseconds() - lastLoopTime < 100* loopWaitTime)
 		 {}
-		 lastLoopTime = time;
+		 lastLoopTime = getMicroseconds();
 
+		readSensors();
+		char msg[200];
+		snprintf(msg, 200, "%d %d\n\r\n", (int)totalDistanceLeft, (int)totalDistanceRight);
+		sendMessage(msg);
+
+
+
+
+		 /*
 		 //Update sensor readings and controller output
 		 readSensors();
 		 countControllers();
