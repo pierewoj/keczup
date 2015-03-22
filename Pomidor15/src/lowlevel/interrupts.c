@@ -22,72 +22,64 @@ void TIM1_TRG_COM_TIM17_IRQHandler(void) //timer od wysylania rzeczy przez bluet
 	if (TIM17->SR & TIM_SR_UIF) // if UIF flag is set
 	{
 		TIM17->SR &= ~TIM_SR_UIF; // clear UIF flag
-		TIM15->CCR2 = 17;
+		TIM2->CCR2 = 17;       //about 10 ms high PWM state - ultrasonic trigger
 
-		ultra1 = ultra__[0];
-		ultra2 = ultra__[1];
-		ultra3 = ultra__[2];
+		//normalization of ultrasonic sensors data
+		ultra_data_processing();
+		ultra1 = ultra[0];
+		ultra2 = ultra[1];
+		ultra3 = ultra[3];
 	}
 }
 
-void TIM1_BRK_TIM15_IRQHandler(void)
+void TIM2_IRQHandler(void)	//interrupt after each ultrasonic trigger pulse generated
 {
-	if (TIM15->SR & TIM_SR_CC2IF) // if CC2IF flag is set
+	if (TIM2->SR & TIM_SR_CC2IF) // if CC2IF flag is set
 	{
-		//Timer 15 -> reset
-		TIM15->SR &= !(TIM_SR_CC2IF | TIM_SR_CC2OF);
-		TIM15->CCR2 = 0;
-		//Timer 3 -> reset interrupt, overrun flags, set polarity (high), reset counter
+		//Timer 2 reset
+		TIM2->SR &= !(TIM_SR_CC2IF | TIM_SR_CC2OF);			//clear flags
+		TIM2->CCR2 = 0;										//clear counter
+
+		//Timer 3 -> reset interrupt and overwrite flags, set polarity (high), reset counter
 		TIM3->SR &= !(TIM_SR_CC3IF | TIM_SR_CC3OF | TIM_SR_CC4IF | TIM_SR_CC4OF
 				| TIM_SR_CC2IF | TIM_SR_CC2OF);
-		TIM3->CCER &= ~(TIM_CCER_CC3P | TIM_CCER_CC4P | TIM_CCER_CC2P); //reakcja na zbocze narast.
+		TIM3->CCER &= ~(TIM_CCER_CC3P | TIM_CCER_CC4P | TIM_CCER_CC2P );
+		//interrupt after rising edge detected
 		TIM3->CNT = 0;
 		int a;
-		for (a = 0; a < 3; a++)
+		for (a = 0; a < 4 ; a++)
 		{
-			if (pierwsze_zbocze[a])
+			if (a == 2)
+				continue;
+			if (pierwsze_zbocze[a])	//if second edge was not detected - max value
 			{
 				ultra__[a] = ultra_distance_max;
+				//continue;
 			}
 		}
 	}
 }
 
-void TIM3_IRQHandler(void) //timer od wysylania rzeczy przez bluetooth do PC
+void TIM3_IRQHandler(void) //ultrasonic sensor echo capturing timer
 {
-	if (TIM3->SR & TIM_SR_CC3IF) // if CC3IF flag is set
+	//rear ultrasonic sensor PA6
+	/*if (TIM3->SR & TIM_SR_CC1IF) // if CC3IF flag is set
 	{
-
-		TIM3->SR &= !(TIM_SR_CC3IF | TIM_SR_CC3OF);
-		if (!(TIM3->CCER & TIM_CCER_CC3P))
+		TIM3->SR &= !(TIM_SR_CC1IF | TIM_SR_CC1OF);         //clear flags
+		if (!(TIM3->CCER & TIM_CCER_CC1P))			//if rising edge captured
 		{
-			ultra_pom[2] = (TIM3->CCR3);
-			pierwsze_zbocze[2] = 1;
+			ultra_pom[2] = (TIM3->CCR1);					//save counter value
+			pierwsze_zbocze[2] = 1;							//first edge ok
 		}
-		else
+		else										//if falling edge detected
 		{
-			ultra__[2] = (TIM3->CCR3) - ultra_pom[2];
-			pierwsze_zbocze[2] = 0;
+			ultra__[2] = (TIM3->CCR1) - ultra_pom[2];		//save distance
+			pierwsze_zbocze[2] = 0;				//clear first edge - state ok
 		}
-		TIM3->CCER ^= TIM_CCER_CC3P;
-	}
-
-	if (TIM3->SR & TIM_SR_CC4IF) // if CC3IF flag is set
-	{
-		TIM3->SR &= !(TIM_SR_CC4IF | TIM_SR_CC4OF);
-		if (!(TIM3->CCER & TIM_CCER_CC4P))
-		{
-			ultra_pom[1] = (TIM3->CCR4);
-			pierwsze_zbocze[1] = 1;
-		}
-		else
-		{
-			ultra__[1] = (TIM3->CCR4) - ultra_pom[1];
-			pierwsze_zbocze[1] = 0;
-		}
-		TIM3->CCER ^= TIM_CCER_CC4P;
-	}
-
+		TIM3->CCER ^= TIM_CCER_CC1P;
+		//change edge polarization (interrupt afterrising/falling)
+	}*/
+	//front ultrasonic sensor PA7
 	if (TIM3->SR & TIM_SR_CC2IF) // if CC3IF flag is set
 	{
 		TIM3->SR &= !(TIM_SR_CC2IF | TIM_SR_CC2OF);
@@ -102,6 +94,39 @@ void TIM3_IRQHandler(void) //timer od wysylania rzeczy przez bluetooth do PC
 			pierwsze_zbocze[0] = 0;
 		}
 		TIM3->CCER ^= TIM_CCER_CC2P;
+	}
+	//right ultrasonic sensor PB0
+	if (TIM3->SR & TIM_SR_CC3IF) // if CC3IF flag is set
+	{
+
+		TIM3->SR &= !(TIM_SR_CC3IF | TIM_SR_CC3OF);
+		if (!(TIM3->CCER & TIM_CCER_CC3P))
+		{
+			ultra_pom[1] = (TIM3->CCR3);
+			pierwsze_zbocze[1] = 1;
+		}
+		else
+		{
+			ultra__[1] = (TIM3->CCR3) - ultra_pom[1];
+			pierwsze_zbocze[1] = 0;
+		}
+		TIM3->CCER ^= TIM_CCER_CC3P;
+	}
+	//rear ultrasonic sensor PB1
+	if (TIM3->SR & TIM_SR_CC4IF) // if CC3IF flag is set
+	{
+		TIM3->SR &= !(TIM_SR_CC4IF | TIM_SR_CC4OF);
+		if (!(TIM3->CCER & TIM_CCER_CC4P))
+		{
+			ultra_pom[3] = (TIM3->CCR4);
+			pierwsze_zbocze[3] = 1;
+		}
+		else
+		{
+			ultra__[3] = (TIM3->CCR4) - ultra_pom[3];
+			pierwsze_zbocze[3] = 0;
+		}
+		TIM3->CCER ^= TIM_CCER_CC4P;
 	}
 }
 

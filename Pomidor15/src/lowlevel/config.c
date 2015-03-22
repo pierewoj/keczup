@@ -1,8 +1,8 @@
 /*
  * config.c
  *
- *  Created on: Mar 15, 2015
- *      Author: Kuba
+ *  Created on: Mar 22, 2015
+ *      Author: Piotrek
  */
 #include "config.h"
 
@@ -69,7 +69,6 @@ void RCC_Config(void)
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM7, ENABLE);
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM15, ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM16, ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM17, ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6, ENABLE);
@@ -119,7 +118,6 @@ void NVIC_Config(void)
 	// Jezeli tablica wektorow w RAM, to ustaw jej adres na 0x20000000
 	NVIC_SetVectorTable(NVIC_VectTab_RAM, 0x0);
 #else  // VECT_TAB_FLASH	// W przeciwnym wypadku ustaw na 0x08000000	NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x0);#endif
-
 	//Wybranie grupy priorytetów
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
 
@@ -157,7 +155,7 @@ void NVIC_Config(void)
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
-	NVIC_InitStructure.NVIC_IRQChannel = TIM1_BRK_TIM15_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
@@ -206,11 +204,11 @@ void GPIO_Config(void)
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOC, &GPIO_InitStructure);
 
-	//PB15 - ultrasonic sensors trigger (PWM)
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;
+	//PA1 - ultrasonic sensors trigger (PWM)
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(GPIOB, &GPIO_InitStructure);
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
 	//PB0, PB1 - ultrasonic sensors echo
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
@@ -262,20 +260,22 @@ void GPIO_Config(void)
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
 	//KTIRs A0/A1/A4/A5/A11/A12/A15
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6 |  GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_15;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_15;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
 	//KTIRs B3/B4/B5/B12/B13/B14
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_12 | GPIO_Pin_13 |
-			GPIO_Pin_15 | GPIO_Pin_8 | GPIO_Pin_9 ;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_12
+			| GPIO_Pin_13 |
+			GPIO_Pin_15 | GPIO_Pin_8 | GPIO_Pin_9;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 
 	//KTIRs C2/C3/C4/C5/C14/C15
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_11 | GPIO_Pin_12
+			| GPIO_Pin_13;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOC, &GPIO_InitStructure);
@@ -321,43 +321,49 @@ void TIMERs_Config(void)
 
 	//engine's PWM configuration
 	TIM2->PSC = 239;	 // Set prescaler to 24 000 (PSC + 1)
-	TIM2->ARR = 500;	 // Auto reload value 500
+	TIM2->ARR = 1000;	 // Auto reload value 500
+	TIM2->CCR2 = 0;
 	TIM2->CCR3 = 0;	   // Start PWM duty for channel 3
-	TIM2->CCR4 = 500; // Start PWM duty for channel 4
+	TIM2->CCR4 = 1000; // Start PWM duty for channel 4
 	TIM2->CCMR2 = TIM_CCMR2_OC4M_2 | TIM_CCMR2_OC4M_1 |
-	TIM_CCMR2_OC3M_2 | TIM_CCMR2_OC3M_1; // PWM mode on channel 3 & 4
-	TIM2->CCER = TIM_CCER_CC4E | TIM_CCER_CC3E; // Enable compare on channel 3 & 4
+	TIM_CCMR2_OC3M_2 | TIM_CCMR2_OC3M_1;
+	TIM2->CCMR1 = TIM_CCMR1_OC2M_2 | TIM_CCMR1_OC2M_1; // PWM mode on channel 3 & 4
+	TIM2->CCER = TIM_CCER_CC4E | TIM_CCER_CC3E | TIM_CCER_CC2E; // Enable compare on channel 3 & 4
+	TIM2->DIER |= TIM_DIER_CC2IE;
 	TIM2->CR1 = TIM_CR1_CEN;	 // Enable timer
 
 	//ultrasonic sensor echo capturing timer
-	TIM3->PSC = 49;                 //preskaler ustawiony na 1
-	TIM3->ARR = ultra_distance_max; //wartosc do której zlicza licznik i po tym sie zeruje
-	TIM3->CR1 = 0;                 //reset controls register
-	TIM3->CCMR1 |= TIM_CCMR1_CC2S_0;             //timer przepe³nia siê co 24 ms
-	TIM3->CCMR2 |= TIM_CCMR2_CC3S_0 | TIM_CCMR2_CC4S_0; //TI3 as input - detecting edge
+	TIM3->PSC = 49;                 //prescaler set to 50
+	TIM3->ARR = ultra_distance_max; //max counter value
+	TIM3->CR1 = 0;                  //reset controls register
+	TIM3->CCMR1 |= TIM_CCMR1_CC2S_0; //capture-compare mode CH2
+	TIM3->CCMR2 |= TIM_CCMR2_CC3S_0 | TIM_CCMR2_CC4S_0; //capture-compare mode CH3, CH4
+
 	TIM3->CCMR2 |= TIM_CCMR2_IC3F_0 | TIM_CCMR2_IC3F_1 | TIM_CCMR2_IC4F_0
-			| TIM_CCMR2_IC4F_1;
-	TIM3->CCMR1 |= TIM_CCMR1_IC2F_0 | TIM_CCMR1_IC2F_1;
+			| TIM_CCMR2_IC4F_1;	//input capture filter
+	TIM3->CCMR1 |= TIM_CCMR1_IC2F_0 | TIM_CCMR1_IC2F_1;	//input capture filter
 	TIM3->CCER |= TIM_CCER_CC3E | TIM_CCER_CC4E | TIM_CCER_CC2E;
-	TIM3->DIER |= TIM_DIER_CC3IE | TIM_DIER_CC4IE | TIM_DIER_CC2IE; //przerwanie od input capture
-	TIM3->CR1 |= TIM_CR1_CEN;
-	TIM3->CNT = 0x0000;
+		//enable capture compare mode
+	TIM3->DIER |= TIM_DIER_CC3IE | TIM_DIER_CC4IE | TIM_DIER_CC2IE;
+	//copture - compare interrupt enable
+	TIM3->CR1 |= TIM_CR1_CEN;	//counter enable
+	TIM3->CNT = 0x0000;			//clear counter
 
 	//TIMER OD ENKODEROW I USREDNIANIA ODCZYTOW Z SHARP
 	TIM7->PSC = 39999;	         // Set prescaler to 24 000 (PSC + 1)
 	TIM7->ARR = 10;	     // Auto reload value [ms]
 	TIM7->DIER = TIM_DIER_UIE; // Enable update interrupt (timer level)
 	TIM7->CR1 = TIM_CR1_CEN;   // Enable timer
-/*
-	//configuration of ultrasonic sensors trigger (PWM)
-	TIM15->PSC = 399;	 					// Set prescaler to 400 (PSC + 1)
-	TIM15->ARR = 1200;									// Auto reload value 500
-	TIM15->CCMR2 = TIM_CCMR1_OC2M_2 | TIM_CCMR1_OC2M_1; //PWM mode on channel 2
-	TIM15->CCER = TIM_CCER_CC2E; 				// Enable compare on channel 2
-	TIM15->CCR2 = 0;
-	TIM15->DIER |= TIM_DIER_CC2IE; //Capture Compare interrupt enable (after each PWM pulse)
-	TIM15->CR1 = TIM_CR1_CEN;	 						// Enable timer
-*/
+			/*
+			 //configuration of ultrasonic sensors trigger (PWM)
+			 TIM15->PSC = 399;	 					// Set prescaler to 400 (PSC + 1)
+			 TIM15->ARR = 1200;									// Auto reload value 500
+			 TIM15->CCMR1 = TIM_CCMR1_OC2M_2 | TIM_CCMR1_OC2M_1; //PWM mode on channel 2
+			 TIM15->CCER = TIM_CCER_CC2E; 				// Enable compare on channel 2
+			 TIM15->CCR2 = 0;
+			 TIM15->DIER |= TIM_DIER_CC2IE; //Capture Compare interrupt enable (after each PWM pulse)
+			 TIM15->CR1 = TIM_CR1_CEN;	 						// Enable timer
+			 */
 	//TIMER OD WYSYLANIA PRZEZ BLUETOOTH (MELDOWANIA)
 	TIM16->PSC = 39999;	         // Set prescaler to 40 000 (PSC + 1)
 	TIM16->ARR = 150;	           // Auto reload value 1000

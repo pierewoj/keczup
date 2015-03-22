@@ -1,8 +1,8 @@
 /*
  * sensors.c
  *
- *  Created on: Mar 15, 2015
- *      Author: Kuba
+ *  Created on: Mar 22, 2015
+ *      Author: Piotrek
  */
 #include "sensors.h"
 #include <stddef.h>
@@ -20,7 +20,7 @@ void readSensors(void)
 
 inline void battery_update(void)
 {
-	battery = pomiar_adc[0];
+	battery = 100 * pomiar_adc[0] *  0.00241699219; //Voltage = 3 * 3,3V * register_value/4096
 }
 
 inline void sharp_update(void)
@@ -128,4 +128,19 @@ void encodersRead(void)
 	//dystans calkowity w mm
 	totalDistanceLeft = leftTotal * IMP_DIST;
 	totalDistanceRight = rightTotal * IMP_DIST;
+}
+
+inline void ultra_data_processing(void)
+{
+	int a;
+	for (a = 0; a < 4; a++)
+	{
+		if (a == 2)		//there is not rear sensor in 1.5 Pomidor version
+		{
+			ultra[a] = 1000;
+			continue;
+		}
+		ultra[0] = (int) (((ultra__[0]) / linear_coefficient_distance)
+						+ const_distance_from_the_middle_of_the_robot);
+	}
 }

@@ -1,8 +1,8 @@
 /*
  * communication.c
  *
- *  Created on: Mar 15, 2015
- *      Author: Kuba
+ *  Created on: Mar 22, 2015
+ *      Author: Piotrek
  */
 
 #include "global.h"

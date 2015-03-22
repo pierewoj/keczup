@@ -36,13 +36,14 @@ int main(void)
 	while (1)
 	{
 		//wait loopWaitTime between iterations
-		 while(getMicroseconds() - lastLoopTime < 100* loopWaitTime)
-		 {}
+		 while(getMicroseconds() - lastLoopTime <  100 * loopWaitTime)
+		 {
+		 }
 		 lastLoopTime = getMicroseconds();
 
 		readSensors();
 		char msg[200];
-		snprintf(msg, 200, "%d %d\n\r\n", (int)totalDistanceLeft, (int)totalDistanceRight);
+		snprintf(msg, 200, "%d %d %d\n\r\n", (int)totalDistanceLeft, (int)totalDistanceRight, (int)battery);
 		sendMessage(msg);
 
 

@@ -36,7 +36,7 @@ void setRightPWM(double v)
 	}
 
 	if (modul < 1.0000001)
-		TIM2->CCR4 = modul * 500;
+		TIM2->CCR4 = modul * 1000;
 }
 
 void setLeftPWM(double v)
@@ -55,20 +55,20 @@ void setLeftPWM(double v)
 	}
 
 	if (modul < 1.0000001)
-		TIM2->CCR3 = modul * 500;
+		TIM2->CCR3 = modul * 1000;
 }
 
 //Motor stop functions using low/high impedance
 void stopFast(void)
 {
-	TIM2->CCR4 = 500;
-	TIM2->CCR3 = 500;
+	TIM2->CCR4 = 1000;
+	TIM2->CCR3 = 1000;
 	GPIO_SetBits(GPIOC, GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9);
 }
 
 void stopSlow(void)
 {
-	TIM2->CCR4 = 500;
-	TIM2->CCR3 = 500;
+	TIM2->CCR4 = 1000;
+	TIM2->CCR3 = 1000;
 	GPIO_ResetBits(GPIOC, GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9);
 }

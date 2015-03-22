@@ -1,8 +1,8 @@
 /*
  * sensors.h
  *
- *  Created on: Mar 15, 2015
- *      Author: Kuba
+ *  Created on: Mar 22, 2015
+ *      Author: Piotrek
  */
 
 #ifndef SENSORS_H_
@@ -26,11 +26,14 @@ int gyro_initial_values[3];
 void gyro_update_direction(void);
 
 //ULTRADZWIEKI
-unsigned int ultra__[3], ultra_pom[3];
+unsigned int ultra__[4], ultra_pom[4];
 unsigned int ultra1, ultra2, ultra3;
-char pierwsze_zbocze[3];
+char pierwsze_zbocze[4];
 #define ultra_distance_max 65535
+#define const_distance_from_the_middle_of_the_robot 10    //(9.55 cm - approx. mean distance)
+#define linear_coefficient_distance 46.65
 
+void ultra_data_processing(void);
 //Markery
 double PWM_L, PWM_R, POSX, POSY, dist_L, dist_R;
 
