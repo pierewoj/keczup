@@ -73,7 +73,7 @@ void RCC_Config(void)
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM17, ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6, ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, ENABLE);
+	//RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, ENABLE);
 	RCC->APB2ENR |= RCC_APB2ENR_ADC1EN;
 	RCC->AHBENR |= RCC_AHBENR_DMA1EN;
 	RCC->APB1ENR |= RCC_APB1ENR_PWREN | RCC_APB1ENR_BKPEN;
@@ -117,7 +117,10 @@ void NVIC_Config(void)
 #ifdef  VECT_TAB_RAM
 	// Jezeli tablica wektorow w RAM, to ustaw jej adres na 0x20000000
 	NVIC_SetVectorTable(NVIC_VectTab_RAM, 0x0);
-#else  // VECT_TAB_FLASH	// W przeciwnym wypadku ustaw na 0x08000000	NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x0);#endif
+#else  // VECT_TAB_FLASH
+	// W przeciwnym wypadku ustaw na 0x08000000
+	NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x0);
+#endif
 	//Wybranie grupy priorytetów
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
 
@@ -160,10 +163,11 @@ void NVIC_Config(void)
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
+	NVIC_EnableIRQ(TIM2_IRQn);
 
 	NVIC_InitStructure.NVIC_IRQChannel = EXTI0_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
@@ -325,8 +329,7 @@ void TIMERs_Config(void)
 	TIM2->CCR2 = 0;
 	TIM2->CCR3 = 0;	   // Start PWM duty for channel 3
 	TIM2->CCR4 = 1000; // Start PWM duty for channel 4
-	TIM2->CCMR2 = TIM_CCMR2_OC4M_2 | TIM_CCMR2_OC4M_1 |
-	TIM_CCMR2_OC3M_2 | TIM_CCMR2_OC3M_1;
+	TIM2->CCMR2 = TIM_CCMR2_OC4M_2 | TIM_CCMR2_OC4M_1 |TIM_CCMR2_OC3M_2 | TIM_CCMR2_OC3M_1;
 	TIM2->CCMR1 = TIM_CCMR1_OC2M_2 | TIM_CCMR1_OC2M_1; // PWM mode on channel 3 & 4
 	TIM2->CCER = TIM_CCER_CC4E | TIM_CCER_CC3E | TIM_CCER_CC2E; // Enable compare on channel 3 & 4
 	TIM2->DIER |= TIM_DIER_CC2IE;
@@ -345,7 +348,7 @@ void TIMERs_Config(void)
 	TIM3->CCER |= TIM_CCER_CC3E | TIM_CCER_CC4E | TIM_CCER_CC2E;
 		//enable capture compare mode
 	TIM3->DIER |= TIM_DIER_CC3IE | TIM_DIER_CC4IE | TIM_DIER_CC2IE;
-	//copture - compare interrupt enable
+	//capture - compare interrupt enable
 	TIM3->CR1 |= TIM_CR1_CEN;	//counter enable
 	TIM3->CNT = 0x0000;			//clear counter
 
@@ -381,9 +384,9 @@ void TIMERs_Config(void)
 //External interrupt configuration - user button
 void EXTI_Config(void)
 {
-	AFIO->EXTICR[0] |= AFIO_EXTICR1_EXTI0_PC;         //manual strona 124, 4V3!
-	EXTI->IMR |= EXTI_IMR_MR1;           				//interrupt (not ivent)
-	EXTI->RTSR |= EXTI_RTSR_TR1;        			//Raising edge - interrupt
+	AFIO->EXTICR[0] |= AFIO_EXTICR1_EXTI0_PA;         //manual strona 124, 4V3!
+	EXTI->IMR |= EXTI_IMR_MR0;           				//interrupt (not ivent)
+	EXTI->RTSR |= EXTI_RTSR_TR0;        			//Raising edge - interrupt
 }
 
 void I2C_Config(void)
@@ -422,13 +425,13 @@ void USART_Config()
 }
 
 //DMA for USART2 configuration
-void DMA_Config(void)
+void DMA_Config(char *message)
 {
 	DMA1_Channel7->CPAR = (uint32_t) (&(USART2->DR));   //periph adress register
-	DMA1_Channel7->CMAR = (uint32_t) U2_buforTx; //memory address register
+	DMA1_Channel7->CMAR = (uint32_t) message; //memory address register
 	DMA1_Channel7->CNDTR = usart_data_number;   // number of data to transfer
-	DMA1_Channel7->CCR |= DMA_CCR7_MSIZE_0 | DMA_CCR7_TCIE | DMA_CCR7_MINC
-			| DMA_CCR7_PSIZE_0 | DMA_CCR7_DIR | DMA_CCR7_PL_1;
+	DMA1_Channel7->CCR |= DMA_CCR7_TCIE | DMA_CCR7_MINC    // DMA_CCR7_MSIZE_0 | | DMA_CCR7_PSIZE_0
+			 | DMA_CCR7_DIR | DMA_CCR7_PL_1;
 	//memory size - half | periph size - half | Periph to memory: 0x00000000
 	// | circular mode | memory increment | enable | priority
 

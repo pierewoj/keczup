@@ -36,20 +36,19 @@ int main(void)
 	while (1)
 	{
 		//wait loopWaitTime between iterations
-		 while(getMicroseconds() - lastLoopTime <  100 * loopWaitTime)
-		 {
-		 }
-		 lastLoopTime = getMicroseconds();
+		while (getMicroseconds() - lastLoopTime < 100 * loopWaitTime)
+		{
+		}
+		lastLoopTime = getMicroseconds();
 
 		readSensors();
 		char msg[200];
-		snprintf(msg, 200, "%d %d %d\n\r\n", (int)totalDistanceLeft, (int)totalDistanceRight, (int)battery);
+		snprintf(msg, 200, "%d %d %d \n", (int) totalDistanceLeft,
+				(int) totalDistanceRight, (int) gyroDirection);
 		sendMessage(msg);
+		sendMessage("_______\n");
 
-
-
-
-		 /*
+		/*
 		 //Update sensor readings and controller output
 		 readSensors();
 		 countControllers();

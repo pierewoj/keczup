@@ -20,64 +20,74 @@ void readSensors(void)
 
 inline void battery_update(void)
 {
-	battery = 100 * pomiar_adc[0] *  0.00241699219; //Voltage = 3 * 3,3V * register_value/4096
+	battery = pomiar_adc[0] * 0.00241699219; //Voltage = 3 * 3,3V * register_value/4096
 }
 
 inline void sharp_update(void)
 {
-	sharp = pomiar_adc[1];
+	if (pomiar_adc[1] > 700)
+		sharp = 15068 / (pomiar_adc[1] + 1);
+	else
+		sharp = 1000;
 }
 
 void gyro_update_direction(void)
 {
-	__i2c_read(imu_write_address, 0x28, dane_z_imu);
-	gyro_x = (int16_t) (dane_z_imu[1] << 8 | dane_z_imu[0]);
-	gyro_y = (int16_t) (dane_z_imu[3] << 8 | dane_z_imu[2]);
-	gyro_z = (int16_t) (dane_z_imu[5] << 8 | dane_z_imu[4]);
+	/*
+	 * Gyro disabled
 
-	//correction of the initial values
-	gyro_x -= gyro_initial_values[0];
-	gyro_y -= gyro_initial_values[1];
-	gyro_z -= gyro_initial_values[2];
+	 __i2c_read(imu_write_address, 0x28, dane_z_imu);
+	 gyro_x = (int16_t) (dane_z_imu[1] << 8 | dane_z_imu[0]);
+	 gyro_y = (int16_t) (dane_z_imu[3] << 8 | dane_z_imu[2]);
+	 gyro_z = (int16_t) (dane_z_imu[5] << 8 | dane_z_imu[4]);
+
+	 //correction of the initial values
+	 gyro_x -= gyro_initial_values[0];
+	 gyro_y -= gyro_initial_values[1];
+	 gyro_z -= gyro_initial_values[2];
+	 */
 }
-
 void read_ktirs()
 {   // !!! jeszcze nie ustalone piny !!!!
 	ktirFront[1] = (unsigned short int) GPIO_ReadInputDataBit(GPIOC,
-			GPIO_Pin_5);
+	GPIO_Pin_5);
 	ktirFront[0] = (unsigned short int) GPIO_ReadInputDataBit(GPIOB,
-			GPIO_Pin_5);
+	GPIO_Pin_5);
 	ktirFront[3] = (unsigned short int) GPIO_ReadInputDataBit(GPIOA,
-			GPIO_Pin_5);
+	GPIO_Pin_5);
 	ktirFront[2] = (unsigned short int) GPIO_ReadInputDataBit(GPIOA,
-			GPIO_Pin_4);
+	GPIO_Pin_4);
 	ktirFront[5] = (unsigned short int) GPIO_ReadInputDataBit(GPIOC,
-			GPIO_Pin_13);
+	GPIO_Pin_13);
 	ktirFront[4] = (unsigned short int) GPIO_ReadInputDataBit(GPIOB,
-			GPIO_Pin_15);
+	GPIO_Pin_15);
 	ktirFront[6] = (unsigned short int) GPIO_ReadInputDataBit(GPIOB,
-			GPIO_Pin_14);
+	GPIO_Pin_14);
 
-	ktirLeft[2] = (unsigned short int) GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_2);
+	ktirLeft[2] = (unsigned short int) GPIO_ReadInputDataBit(GPIOD,
+	GPIO_Pin_2);
 	ktirLeft[1] = (unsigned short int) GPIO_ReadInputDataBit(GPIOA,
-			GPIO_Pin_11);
+	GPIO_Pin_11);
 	ktirLeft[0] = (unsigned short int) GPIO_ReadInputDataBit(GPIOC,
-			GPIO_Pin_11);
+	GPIO_Pin_11);
 
 	ktirBack[0] = false;
 	ktirBack[1] = false;
-	ktirBack[2] = (unsigned short int) GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6);
-	ktirBack[3] = (unsigned short int) GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_8);
-	ktirBack[4] = (unsigned short int) GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9);
+	ktirBack[2] = (unsigned short int) GPIO_ReadInputDataBit(GPIOA,
+	GPIO_Pin_6);
+	ktirBack[3] = (unsigned short int) GPIO_ReadInputDataBit(GPIOB,
+	GPIO_Pin_8);
+	ktirBack[4] = (unsigned short int) GPIO_ReadInputDataBit(GPIOB,
+	GPIO_Pin_9);
 	ktirBack[5] = false;
 	ktirBack[6] = false;
 
 	ktirRight[0] = (unsigned short int) GPIO_ReadInputDataBit(GPIOC,
-			GPIO_Pin_12);
+	GPIO_Pin_12);
 	ktirRight[1] = (unsigned short int) GPIO_ReadInputDataBit(GPIOA,
-			GPIO_Pin_15);
+	GPIO_Pin_15);
 	ktirRight[2] = (unsigned short int) GPIO_ReadInputDataBit(GPIOA,
-			GPIO_Pin_12);
+	GPIO_Pin_12);
 
 }
 
@@ -93,46 +103,50 @@ void encodersReset(void)
 	TIM_SetCounter(ENC_L_TIM, 0); //lewy
 	TIM_SetCounter(ENC_R_TIM, 0); //prawy
 	__enable_irq();
+	old_left_impulse = 0;
+	old_right_impulse = 0;
 }
 
 void encodersRead(void)
 {
-	//static unsigned int time_old = 0;
-	//wywolywac np co 1ms
+//wywolywac np co 1ms
 	oldLeftEncoder = leftEncoder;
 	leftEncoder = -TIM_GetCounter(ENC_L_TIM);
 	oldRightEncoder = rightEncoder;
 	rightEncoder = TIM_GetCounter(ENC_R_TIM);
 
-	//predkosci w impulsach na szczytanie
+//predkosci w impulsach na szczytanie
 	leftCount = leftEncoder - oldLeftEncoder;
 	rightCount = rightEncoder - oldRightEncoder;
 
-	//predkosci w mm/s
+//predkosci w mm/s
 	velocityLeft = leftCount * IMP_DIST
 			* (1000000. / ((double) (getMicroseconds() - time_old)));
 	velocityRight = rightCount * IMP_DIST
 			* (1000000. / ((double) (getMicroseconds() - time_old)));
 	time_old = getMicroseconds();
 
-	//dystanse
-	//fwdCount = leftCount + rightCount;
-	//rotCount = - (leftCount - rightCount);
-	//fwdTotal += fwdCount;
-	//rotTotal += rotCount;
-
-	//dystans calkowity w impulsach
+//dystans calkowity w impulsach
 	leftTotal += leftCount;
 	rightTotal += rightCount;
 
-	//dystans calkowity w mm
+	//direction update
+	gyroDirection += (IMP_DIST * (rightCount - leftCount) / 3.7972);
+	//const = 3.7972 = 1367/360; 360 degrees,
+	//1367/2 = 683.5 ->mean number of impulses per 1 rotate
+	gyroDirection = angleMakeInRange(gyroDirection);
+	direction = gyroDirection;
+
+//dystans calkowity w mm
 	totalDistanceLeft = leftTotal * IMP_DIST;
 	totalDistanceRight = rightTotal * IMP_DIST;
 }
 
+//normalization of ultrasonic sensors data
 inline void ultra_data_processing(void)
 {
 	int a;
+
 	for (a = 0; a < 4; a++)
 	{
 		if (a == 2)		//there is not rear sensor in 1.5 Pomidor version
@@ -140,7 +154,13 @@ inline void ultra_data_processing(void)
 			ultra[a] = 1000;
 			continue;
 		}
-		ultra[0] = (int) (((ultra__[0]) / linear_coefficient_distance)
-						+ const_distance_from_the_middle_of_the_robot);
+		if (pierwsze_zbocze[a])	//if second edge was not detected - max value
+		{
+			ultra[a] = 1000;
+			continue;
+		}
+		ultra[a] = (int) (((ultra__[a]) / linear_coefficient_distance)
+				+ const_distance_from_the_middle_of_the_robot);
+		//register value to enemy distance [cm] conversion
 	}
 }

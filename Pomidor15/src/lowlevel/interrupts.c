@@ -11,9 +11,7 @@ void TIM1_UP_TIM16_IRQHandler(void) //timer od wysylania rzeczy przez bluetooth 
 	if (TIM16->SR & TIM_SR_UIF) // if UIF flag is set
 	{
 		TIM16->SR &= ~TIM_SR_UIF; // clear UIF flag
-		//melduj();
-		//DMA_Config();
-		//loopCounter = 0;
+		//unused interrupt
 	}
 }
 
@@ -32,7 +30,7 @@ void TIM1_TRG_COM_TIM17_IRQHandler(void) //timer od wysylania rzeczy przez bluet
 	}
 }
 
-void TIM2_IRQHandler(void)	//interrupt after each ultrasonic trigger pulse generated
+void TIM2_IRQHandler(void) //interrupt after each ultrasonic trigger pulse generated
 {
 	if (TIM2->SR & TIM_SR_CC2IF) // if CC2IF flag is set
 	{
@@ -43,42 +41,15 @@ void TIM2_IRQHandler(void)	//interrupt after each ultrasonic trigger pulse gener
 		//Timer 3 -> reset interrupt and overwrite flags, set polarity (high), reset counter
 		TIM3->SR &= !(TIM_SR_CC3IF | TIM_SR_CC3OF | TIM_SR_CC4IF | TIM_SR_CC4OF
 				| TIM_SR_CC2IF | TIM_SR_CC2OF);
-		TIM3->CCER &= ~(TIM_CCER_CC3P | TIM_CCER_CC4P | TIM_CCER_CC2P );
+		TIM3->CCER &= ~(TIM_CCER_CC3P | TIM_CCER_CC4P | TIM_CCER_CC2P);
 		//interrupt after rising edge detected
 		TIM3->CNT = 0;
-		int a;
-		for (a = 0; a < 4 ; a++)
-		{
-			if (a == 2)
-				continue;
-			if (pierwsze_zbocze[a])	//if second edge was not detected - max value
-			{
-				ultra__[a] = ultra_distance_max;
-				//continue;
-			}
-		}
+
 	}
 }
 
 void TIM3_IRQHandler(void) //ultrasonic sensor echo capturing timer
 {
-	//rear ultrasonic sensor PA6
-	/*if (TIM3->SR & TIM_SR_CC1IF) // if CC3IF flag is set
-	{
-		TIM3->SR &= !(TIM_SR_CC1IF | TIM_SR_CC1OF);         //clear flags
-		if (!(TIM3->CCER & TIM_CCER_CC1P))			//if rising edge captured
-		{
-			ultra_pom[2] = (TIM3->CCR1);					//save counter value
-			pierwsze_zbocze[2] = 1;							//first edge ok
-		}
-		else										//if falling edge detected
-		{
-			ultra__[2] = (TIM3->CCR1) - ultra_pom[2];		//save distance
-			pierwsze_zbocze[2] = 0;				//clear first edge - state ok
-		}
-		TIM3->CCER ^= TIM_CCER_CC1P;
-		//change edge polarization (interrupt afterrising/falling)
-	}*/
 	//front ultrasonic sensor PA7
 	if (TIM3->SR & TIM_SR_CC2IF) // if CC3IF flag is set
 	{
@@ -136,10 +107,7 @@ void TIM7_IRQHandler(void)
 	{
 		TIM7->SR &= ~TIM_SR_UIF; // clear UIF flag
 		//ENKODERY
-		encodersRead();
-
 		//Gyroscope
-
 		//SHARPY
 	}
 
@@ -147,12 +115,12 @@ void TIM7_IRQHandler(void)
 
 void EXTI0_IRQHandler(void)
 {
-	if (( EXTI->PR & EXTI_PR_PR0) != 0)
+	if ( EXTI->PR & EXTI_PR_PR0)
 	{
+		EXTI->PR |= EXTI_PR_PR0;
 		buttonStart = !buttonStart;
-		sendMessage("asdasdw\n");
+		//do not send any message - there is a conflict between DMA and EXTI interrupts
 	}
-	EXTI->PR |= EXTI_PR_PR0;
 }
 
 void DMA1_Channel7_IRQHandler(void)
@@ -162,6 +130,6 @@ void DMA1_Channel7_IRQHandler(void)
 		while (!(USART2->SR & USART_SR_TC))
 			;   //jezeli flaga TC nie ustawiona to czekaj
 		DMA1_Channel7->CCR &= ~DMA_CCR7_EN;
-		DMA1->IFCR |= DMA_IFCR_CTCIF7;       //clear TCIF6 flag
+		DMA1->IFCR |= DMA_IFCR_CTCIF7;       //clear TCIF7 flag
 	}
 }

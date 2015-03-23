@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "communication.h"
+#include "config.h"
 
 /*
  * sends message via UART, message hast to end with newline
@@ -24,8 +25,10 @@ void sendMessage(char* msg)
 			break;
 		}
 	}
-
-	uart2_sendArray(msg, i + 1 );
+	usart_data_number = i + 1;
+	while (DMA1_Channel7->CCR & DMA_CCR7_EN)
+		; //wait until DMA disabled after last transfer
+	DMA_Config(msg);	//DMA configuration for the next transfer
 }
 
 //****************************************************//
@@ -54,24 +57,7 @@ void USART3_IRQHandler(void)
 
 void USART2_IRQHandler(void)
 {
-	/*
-	 if(USART_GetITStatus(USART2, USART_IT_TXE) != RESET)
-	 {
-
-
-	 if(U2_bufTxIndex==U2_bufTxMaxIndex-1)                   //Jesli wysylany zostal ostatni znak (\r)
-	 {
-	 USART_ITConfig(USART2, USART_IT_TXE, DISABLE);    //Wylacz przerwanie = koniec transmisji
-	 U2_bufTxIndex = 0;
-	 }
-
-	 else{
-	 USART_SendData(USART2, U2_buforTx[U2_bufTxIndex]);
-	 U2_bufTxIndex++;
-
-	 }
-	 }
-	 */
+	//receive data
 	if (USART_GetITStatus(USART2, USART_IT_RXNE))
 	{
 		U2_buforRx[U2_bufRxIndex] = USART_ReceiveData(USART2);
@@ -83,10 +69,6 @@ void USART2_IRQHandler(void)
 			U2_bufRxIndex = 0;
 			messageProcessor(U2_buforRx, U2_buforRx_Size);
 		}
-
-		//a = USART_ReceiveData(USART2);
-		//USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);
-
 	}
 }
 
@@ -101,21 +83,6 @@ void uart3_sendArray(unsigned short int *arr, unsigned short int n)
 	}
 	U3_bufTxIndex = 0;
 	USART_ITConfig(USART3, USART_IT_TXE, ENABLE);
-}
-
-void uart2_sendArray(char *arr, unsigned short int n)
-{
-	U2_bufTxMaxIndex = n;
-	int i;
-	for (i = 0; i < n; i++)
-	{
-		U2_buforTx[i] = (unsigned short int) *arr;
-		arr++;
-	}
-	usart_data_number = n;
-	U2_bufTxIndex = 0;
-	DMA_Config();
-	//USART_ITConfig(USART2, USART_IT_TXE, ENABLE);
 }
 
 void dynamixel_ustawPozycje(double procent)
