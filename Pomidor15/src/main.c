@@ -40,72 +40,63 @@ int main(void)
 		{
 		}
 		lastLoopTime = getMicroseconds();
-
 		readSensors();
-		char msg[200];
-		snprintf(msg, 200, "%d %d %d \n", (int) totalDistanceLeft,
-				(int) totalDistanceRight, (int) gyroDirection);
-		sendMessage(msg);
-		sendMessage("_______\n");
 
-		/*
-		 //Update sensor readings and controller output
-		 readSensors();
-		 countControllers();
+		//Update sensor readings and controller output
+		readSensors();
+		countControllers();
 
-		 //Update position of Pomidor and enemy
-		 updateOurPosition();
-		 updateEnemyPosition();
+		//Update position of Pomidor and enemy
+		updateOurPosition();
+		updateEnemyPosition();
 
-		 //Finite state machine
-		 switch(state)
-		 {
-		 //Set default values to all global variables
-		 case STATE_INIT:
-		 initializeGlobalVariables();
-		 changeState( STATE_STOP, REASON_VARIABLES_INITIALIZED );
-		 break;
+		//Finite state machine
+		switch (state)
+		{
+		//Set default values to all global variables
+		case STATE_INIT:
+			initializeGlobalVariables();
+			changeState( STATE_STOP, REASON_VARIABLES_INITIALIZED);
+			break;
 
-		 //Stop and wait till user presses button
-		 case STATE_STOP:
-		 stateStop();
-		 break;
+			//Stop and wait till user presses button
+		case STATE_STOP:
+			stateStop();
+			break;
 
-		 //Drive between crossroads
-		 case STATE_GO:
-		 stateGo();
-		 break;
+			//Drive between crossroads
+		case STATE_GO:
+			stateGo();
+			break;
 
-		 //Rotating
-		 case STATE_ROTATE:
-		 stateRotate();
-		 break;
+			//Rotating
+		case STATE_ROTATE:
+			stateRotate();
+			break;
 
-		 //Approach new can and take it
-		 case STATE_TAKE_CAN:
-		 stateTakeCan();
-		 break;
+			//Approach new can and take it
+		case STATE_TAKE_CAN:
+			stateTakeCan();
+			break;
 
-		 //Put can on a base line
-		 case STATE_LEAVE_CAN:
-		 stateLeaveCan();
-		 break;
+			//Put can on a base line
+		case STATE_LEAVE_CAN:
+			stateLeaveCan();
+			break;
 
-		 //Steer robot manually using Bluetooth
-		 case STATE_MANUAL:
-		 stateManual();
-		 break;
+			//Steer robot manually using Bluetooth
+		case STATE_MANUAL:
+			stateManual();
+			break;
 
-		 default:
-		 break;
+		default:
+			break;
 
-		 }
+		}
 
-		 //Motor control
-
-		 if(driveFunction != NULL)
-		 driveFunction();
-		 */
+		//Motor control
+		if (driveFunction != NULL)
+			driveFunction();
 
 	}
 }

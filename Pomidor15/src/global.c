@@ -7,12 +7,11 @@
  * beginning of the program
  */
 
-
 void initializeGlobalVariables(void)
 {
 	time_old = 0;
-	loopWaitTime = 1000; 					//time to wait between main loop iteratinos
-	lastLoopTime = 0; 		 			//time of last loop execution in microseconds
+	loopWaitTime = 1000; 			//time to wait between main loop iteratinos
+	lastLoopTime = 0; 		 	//time of last loop execution in microseconds
 	bool carryingCan = 0;
 	usart_data_number = 0;
 	state = 0;
@@ -23,7 +22,7 @@ void initializeGlobalVariables(void)
 
 unsigned int getMicroseconds(void)
 {
-	return ((((RTC->CNTH) << 16) + RTC->CNTL) * 16);               //time - current time value [us]
+	return ((((RTC->CNTH) << 16) + RTC->CNTL) * 16); //time - current time value [us]
 }
 
 unsigned int getMiliseconds(void)

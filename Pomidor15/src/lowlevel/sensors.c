@@ -20,7 +20,8 @@ void readSensors(void)
 
 inline void battery_update(void)
 {
-	battery = pomiar_adc[0] * 0.00241699219; //Voltage = 3 * 3,3V * register_value/4096
+	//Voltage = 3 * 3,3V * register_value/4096
+	battery = pomiar_adc[0] * 0.00241699219;
 }
 
 inline void sharp_update(void)
@@ -47,6 +48,7 @@ void gyro_update_direction(void)
 	 gyro_z -= gyro_initial_values[2];
 	 */
 }
+
 void read_ktirs()
 {   // !!! jeszcze nie ustalone piny !!!!
 	ktirFront[1] = (unsigned short int) GPIO_ReadInputDataBit(GPIOC,
