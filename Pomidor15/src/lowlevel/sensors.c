@@ -105,6 +105,7 @@ void encodersReset(void)
 	__enable_irq();
 	old_left_impulse = 0;
 	old_right_impulse = 0;
+	gyroDirection = 90;
 }
 
 void encodersRead(void)
@@ -162,5 +163,10 @@ inline void ultra_data_processing(void)
 		ultra[a] = (int) (((ultra__[a]) / linear_coefficient_distance)
 				+ const_distance_from_the_middle_of_the_robot);
 		//register value to enemy distance [cm] conversion
+		if (ultra[a] > 58)	//if second edge was not detected - max value
+		{
+			ultra[a] = 1000;
+			continue;
+		}
 	}
 }
