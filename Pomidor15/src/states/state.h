@@ -21,6 +21,7 @@
 #define REASON_BIG_ANGLE_TO_NEXT_CROSSROAD 2
 #define REASON_ARRIVED_AT_BASELINE 3
 #define REASON_CAN_DETECTED_SHARP 4
+#define REASON_BUTTON_PRESSED 5
 
 void changeState(int newState, int reason);
 

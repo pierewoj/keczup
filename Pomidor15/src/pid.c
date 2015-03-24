@@ -22,7 +22,7 @@ void PID(ControllerState* s, bool currentlyRunning)
 		s->integral = 0;
 	}
 
-//update history for D every "diffInterval" iterations
+	//update history for D every "diffInterval" iterations
 	if (getMicroseconds() - s->lastTimeDiff > s->diffInteral * loopWaitTime)
 	{
 		s->history[1] = s->history[0];
@@ -38,7 +38,8 @@ void PID(ControllerState* s, bool currentlyRunning)
 
 	//count output from P, I and D
 	s->propSignal = s->enabledP * s->kp * error;
-	s->integralSignal = s->enabledI * s->kp / s->ti * s->integral;
+	if (s->ti != 0)
+		s->integralSignal = s->enabledI * s->kp / s->ti * s->integral;
 	s->diffSignal = s->enabledD * s->kp * s->td * d;
 
 	//count total controller output
@@ -90,7 +91,7 @@ void drivePIDForward(void)
 {
 	double s = controllerForward.output;
 
-	double sl = followLineFunction(s), sr = followLineFunction(-s);
+	double sl = followLineFunction(-s), sr = followLineFunction(s);
 
 	setLeftPWM(sl * drivePIDForwardPWMMax);
 	setRightPWM(sr * drivePIDForwardPWMMax);

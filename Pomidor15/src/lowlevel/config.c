@@ -5,7 +5,8 @@
  *      Author: Piotrek
  */
 #include "config.h"
-
+#include "global.h"
+#include "sensors.h"
 void configurePeripherials(void)
 {
 	//STM32 internal peripherials configurations
@@ -21,6 +22,12 @@ void configurePeripherials(void)
 
 	//External devices configurations
 	encodersReset();
+
+	usart_data_number = 0;
+	time_old = 0;
+	gyro_initial_values[0] = 0;
+	gyro_initial_values[1] = 0;
+	gyro_initial_values[2] = 0;
 }
 
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//

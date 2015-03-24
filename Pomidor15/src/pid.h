@@ -24,38 +24,45 @@
  * follow the line forward, PWMMax is the maximum PWM value [0, 1.0]
  */
 void setDrivePIDForward(double PWMMax);
+void drivePIDForward(void);
 
 /*
  * follow the line backward, PWMMax is the maximum PWM value [0, 1.0]
  */
 void setDrivePIDBackward(double PWMMax);
+void drivePIDBackward(void);
 
 /*
  * control the velocity of wheels.
  * velLeft, velRight - desired velocities in mm/s
  */
 void setDriveWheelVelocity(double velLeft, double velRight);
+void driveWheelVelocity(void);
 
 /*
  * Control position of the line under left/right ktirs
  */
 void setDriveSideKtir(void);
+void driveSideKtir(void);
 
 /*
  * Set constant PWM values on both motors.
  * pwmLeft, pwmRight are in [-1.0, 1.0]
  */
 void setDriveWheelPWM(double pwmLeft, double pwmRight);
+void driveWheelPWM(void);
 
 /*
  * Fast stop
  */
 void setDriveStopFast(void);
+void driveStopFast(void);
 
 /*
  * Slow stop
  */
 void setDriveStopSlow(void);
+void driveStopSlow(void);
 
 /*
  * Update controller feedback and calculate output

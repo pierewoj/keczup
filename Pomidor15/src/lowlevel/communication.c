@@ -9,26 +9,25 @@
 #include <stdio.h>
 #include <string.h>
 #include "communication.h"
+#include "../commPC.h"
 #include "config.h"
+#include <stdlib.h>
 
 /*
- * sends message via UART, message hast to end with newline
- * character ('\n')
+ * sends message via UART, appends "\r\n"
  */
 void sendMessage(char* msg)
 {
-	int i = 0;
-	for (i = 0; i < 1000; i++)
-	{
-		if (msg[i] == '\n')
-		{
-			break;
-		}
-	}
-	usart_data_number = i + 1;		//variable used to DMA configuration
+	char* msgNew = malloc(strlen(msg)+2);
+	strcpy(msgNew, msg);
+	strcat(msgNew, "\r\n");
+	usart_data_number = strlen(msgNew);
+
 	while (DMA1_Channel7->CCR & DMA_CCR7_EN)
 		; //wait until DMA disabled after last transfer
-	DMA_Config(msg);	//DMA configuration for the next transfer
+	DMA_Config(msgNew);	//DMA configuration for the next transfer
+
+	free(msgNew);
 }
 
 //****************************************************//
@@ -119,12 +118,7 @@ void dynamixel_ustawPozycje(double procent)
  */
 void messageProcessor(char* msg, int msgLength)
 {
-	char command[20]; //maximum command length is 20
-	sscanf(msg, "%20s", command);
-	if (strcmp(command, "START") == 0) //received "START" command
-	{
-		sendMessage("JAZDA!!!!!!!\n");
-	}
+	messageReceived(msg,msgLength);
 }
 
 //****************************************************//
@@ -217,10 +211,3 @@ void __i2c_read(uint8_t address, uint8_t reg_address, uint8_t* data)
  */
 
 //sends values of state variables via UART
-void sendAllVariables(void)
-{
-	char messageBuffer[400];
-	snprintf(messageBuffer, 400, "%d\n", state);
-
-	sendMessage(messageBuffer);
-}

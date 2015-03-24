@@ -1,5 +1,9 @@
 #include "global.h"
 #include "lowlevel/sensors.h"
+#include "states/state.h"
+#include "settings.h"
+#include "location.h"
+#include "strategy.h"
 
 //jakies tam komentarze dupa dupa dupa...
 /*
@@ -9,15 +13,42 @@
 
 void initializeGlobalVariables(void)
 {
-	time_old = 0;
+
 	loopWaitTime = 1000; 			//time to wait between main loop iteratinos
 	lastLoopTime = 0; 		 	//time of last loop execution in microseconds
-	bool carryingCan = 0;
-	usart_data_number = 0;
-	state = 0;
-	gyro_initial_values[0] = 0;
-	gyro_initial_values[1] = 0;
-	gyro_initial_values[2] = 0;
+	carryingCan = 0;
+	state = STATE_INIT;
+	prevState = STATE_INIT;
+	reasonChangeState = REASON_PROGRAM_RESET;
+	position.x = 600;
+	position.y = - settingDistanceMidBeginning;
+	direction = 90;
+
+	int i,j;
+	for(i=0;i<5;i++)
+		for(j=0;j<5;j++)
+		{
+			enemyTimes[i][j] = -60*1000;
+			visitTimes[i][j] = -60*1000;
+		}
+
+	nextCrossroad.i = 2;
+	nextCrossroad.j = 1;
+	strategyInit();
+
+	controllerForward.diffInteral  = 1;
+	controllerForward.enabledP = 1;
+	controllerForward.kp = 1;
+	controllerForward.target = 3.5;
+
+	controllerLeftWheelSpeed.diffInteral = 1;
+	controllerLeftWheelSpeed.enabledP = 1;
+	controllerLeftWheelSpeed.kp = 0.001;
+
+	controllerRightWheelSpeed.diffInteral = 1;
+	controllerRightWheelSpeed.enabledP = 1;
+	controllerRightWheelSpeed.kp = 0.001;
+
 }
 
 unsigned int getMicroseconds(void)

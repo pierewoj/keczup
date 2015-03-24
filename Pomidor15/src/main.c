@@ -22,6 +22,7 @@
 #include "states/stateLeaveCan.h"
 #include "states/stateManual.h"
 #include "stdio.h"
+#include "commPC.h"
 
 int main(void)
 {
@@ -36,11 +37,10 @@ int main(void)
 	while (1)
 	{
 		//wait loopWaitTime between iterations
-		while (getMicroseconds() - lastLoopTime < 100 * loopWaitTime)
+		while (getMicroseconds() - lastLoopTime < 100*loopWaitTime)
 		{
 		}
 		lastLoopTime = getMicroseconds();
-		readSensors();
 
 		//Update sensor readings and controller output
 		readSensors();
@@ -49,6 +49,9 @@ int main(void)
 		//Update position of Pomidor and enemy
 		updateOurPosition();
 		updateEnemyPosition();
+
+		//debug
+		sendToPC();
 
 		//Finite state machine
 		switch (state)

@@ -7,6 +7,8 @@
 
 //unlocks the can
 #include "effectors.h"
+#include "../global.h"
+#include <math.h>
 
 void openFrame(void)
 {
@@ -22,7 +24,12 @@ void closeFrame(void)
 //set PWM values controlling engines. Values [-1.0 .. +1.0]. + is forward.
 void setRightPWM(double v)
 {
+	//make sure v is in [-1;1]
+	v = fmin(1,fmax(-1,v));
 	double modul = fabs(v);
+
+	//for sending it to PC
+	pwmRight = v;
 
 	if (v > 0)
 	{
@@ -41,7 +48,12 @@ void setRightPWM(double v)
 
 void setLeftPWM(double v)
 {
+	//make sure v is in [-1;1]
+	v = fmin(1,fmax(-1,v));
 	double modul = fabs(v);
+
+	//for sending it to PC
+	pwmLeft = v;
 
 	if (v > 0)
 	{

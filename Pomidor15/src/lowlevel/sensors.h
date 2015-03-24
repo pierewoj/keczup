@@ -51,6 +51,7 @@ double V_L, V_R;
 #define ENC_L_TIM              	TIM1                     // timer's macros
 #define ENC_R_TIM              	TIM4
 
+unsigned int time_old;
 volatile int16_t leftCount;								//speeds
 volatile int16_t rightCount;
 volatile int16_t fwdCount;

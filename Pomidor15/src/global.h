@@ -21,7 +21,7 @@
 
 unsigned int getMiliseconds(void);
 unsigned int getMicroseconds(void);
-unsigned int time_old;
+
 int state, prevState, reasonChangeState;
 void (*driveFunction)(void); //pointer to a function which controls motors
 unsigned long loopWaitTime; //time to wait between main loop iteratinos
@@ -90,6 +90,16 @@ bool buttonStart;
  * current voltage of battery in volts
  */
 double battery;
+
+/*
+ * is frame clossed? readonly
+ */
+bool frameClosed;
+
+/*
+ * current pwm steering signals, readonly
+ */
+double pwmLeft, pwmRight;
 
 //-----------------Functions------------------//
 

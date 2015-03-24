@@ -2,12 +2,19 @@
 #define LOCATION_H_
 
 #include "stdbool.h"
+#include "geometry.h"
 /*
  * functions in this file provide finding a way to the recent target
  * (Point getRecentTarget() from "staregy.c")
  *
  * Changing current target should be done "manually" in states.
  */
+
+/*
+ * position of next crossroad to be visited. Should be accessed directly from
+ * current position
+ */
+Point nextCrossroad;
 
 /*
  * updates robot position, direction and performs snap

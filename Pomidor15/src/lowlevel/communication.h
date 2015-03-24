@@ -15,7 +15,6 @@ void messageProcessor(char* msg, int msgLength);
 
 //sends a message via USART
 void sendMessage(char* msg);
-void sendAllVariables(void);
 
 //***********************__USART__*********************************//
 

@@ -9,6 +9,9 @@
 //distance in MM between center of robot to the front KTIR line
 double settingDistanceMidToKtir = 70;
 
+//distance from baseline to center of robot at the beggining of the round
+double settingDistanceMidBeginning = -70;
+
 //importance of distance to the target in finding nextCrossroad
 double settingLocationWeightDistance = 10;
 
@@ -32,3 +35,6 @@ double settingAngleToBeginRotate = 30;
 
 //Minimum Sharp reading in cm to detect can
 double settingSharpThresh = 7;
+
+//Send uart message every X iterations
+double settingBluetoothInterval = 100;

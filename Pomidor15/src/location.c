@@ -3,12 +3,8 @@
 #include "global.h"
 #include "geometry.h"
 #include "math.h"
+#include "location.h"
 
-/*
- * position of next crossroad to be visited. Should be accessed directly from
- * current position
- */
-Point nextCrossroad;
 
 /*
  * last value of gyroDirection reading. Difference between current and las value
