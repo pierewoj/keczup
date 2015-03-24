@@ -51,10 +51,6 @@ double V_L, V_R;
 #define ENC_L_TIM              	TIM1                     // timer's macros
 #define ENC_R_TIM              	TIM4
 
-int old_left_impulse, old_right_impulse;
-int new_left_impulse, new_right_impulse;
-#define accuracy 0.98
-
 volatile int16_t leftCount;								//speeds
 volatile int16_t rightCount;
 volatile int16_t fwdCount;

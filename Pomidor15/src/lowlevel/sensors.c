@@ -10,6 +10,7 @@
 #include "communication.h"
 #include "../global.h"
 
+//read selected sensors
 void readSensors(void)
 {
 	encodersRead();
@@ -18,12 +19,14 @@ void readSensors(void)
 	read_ktirs();
 }
 
+//battery voltage updating
 inline void battery_update(void)
 {
 	//Voltage = 3 * 3,3V * register_value/4096
 	battery = pomiar_adc[0] * 0.00241699219;
 }
 
+//sharp distance updating
 inline void sharp_update(void)
 {
 	if (pomiar_adc[1] > 700)
@@ -32,6 +35,7 @@ inline void sharp_update(void)
 		sharp = 1000;
 }
 
+//angular velocity updating
 void gyro_update_direction(void)
 {
 	/*
@@ -49,8 +53,10 @@ void gyro_update_direction(void)
 	 */
 }
 
+//read line sensors
 void read_ktirs()
-{   // !!! jeszcze nie ustalone piny !!!!
+{
+	//front sensors
 	ktirFront[1] = (unsigned short int) GPIO_ReadInputDataBit(GPIOC,
 	GPIO_Pin_5);
 	ktirFront[0] = (unsigned short int) GPIO_ReadInputDataBit(GPIOB,
@@ -66,6 +72,7 @@ void read_ktirs()
 	ktirFront[6] = (unsigned short int) GPIO_ReadInputDataBit(GPIOB,
 	GPIO_Pin_14);
 
+	//left sensors
 	ktirLeft[2] = (unsigned short int) GPIO_ReadInputDataBit(GPIOD,
 	GPIO_Pin_2);
 	ktirLeft[1] = (unsigned short int) GPIO_ReadInputDataBit(GPIOA,
@@ -73,6 +80,7 @@ void read_ktirs()
 	ktirLeft[0] = (unsigned short int) GPIO_ReadInputDataBit(GPIOC,
 	GPIO_Pin_11);
 
+	//rear sensors
 	ktirBack[0] = false;
 	ktirBack[1] = false;
 	ktirBack[2] = (unsigned short int) GPIO_ReadInputDataBit(GPIOA,
@@ -84,52 +92,52 @@ void read_ktirs()
 	ktirBack[5] = false;
 	ktirBack[6] = false;
 
+	//right sensors
 	ktirRight[0] = (unsigned short int) GPIO_ReadInputDataBit(GPIOC,
 	GPIO_Pin_12);
 	ktirRight[1] = (unsigned short int) GPIO_ReadInputDataBit(GPIOA,
 	GPIO_Pin_15);
 	ktirRight[2] = (unsigned short int) GPIO_ReadInputDataBit(GPIOA,
 	GPIO_Pin_12);
-
 }
 
+//encoders reset
 void encodersReset(void)
 {
-	__disable_irq();
+	__disable_irq();	//interrupts disable
 	oldLeftEncoder = 0;
 	oldRightEncoder = 0;
 	leftTotal = 0;
 	rightTotal = 0;
 	fwdTotal = 0;
 	rotTotal = 0;
-	TIM_SetCounter(ENC_L_TIM, 0); //lewy
-	TIM_SetCounter(ENC_R_TIM, 0); //prawy
+	TIM_SetCounter(ENC_L_TIM, 0); //left
+	TIM_SetCounter(ENC_R_TIM, 0); //right
 	__enable_irq();
-	old_left_impulse = 0;
-	old_right_impulse = 0;
 	gyroDirection = 90;
 }
 
+//update encoders values
 void encodersRead(void)
 {
-//wywolywac np co 1ms
+//read encoder sensors and set old values
 	oldLeftEncoder = leftEncoder;
 	leftEncoder = -TIM_GetCounter(ENC_L_TIM);
 	oldRightEncoder = rightEncoder;
 	rightEncoder = TIM_GetCounter(ENC_R_TIM);
 
-//predkosci w impulsach na szczytanie
+//velocity impulse per reading
 	leftCount = leftEncoder - oldLeftEncoder;
 	rightCount = rightEncoder - oldRightEncoder;
 
-//predkosci w mm/s
+//velocity computing mm/s
 	velocityLeft = leftCount * IMP_DIST
 			* (1000000. / ((double) (getMicroseconds() - time_old)));
 	velocityRight = rightCount * IMP_DIST
 			* (1000000. / ((double) (getMicroseconds() - time_old)));
 	time_old = getMicroseconds();
 
-//dystans calkowity w impulsach
+//total distance in impulses
 	leftTotal += leftCount;
 	rightTotal += rightCount;
 
@@ -140,7 +148,7 @@ void encodersRead(void)
 	gyroDirection = angleMakeInRange(gyroDirection);
 	direction = gyroDirection;
 
-//dystans calkowity w mm
+	//total distance in mm
 	totalDistanceLeft = leftTotal * IMP_DIST;
 	totalDistanceRight = rightTotal * IMP_DIST;
 }
@@ -165,10 +173,10 @@ inline void ultra_data_processing(void)
 		ultra[a] = (int) (((ultra__[a]) / linear_coefficient_distance)
 				+ const_distance_from_the_middle_of_the_robot);
 		//register value to enemy distance [cm] conversion
-		if (ultra[a] > 58)	//if second edge was not detected - max value
+
+		if (ultra[a] > 58)	//low-pass filter, high bandwidth - unstable
 		{
 			ultra[a] = 1000;
-			continue;
 		}
 	}
 }

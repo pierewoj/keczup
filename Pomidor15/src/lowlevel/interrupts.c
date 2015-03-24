@@ -6,16 +6,8 @@
  */
 #include "interrupts.h"
 
-void TIM1_UP_TIM16_IRQHandler(void) //timer od wysylania rzeczy przez bluetooth do PC
-{
-	if (TIM16->SR & TIM_SR_UIF) // if UIF flag is set
-	{
-		TIM16->SR &= ~TIM_SR_UIF; // clear UIF flag
-		//unused interrupt
-	}
-}
-
-void TIM1_TRG_COM_TIM17_IRQHandler(void) //timer od wysylania rzeczy przez bluetooth do PC
+//interrupt for ultrasonic sensors data processing
+void TIM1_TRG_COM_TIM17_IRQHandler(void)
 {
 	if (TIM17->SR & TIM_SR_UIF) // if UIF flag is set
 	{
@@ -43,8 +35,7 @@ void TIM2_IRQHandler(void) //interrupt after each ultrasonic trigger pulse gener
 				| TIM_SR_CC2IF | TIM_SR_CC2OF);
 		TIM3->CCER &= ~(TIM_CCER_CC3P | TIM_CCER_CC4P | TIM_CCER_CC2P);
 		//interrupt after rising edge detected
-		TIM3->CNT = 0;
-
+		TIM3->CNT = 0;	//clear counter register
 	}
 }
 
@@ -54,17 +45,18 @@ void TIM3_IRQHandler(void) //ultrasonic sensor echo capturing timer
 	if (TIM3->SR & TIM_SR_CC2IF) // if CC3IF flag is set
 	{
 		TIM3->SR &= !(TIM_SR_CC2IF | TIM_SR_CC2OF);
-		if (!(TIM3->CCER & TIM_CCER_CC2P))
+		if (!(TIM3->CCER & TIM_CCER_CC2P))	//rising edge response
 		{
-			ultra_pom[0] = (TIM3->CCR2);
+			ultra_pom[0] = (TIM3->CCR2);	//capture counter value
 			pierwsze_zbocze[0] = 1;
 		}
-		else
+		else								//falling edge response
 		{
 			ultra__[0] = (TIM3->CCR2) - ultra_pom[0];
-			pierwsze_zbocze[0] = 0;
+			//capture counter value (falling edge) and substract previous value (rising edge)
+			pierwsze_zbocze[0] = 0;		//both edges detected - ok
 		}
-		TIM3->CCER ^= TIM_CCER_CC2P;
+		TIM3->CCER ^= TIM_CCER_CC2P;	//change polarity (rising/falling)
 	}
 	//right ultrasonic sensor PB0
 	if (TIM3->SR & TIM_SR_CC3IF) // if CC3IF flag is set
@@ -83,7 +75,7 @@ void TIM3_IRQHandler(void) //ultrasonic sensor echo capturing timer
 		}
 		TIM3->CCER ^= TIM_CCER_CC3P;
 	}
-	//rear ultrasonic sensor PB1
+	//left ultrasonic sensor PB1
 	if (TIM3->SR & TIM_SR_CC4IF) // if CC3IF flag is set
 	{
 		TIM3->SR &= !(TIM_SR_CC4IF | TIM_SR_CC4OF);
@@ -101,18 +93,7 @@ void TIM3_IRQHandler(void) //ultrasonic sensor echo capturing timer
 	}
 }
 
-void TIM7_IRQHandler(void)
-{
-	if (TIM7->SR & TIM_SR_UIF) // if UIF flag is set
-	{
-		TIM7->SR &= ~TIM_SR_UIF; // clear UIF flag
-		//ENKODERY
-		//Gyroscope
-		//SHARPY
-	}
-
-}
-
+//user button interrupt
 void EXTI0_IRQHandler(void)
 {
 	if ( EXTI->PR & EXTI_PR_PR0)
@@ -128,8 +109,8 @@ void DMA1_Channel7_IRQHandler(void)
 	if (DMA1->ISR & DMA_ISR_TCIF7)
 	{
 		while (!(USART2->SR & USART_SR_TC))
-			;   //jezeli flaga TC nie ustawiona to czekaj
-		DMA1_Channel7->CCR &= ~DMA_CCR7_EN;
+			;   //if TC flag is not set then wait
+		DMA1_Channel7->CCR &= ~DMA_CCR7_EN;	 //DMA disable
 		DMA1->IFCR |= DMA_IFCR_CTCIF7;       //clear TCIF7 flag
 	}
 }

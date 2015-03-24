@@ -21,7 +21,6 @@ void configurePeripherials(void)
 
 	//External devices configurations
 	encodersReset();
-	//gyro_config();
 }
 
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
@@ -68,12 +67,9 @@ void RCC_Config(void)
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM7, ENABLE);
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM16, ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM17, ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6, ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
-	//RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, ENABLE);
 	RCC->APB2ENR |= RCC_APB2ENR_ADC1EN;
 	RCC->AHBENR |= RCC_AHBENR_DMA1EN;
 	RCC->APB1ENR |= RCC_APB1ENR_PWREN | RCC_APB1ENR_BKPEN;
@@ -117,9 +113,7 @@ void NVIC_Config(void)
 #ifdef  VECT_TAB_RAM
 	// Jezeli tablica wektorow w RAM, to ustaw jej adres na 0x20000000
 	NVIC_SetVectorTable(NVIC_VectTab_RAM, 0x0);
-#else  // VECT_TAB_FLASH
-	// W przeciwnym wypadku ustaw na 0x08000000
-	NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x0);
+#else  // VECT_TAB_FLASH	// W przeciwnym wypadku ustaw na 0x08000000	NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x0);
 #endif
 	//Wybranie grupy priorytetów
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
@@ -142,18 +136,6 @@ void NVIC_Config(void)
 	//Przerwanie od TIM3
 	NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init(&NVIC_InitStructure);
-
-	NVIC_InitStructure.NVIC_IRQChannel = TIM1_UP_TIM16_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;
-	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init(&NVIC_InitStructure);
-
-	NVIC_InitStructure.NVIC_IRQChannel = TIM7_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
@@ -264,7 +246,8 @@ void GPIO_Config(void)
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
 	//KTIRs A0/A1/A4/A5/A11/A12/A15
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_15;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6
+			| GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_15;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
@@ -312,24 +295,25 @@ void GPIO_Config(void)
 void TIMERs_Config(void)
 {
 	//configuration of left wheel's encoder
-	TIM1->SMCR |= TIM_SMCR_SMS_0 | TIM_SMCR_SMS_1; // liczy sygnaly z obydwu kanalow timera
-	TIM1->CCER &= !(TIM_CCER_CC1P | TIM_CCER_CC2P); // clear - ustawienie polaryzacji na rosnace wzbocze
-	TIM1->ARR = 0xffff;									// wartosc auto reload
-	TIM1->CR1 |= TIM_CR1_CEN;							// wlaczenie
+	TIM1->SMCR |= TIM_SMCR_SMS_0 | TIM_SMCR_SMS_1; // count impulses from both of timers channels
+	TIM1->CCER &= !(TIM_CCER_CC1P | TIM_CCER_CC2P); // set polarization on rising edge
+	TIM1->ARR = 0xffff;									// auto reload value
+	TIM1->CR1 |= TIM_CR1_CEN;							// TIMER enable
 
 	//configuration of right wheel's encoder
-	TIM4->SMCR |= TIM_SMCR_SMS_0 | TIM_SMCR_SMS_1;// liczy sygnaly z obydwu kanalow timera
-	TIM4->CCER &= !(TIM_CCER_CC1P | TIM_CCER_CC2P);	// clear - ustawienie polaryzacji na rosnace wzbocze
-	TIM4->ARR = 0xffff;									// wartosc auto reload
-	TIM4->CR1 |= TIM_CR1_CEN;							// wlaczenie
+	TIM4->SMCR |= TIM_SMCR_SMS_0 | TIM_SMCR_SMS_1;// count impulses from both of timers channels
+	TIM4->CCER &= !(TIM_CCER_CC1P | TIM_CCER_CC2P);	// set polarization on rising edge
+	TIM4->ARR = 0xffff;									// auto reload value
+	TIM4->CR1 |= TIM_CR1_CEN;							// TIMER enable
 
 	//engine's PWM configuration
-	TIM2->PSC = 239;	 // Set prescaler to 24 000 (PSC + 1)
-	TIM2->ARR = 1000;	 // Auto reload value 500
-	TIM2->CCR2 = 0;
+	TIM2->PSC = 239;	 // Set prescaler to 240 (PSC + 1)
+	TIM2->ARR = 1000;	 // Auto reload value 1000
+	TIM2->CCR2 = 0;		//PWM for ultrasonic sensors
 	TIM2->CCR3 = 0;	   // Start PWM duty for channel 3
 	TIM2->CCR4 = 1000; // Start PWM duty for channel 4
-	TIM2->CCMR2 = TIM_CCMR2_OC4M_2 | TIM_CCMR2_OC4M_1 |TIM_CCMR2_OC3M_2 | TIM_CCMR2_OC3M_1;
+	TIM2->CCMR2 = TIM_CCMR2_OC4M_2 | TIM_CCMR2_OC4M_1 | TIM_CCMR2_OC3M_2
+			| TIM_CCMR2_OC3M_1;
 	TIM2->CCMR1 = TIM_CCMR1_OC2M_2 | TIM_CCMR1_OC2M_1; // PWM mode on channel 3 & 4
 	TIM2->CCER = TIM_CCER_CC4E | TIM_CCER_CC3E | TIM_CCER_CC2E; // Enable compare on channel 3 & 4
 	TIM2->DIER |= TIM_DIER_CC2IE;
@@ -346,35 +330,13 @@ void TIMERs_Config(void)
 			| TIM_CCMR2_IC4F_1;	//input capture filter
 	TIM3->CCMR1 |= TIM_CCMR1_IC2F_0 | TIM_CCMR1_IC2F_1;	//input capture filter
 	TIM3->CCER |= TIM_CCER_CC3E | TIM_CCER_CC4E | TIM_CCER_CC2E;
-		//enable capture compare mode
+	//enable capture compare mode
 	TIM3->DIER |= TIM_DIER_CC3IE | TIM_DIER_CC4IE | TIM_DIER_CC2IE;
 	//capture - compare interrupt enable
 	TIM3->CR1 |= TIM_CR1_CEN;	//counter enable
 	TIM3->CNT = 0x0000;			//clear counter
 
-	//TIMER OD ENKODEROW I USREDNIANIA ODCZYTOW Z SHARP
-	TIM7->PSC = 39999;	         // Set prescaler to 24 000 (PSC + 1)
-	TIM7->ARR = 10;	     // Auto reload value [ms]
-	TIM7->DIER = TIM_DIER_UIE; // Enable update interrupt (timer level)
-	TIM7->CR1 = TIM_CR1_CEN;   // Enable timer
-			/*
-			 //configuration of ultrasonic sensors trigger (PWM)
-			 TIM15->PSC = 399;	 					// Set prescaler to 400 (PSC + 1)
-			 TIM15->ARR = 1200;									// Auto reload value 500
-			 TIM15->CCMR1 = TIM_CCMR1_OC2M_2 | TIM_CCMR1_OC2M_1; //PWM mode on channel 2
-			 TIM15->CCER = TIM_CCER_CC2E; 				// Enable compare on channel 2
-			 TIM15->CCR2 = 0;
-			 TIM15->DIER |= TIM_DIER_CC2IE; //Capture Compare interrupt enable (after each PWM pulse)
-			 TIM15->CR1 = TIM_CR1_CEN;	 						// Enable timer
-			 */
-	//TIMER OD WYSYLANIA PRZEZ BLUETOOTH (MELDOWANIA)
-	TIM16->PSC = 39999;	         // Set prescaler to 40 000 (PSC + 1)
-	TIM16->ARR = 150;	           // Auto reload value 1000
-	TIM16->DIER = TIM_DIER_UIE; // Enable update interrupt (timer level)
-	TIM16->CR1 = TIM_CR1_CEN;   // Enable timer
-	// NVIC->ISER[TIM1_UP_TIM16_IRQn >> 5] |= (1 << (TIM1_UP_TIM16_IRQn & 0x1F));   // Enable interrupt from TIM13 (NVIC level)
-
-	//TIMER OD ENKODEROW I USREDNIANIA ODCZYTOW Z SHARP
+	//ultrasonic sensors data processing timer
 	TIM17->PSC = 39999;	         // Set prescaler to 24 000 (PSC + 1)
 	TIM17->ARR = 20;	         // Auto reload value [ms]
 	TIM17->DIER = TIM_DIER_UIE;  // Enable update interrupt (timer level)
@@ -430,8 +392,8 @@ void DMA_Config(char *message)
 	DMA1_Channel7->CPAR = (uint32_t) (&(USART2->DR));   //periph adress register
 	DMA1_Channel7->CMAR = (uint32_t) message; //memory address register
 	DMA1_Channel7->CNDTR = usart_data_number;   // number of data to transfer
-	DMA1_Channel7->CCR |= DMA_CCR7_TCIE | DMA_CCR7_MINC    // DMA_CCR7_MSIZE_0 | | DMA_CCR7_PSIZE_0
-			 | DMA_CCR7_DIR | DMA_CCR7_PL_1;
+	DMA1_Channel7->CCR |= DMA_CCR7_TCIE | DMA_CCR7_MINC // DMA_CCR7_MSIZE_0 | | DMA_CCR7_PSIZE_0
+			| DMA_CCR7_DIR | DMA_CCR7_PL_1;
 	//memory size - half | periph size - half | Periph to memory: 0x00000000
 	// | circular mode | memory increment | enable | priority
 
@@ -445,17 +407,17 @@ void ADC_Config(volatile unsigned int *tab)
 	//*******************__ADC_configuration__******************************//
 
 	ADC1->CR2 = ADC_CR2_ADON | ADC_CR2_CONT | ADC_CR2_DMA; // Turn on ADC, enable continuos mode, DMA mode
-	ADC1->CR1 = ADC_CR1_SCAN;          // interrupt - end of conv.  ,  scan mode
+	ADC1->CR1 = ADC_CR1_SCAN;          //scan mode
 	ADC1->SQR1 = ADC_SEQUENCE_LENGTH(1);         // two channel in sequence
-	ADC1->SQR3 = ADC_SEQ1(10) | ADC_SEQ2(13); // ADC channel 10 is first in sequence, channel 11 is second in sequence and so on...
+	ADC1->SQR3 = ADC_SEQ1(10) | ADC_SEQ2(13); // ADC channel 10 is first in sequence, channel 13 is second in sequence and so on...
 	ADC1->SMPR1 = ADC_SAMPLE_TIME0(SAMPLE_TIME_41_5) | // sample time for first channel
 			ADC_SAMPLE_TIME1(SAMPLE_TIME_41_5); // sample time for second channel in sequence
 
 	//**************__DMA_for_ADC_configuration__***************//
 
 	DMA1_Channel1->CPAR = (uint32_t) (&(ADC1->DR));   //periph adress register
-	DMA1_Channel1->CMAR = (uint32_t) tab; //memory address register
-	DMA1_Channel1->CNDTR = 2; // number of data to transfer
+	DMA1_Channel1->CMAR = (uint32_t) tab; 			//memory address register
+	DMA1_Channel1->CNDTR = 2; 					// number of data to transfer
 	DMA1_Channel1->CCR |= DMA_CCR1_MSIZE_1 | DMA_CCR1_CIRC | DMA_CCR1_MINC
 			| DMA_CCR1_PSIZE_0;
 	//memory size - half | periph size - half | Periph to memory| circular mode
@@ -463,10 +425,6 @@ void ADC_Config(volatile unsigned int *tab)
 	DMA1_Channel1->CCR |= DMA_CCR1_EN; //Enable DMA Channel1
 	ADC1->CR2 |= ADC_CR2_ADON;         //Enable ADC
 }
-
-//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
-//**************__Internal_devices_configurations_END__*******************//
-//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
 
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
 //****************__External_devices_configurations__*********************//
@@ -490,6 +448,7 @@ void gyro_config(void)
 	__i2c_write(imu_write_address, imu, 2);
 
 	//getting initial values of angular velocity during immobility of the robot
+	//compute mean value of initial angular velocity
 	int a;
 	for (a = 0; a < gyro_calibration_sample_number; a++)
 	{
@@ -505,7 +464,3 @@ void gyro_config(void)
 	gyro_initial_values[1] /= gyro_calibration_sample_number;
 	gyro_initial_values[2] /= gyro_calibration_sample_number;
 }
-
-//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
-//**************__External_devices_configurations_END__*******************//
-//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//

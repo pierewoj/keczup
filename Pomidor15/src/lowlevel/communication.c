@@ -25,7 +25,7 @@ void sendMessage(char* msg)
 			break;
 		}
 	}
-	usart_data_number = i + 1;
+	usart_data_number = i + 1;		//variable used to DMA configuration
 	while (DMA1_Channel7->CCR & DMA_CCR7_EN)
 		; //wait until DMA disabled after last transfer
 	DMA_Config(msg);	//DMA configuration for the next transfer
@@ -35,39 +35,45 @@ void sendMessage(char* msg)
 //********************__USART__***********************//
 //****************************************************//
 
+/*
+ * dynamixel USART interrupts configuration
+ */
 void USART3_IRQHandler(void)
 {
 	if (USART_GetITStatus(USART3, USART_IT_TXE) != RESET)
+	//if transmit register waits for data
 	{
 
-		if (U3_bufTxIndex == U3_bufTxMaxIndex - 1) //Jesli wysylany zostal ostatni znak (\r)
+		if (U3_bufTxIndex == U3_bufTxMaxIndex - 1) //if the last character sent..
 		{
-			USART_ITConfig(USART3, USART_IT_TXE, DISABLE); //Wylacz przerwanie = koniec transmisji
-			U3_bufTxIndex = 0;
+			USART_ITConfig(USART3, USART_IT_TXE, DISABLE); //Interrupt disable - end of trasmission
+			U3_bufTxIndex = 0;	//set index to 0
 		}
 
 		else
 		{
-			USART_SendData(USART3, U3_buforTx[U3_bufTxIndex]);
+			USART_SendData(USART3, U3_buforTx[U3_bufTxIndex]);//load USART data register
 			U3_bufTxIndex++;
-
 		}
 	}
 }
 
+/*
+ * bluetooth USART interrupts configuration
+ */
 void USART2_IRQHandler(void)
 {
 	//receive data
-	if (USART_GetITStatus(USART2, USART_IT_RXNE))
+	if (USART_GetITStatus(USART2, USART_IT_RXNE))//if data register not empty (receive register)
 	{
-		U2_buforRx[U2_bufRxIndex] = USART_ReceiveData(USART2);
+		U2_buforRx[U2_bufRxIndex] = USART_ReceiveData(USART2);//get register value
 		U2_bufRxIndex++;
 
-		if (U2_buforRx[U2_bufRxIndex - 1] == 10 || U2_bufRxIndex > 50)
+		if (U2_buforRx[U2_bufRxIndex - 1] == 10 || U2_bufRxIndex > 50)//end of transmission
 		{
 			U2_buforRx_Size = U2_bufRxIndex - 2;
 			U2_bufRxIndex = 0;
-			messageProcessor(U2_buforRx, U2_buforRx_Size);
+			messageProcessor(U2_buforRx, U2_buforRx_Size);	//carry out a task
 		}
 	}
 }
@@ -85,11 +91,13 @@ void uart3_sendArray(unsigned short int *arr, unsigned short int n)
 	USART_ITConfig(USART3, USART_IT_TXE, ENABLE);
 }
 
+/*
+ * Set frame position
+ * //0.2 - horizontaly front
+ * //0.8 - horizontaly rear
+ */
 void dynamixel_ustawPozycje(double procent)
 {
-//0.2 - poziomo z tylu
-//0.8 - poziomo przod
-
 	if (procent < 0 || procent > 1)
 		return;
 
