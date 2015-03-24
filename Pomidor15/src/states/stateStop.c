@@ -7,7 +7,7 @@
 
 void stateStop(void)
 {
-	setDriveStopFast();
+	setDriveStopSlow();
 	if(buttonStart)
 		changeState(STATE_MANUAL, REASON_BUTTON_PRESSED);
 }

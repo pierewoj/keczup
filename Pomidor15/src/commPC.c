@@ -14,10 +14,161 @@
 #include "math.h"
 #include "pid.h"
 #include "settings.h"
+#include "lowlevel/effectors.h"
+
+/*
+ * helper function, appends d (with 'decimal' decimal places) to msg
+ * you need to use this function because snprintf doesnt work with doubles well
+ */
+void addDoubleToString(char *msg, double d, int decimal)
+{
+	if (d < 0)
+	{
+		strcat(msg, "-");
+	}
+
+	d = fabs(d);
+	int beforeDot = (int) d;
+	double remainingAfterDot = d - beforeDot;
+	int afterDot = pow(10, decimal) * remainingAfterDot;
+	char representation[20];
+	snprintf(representation, 20, "%d.%d ", beforeDot, afterDot);
+	strcat(msg, representation);
+}
+
+/*
+ * returns pointer to controller based on its name
+ */
+ControllerState* getController(char* name)
+{
+	if (strcmp(name, "controllerForward") == 0)
+	{
+		return &controllerForward;
+	}
+	else if (strcmp(name, "controllerBackward") == 0)
+	{
+		return &controllerBackward;
+	}
+	else if (strcmp(name, "controllerLeftKtir") == 0)
+	{
+		return &controllerLeftKtir;
+	}
+	else if (strcmp(name, "controllerRightKtir") == 0)
+	{
+		return &controllerRightKtir;
+	}
+	else if (strcmp(name, "controllerLeftWheelSpeed") == 0)
+	{
+		return &controllerLeftWheelSpeed;
+	}
+	else
+	{
+		return &controllerRightWheelSpeed;
+	}
+}
+
+void printControllerOutput(char* name)
+{
+	ControllerState controller = *getController(name);
+	char msg[100];
+	snprintf(msg, 100, "CONTROLLER_STATE %s", name);
+	addDoubleToString(msg, controller.propSignal, 3);
+	addDoubleToString(msg, controller.integralSignal, 3);
+	addDoubleToString(msg, controller.diffSignal, 3);
+	sendMessage(msg);
+}
+
+void printControllerSettings(char* name)
+{
+	ControllerState controller = *getController(name);
+	char msg[200];
+	snprintf(msg, 200, "CONTROLLER_STATE %s", name);
+	addDoubleToString(msg, controller.diffInterval, 3);
+	addDoubleToString(msg, controller.integralMax, 3);
+	addDoubleToString(msg, controller.kp, 5);
+	addDoubleToString(msg, controller.ti, 5);
+	addDoubleToString(msg, controller.td, 5);
+	addDoubleToString(msg, controller.enabledP, 0);
+	addDoubleToString(msg, controller.enabledI, 0);
+	addDoubleToString(msg, controller.enabledD, 0);
+	sendMessage(msg);
+}
 
 void messageReceived(char* msg, int msgLength)
 {
-	//to be implemented
+	char type[30];
+	sscanf(msg, "%30s", type);
+
+	if (strcmp(type, "START_AUTO") == 0)
+	{
+		//NOT IMPLEMENTED
+	}
+	else if (strcmp(type, "STOP_AUT0") == 0)
+	{
+		//NOT IMPLEMENTED
+	}
+	else if (strcmp(type, "RESET") == 0)
+	{
+		//NOT IMPLEMENTED
+	}
+	else if (strcmp(type, "MANUAL") == 0)
+	{
+		//NOT IMPLEMENTED
+	}
+	else if (strcmp(type, "OPEN_FRAME") == 0)
+	{
+		openFrame();
+	}
+	else if (strcmp(type, "CLOSE_FRAME") == 0)
+	{
+		closeFrame();
+	}
+	else if (strcmp(type, "DRIVE_PID_FORWARD") == 0)
+	{
+		//NOT IMPLEMENTED
+	}
+	else if (strcmp(type, "DRIVE_PID_BACKWARD") == 0)
+	{
+		//NOT IMPLEMENTED
+	}
+	else if (strcmp(type, "DRIVE_VWHEEL") == 0)
+	{
+		//NOT IMPLEMENTED
+	}
+	else if (strcmp(type, "DRIVE_SIDE_KTIR") == 0)
+	{
+		//NOT IMPLEMENTED
+	}
+	else if (strcmp(type, "DRIVE_PWM") == 0)
+	{
+		//NOT IMPLEMENTED
+	}
+	else if (strcmp(type, "DRIVE_STOP_FAST") == 0)
+	{
+		//NOT IMPLEMENTED
+	}
+	else if (strcmp(type, "DRIVE_STOP_SLOW") == 0)
+	{
+		//NOT IMPLEMENTED
+	}
+	else if (strcmp(type, "GET_CONTROLLER") == 0)
+	{
+		char controllerName[30];
+		sscanf("%s %s", type, controllerName);
+		printControllerSettings(controllerName);
+	}
+	else if (strcmp(type, "SET_CONTROLLER") == 0)
+	{
+		//NOT IMPLEMENTED
+	}
+	else if (strcmp(type, "GET_SETTINGS") == 0)
+	{
+		//NOT IMPLEMENTED
+	}
+	else if (strcmp(type, "SET_SETTINGS") == 0)
+	{
+		//NOT IMPLEMENTED
+	}
 }
 
 /*
@@ -30,28 +181,6 @@ void printKtir(char* dst, bool* source, int num)
 		dst[i] = source[i] + '0';
 
 	dst[i] = '\0';
-
-}
-
-/*
- * helper function, appends d (with 'decimal' decimal places) to msg
- * you need to use this function because snprintf doesnt work with doubles well
- */
-void addDoubleToString(char *msg, double d, int decimal)
-{
-	if (d < 0)
-	{
-		strcat(msg, "-");
-
-	}
-
-	d = fabs(d);
-	int beforeDot = (int) d;
-	double remainingAfterDot = d - beforeDot;
-	int afterDot = pow(10, decimal) * remainingAfterDot;
-	char representation[20];
-	snprintf(representation, 20, "%d.%d ", beforeDot, afterDot);
-	strcat(msg, representation);
 
 }
 
@@ -156,7 +285,6 @@ void sendGlobal(void)
 	sendMessage(msg);
 }
 
-
 /*
  * last time of sending message, updated by sendToPC()
  */
@@ -171,12 +299,20 @@ void sendToPC()
 	 * will not send if message was sent later than settingBluetoothInterval
 	 * iterations ago
 	 */
-	if (getMicroseconds() - timeLastSent > settingBluetoothInterval * loopWaitTime)
+	if (getMicroseconds() - timeLastSent
+			> settingBluetoothInterval * loopWaitTime)
 	{
 		timeLastSent = getMicroseconds();
 
 		sendGlobal();
-		//need to implement sending controllers!!!!
+
+		printControllerOutput("controllerForward");
+		printControllerOutput("controllerBackward");
+		printControllerOutput("controllerLeftKtir");
+		printControllerOutput("controllerRightKtir");
+		printControllerOutput("controllerLeftWheelSpeed");
+		printControllerOutput("ontrollerRightWheelSpeed");
 	}
+
 }
 

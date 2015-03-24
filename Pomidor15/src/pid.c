@@ -23,7 +23,7 @@ void PID(ControllerState* s, bool currentlyRunning)
 	}
 
 	//update history for D every "diffInterval" iterations
-	if (getMicroseconds() - s->lastTimeDiff > s->diffInteral * loopWaitTime)
+	if (getMicroseconds() - s->lastTimeDiff > s->diffInterval * loopWaitTime)
 	{
 		s->history[1] = s->history[0];
 		s->history[0] = error;

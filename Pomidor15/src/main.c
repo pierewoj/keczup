@@ -37,7 +37,7 @@ int main(void)
 	while (1)
 	{
 		//wait loopWaitTime between iterations
-		while (getMicroseconds() - lastLoopTime < 100*loopWaitTime)
+		while (getMicroseconds() - lastLoopTime < loopWaitTime)
 		{
 		}
 		lastLoopTime = getMicroseconds();

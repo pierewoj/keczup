@@ -47,7 +47,7 @@ typedef struct controllerState
 
 	bool enabledP, enabledI, enabledD;
 
-	int diffInteral;
+	int diffInterval;
 	unsigned long lastTimeDiff;
 } ControllerState;
 

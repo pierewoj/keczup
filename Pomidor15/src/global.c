@@ -21,33 +21,89 @@ void initializeGlobalVariables(void)
 	prevState = STATE_INIT;
 	reasonChangeState = REASON_PROGRAM_RESET;
 	position.x = 600;
-	position.y = - settingDistanceMidBeginning;
+	position.y = -settingDistanceMidBeginning;
 	direction = 90;
 
-	int i,j;
-	for(i=0;i<5;i++)
-		for(j=0;j<5;j++)
+	int i, j;
+	for (i = 0; i < 5; i++)
+		for (j = 0; j < 5; j++)
 		{
-			enemyTimes[i][j] = -60*1000;
-			visitTimes[i][j] = -60*1000;
+			enemyTimes[i][j] = -60 * 1000;
+			visitTimes[i][j] = -60 * 1000;
 		}
 
 	nextCrossroad.i = 2;
 	nextCrossroad.j = 1;
 	strategyInit();
 
-	controllerForward.diffInteral  = 1;
+	/*
+	 * Controller default settings!!
+	 */
 	controllerForward.enabledP = 1;
+	controllerForward.enabledI = 0;
+	controllerForward.enabledD = 0;
 	controllerForward.kp = 1;
+	controllerForward.ti = 10;
+	controllerForward.td = 2;
 	controllerForward.target = 3.5;
+	controllerForward.lastTimeDiff = getMicroseconds();
+	controllerForward.integralMax = 3;
+	controllerForward.diffInterval = 1;
 
-	controllerLeftWheelSpeed.diffInteral = 1;
+	controllerBackward.enabledP = 1;
+	controllerBackward.enabledI = 0;
+	controllerBackward.enabledD = 0;
+	controllerBackward.kp = 1;
+	controllerBackward.ti = 10;
+	controllerBackward.td = 2;
+	controllerBackward.target = 3.5;
+	controllerBackward.lastTimeDiff = getMicroseconds();
+	controllerBackward.integralMax = 3;
+	controllerBackward.diffInterval = 1;
+
+	controllerLeftKtir.enabledP = 1;
+	controllerLeftKtir.enabledI = 0;
+	controllerLeftKtir.enabledD = 0;
+	controllerLeftKtir.kp = 1;
+	controllerLeftKtir.ti = 10;
+	controllerLeftKtir.td = 2;
+	controllerLeftKtir.target = 1;
+	controllerLeftKtir.lastTimeDiff = getMicroseconds();
+	controllerLeftKtir.integralMax = 3;
+	controllerLeftKtir.diffInterval = 1;
+
+	controllerRightKtir.enabledP = 1;
+	controllerRightKtir.enabledI = 0;
+	controllerRightKtir.enabledD = 0;
+	controllerRightKtir.kp = 1;
+	controllerRightKtir.ti = 10;
+	controllerRightKtir.td = 2;
+	controllerRightKtir.target = 1;
+	controllerRightKtir.lastTimeDiff = getMicroseconds();
+	controllerRightKtir.integralMax = 3;
+	controllerRightKtir.diffInterval = 1;
+
 	controllerLeftWheelSpeed.enabledP = 1;
-	controllerLeftWheelSpeed.kp = 0.001;
+	controllerLeftWheelSpeed.enabledI = 0;
+	controllerLeftWheelSpeed.enabledD = 0;
+	controllerLeftWheelSpeed.kp = 0.0001;
+	controllerLeftWheelSpeed.ti = 10000;
+	controllerLeftWheelSpeed.td = 2;
+	controllerLeftWheelSpeed.target = 300;
+	controllerLeftWheelSpeed.lastTimeDiff = getMicroseconds();
+	controllerLeftWheelSpeed.integralMax = 3;
+	controllerLeftWheelSpeed.diffInterval = 1;
 
-	controllerRightWheelSpeed.diffInteral = 1;
 	controllerRightWheelSpeed.enabledP = 1;
-	controllerRightWheelSpeed.kp = 0.001;
+	controllerRightWheelSpeed.enabledI = 0;
+	controllerRightWheelSpeed.enabledD = 0;
+	controllerRightWheelSpeed.kp = 0.0001;
+	controllerRightWheelSpeed.ti = 10000;
+	controllerRightWheelSpeed.td = 2;
+	controllerRightWheelSpeed.target = 300;
+	controllerRightWheelSpeed.lastTimeDiff = getMicroseconds();
+	controllerRightWheelSpeed.integralMax = 3;
+	controllerRightWheelSpeed.diffInterval = 1;
 
 }
 
