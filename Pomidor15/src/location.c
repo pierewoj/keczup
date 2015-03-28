@@ -5,6 +5,7 @@
 #include "math.h"
 #include "location.h"
 
+Point nextCrossroad;
 
 /*
  * last value of gyroDirection reading. Difference between current and las value

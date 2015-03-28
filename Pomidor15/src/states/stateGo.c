@@ -3,11 +3,11 @@
  */
 #include "math.h"
 #include "state.h"
-#include "settings.h"
-#include "location.h"
-#include "strategy.h"
-#include "global.h"
-#include "pid.h"
+#include "../settings.h"
+#include "../location.h"
+#include "../strategy.h"
+#include "../global.h"
+#include "../pid.h"
 
 void stateGo(void)
 {

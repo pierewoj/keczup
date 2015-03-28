@@ -70,8 +70,9 @@ ControllerState* getController(char* name)
 void printControllerOutput(char* name)
 {
 	ControllerState controller = *getController(name);
-	char msg[100];
-	snprintf(msg, 100, "CONTROLLER_STATE %s", name);
+	char msg[200];
+	snprintf(msg, 100, "CONTROLLER_STATE %s ", name);
+	strcat(msg," ");
 	addDoubleToString(msg, controller.propSignal, 3);
 	addDoubleToString(msg, controller.integralSignal, 3);
 	addDoubleToString(msg, controller.diffSignal, 3);
@@ -81,8 +82,9 @@ void printControllerOutput(char* name)
 void printControllerSettings(char* name)
 {
 	ControllerState controller = *getController(name);
-	char msg[200];
-	snprintf(msg, 200, "CONTROLLER_STATE %s", name);
+	char msg[300];
+	snprintf(msg, 200, "CONTROLLER_SETTINGS %s ", name);
+	strcat(msg," ");
 	addDoubleToString(msg, controller.diffInterval, 3);
 	addDoubleToString(msg, controller.integralMax, 3);
 	addDoubleToString(msg, controller.kp, 5);
@@ -97,6 +99,7 @@ void printControllerSettings(char* name)
 void messageReceived(char* msg, int msgLength)
 {
 	char type[30];
+	type[0] = '\0';
 	sscanf(msg, "%30s", type);
 
 	if (strcmp(type, "START_AUTO") == 0)
@@ -154,7 +157,7 @@ void messageReceived(char* msg, int msgLength)
 	else if (strcmp(type, "GET_CONTROLLER") == 0)
 	{
 		char controllerName[30];
-		sscanf("%s %s", type, controllerName);
+		sscanf(msg,"%s %s", type, controllerName);
 		printControllerSettings(controllerName);
 	}
 	else if (strcmp(type, "SET_CONTROLLER") == 0)
@@ -305,13 +308,13 @@ void sendToPC()
 		timeLastSent = getMicroseconds();
 
 		sendGlobal();
-
+		/*
 		printControllerOutput("controllerForward");
 		printControllerOutput("controllerBackward");
 		printControllerOutput("controllerLeftKtir");
 		printControllerOutput("controllerRightKtir");
 		printControllerOutput("controllerLeftWheelSpeed");
-		printControllerOutput("ontrollerRightWheelSpeed");
+		printControllerOutput("controllerRightWheelSpeed");*/
 	}
 
 }

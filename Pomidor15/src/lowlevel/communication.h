@@ -10,22 +10,17 @@
 
 #include <stddef.h>
 #include "stm32f10x.h"
-//processes a message received by UART. Messages shuold end with '\n'
-void messageProcessor(char* msg, int msgLength);
-
-//sends a message via USART
-void sendMessage(char* msg);
 
 //***********************__USART__*********************************//
 
-unsigned short int U3_bufTxIndex,U3_bufTxMaxIndex;
-unsigned short int U2_bufTxIndex,U2_bufTxMaxIndex;
-char U2_buforRx[200];
-int U2_buforRx_Size;
-int U2_bufRxIndex;
-int usart_data_number;
-unsigned short int U2_buforTx[250];
-unsigned short int U3_buforTx[50];
+extern unsigned short int U3_bufTxIndex,U3_bufTxMaxIndex;
+extern unsigned short int U2_bufTxIndex,U2_bufTxMaxIndex;
+extern char U2_buforRx[300];
+extern int U2_buforRx_Size;
+extern int U2_bufRxIndex;
+extern int usart_data_number;
+extern unsigned short int U2_buforTx[350];
+extern unsigned short int U3_buforTx[50];
 
 
 void dynamixel_ustawPozycje(double procent);
@@ -37,6 +32,14 @@ void USART2_IRQHandler(void);
 void uart3_sendArray(unsigned short int *arr, unsigned short int n);
 
 void uart2_sendArray(char *arr, unsigned short int n);
+
+//processes a message received by UART. Messages shuold end with '\n'
+void messageProcessor(char* msg, int msgLength);
+
+//sends a message via USART
+void sendMessage(char* msg);
+
+
 
 //************************__I2C_protocol__*************************//
 

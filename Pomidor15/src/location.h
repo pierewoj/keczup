@@ -14,7 +14,7 @@
  * position of next crossroad to be visited. Should be accessed directly from
  * current position
  */
-Point nextCrossroad;
+extern Point nextCrossroad;
 
 /*
  * updates robot position, direction and performs snap

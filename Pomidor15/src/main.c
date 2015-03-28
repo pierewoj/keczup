@@ -33,6 +33,7 @@ int main(void)
 	//Initialize global variables
 	changeState( STATE_INIT, REASON_PROGRAM_RESET);
 
+
 	//Endless loop
 	while (1)
 	{
@@ -50,7 +51,6 @@ int main(void)
 		updateOurPosition();
 		updateEnemyPosition();
 
-		//debug
 		sendToPC();
 
 		//Finite state machine
@@ -103,3 +103,13 @@ int main(void)
 
 	}
 }
+
+#ifdef USE_FULL_ASSERT
+void assert_failed(uint8_t* file, uint32_t line)
+{
+/* Infinite loop */
+/* Use GDB to find out why we're here */
+//while (1);
+}
+#endif
+

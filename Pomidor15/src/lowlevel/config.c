@@ -5,8 +5,15 @@
  *      Author: Piotrek
  */
 #include "config.h"
-#include "global.h"
+#include "../global.h"
 #include "sensors.h"
+#include "stm32f10x_rcc.h"
+#include "stm32f10x_flash.h"
+#include "stm32f10x_usart.h"
+#include "stm32f10x_gpio.h"
+
+ unsigned int time__;
+
 void configurePeripherials(void)
 {
 	//STM32 internal peripherials configurations

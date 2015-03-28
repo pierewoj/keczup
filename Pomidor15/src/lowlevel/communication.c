@@ -5,7 +5,8 @@
  *      Author: Piotrek
  */
 
-#include "global.h"
+#include "stm32f10x_usart.h"
+#include "../global.h"
 #include <stdio.h>
 #include <string.h>
 #include "communication.h"
@@ -13,21 +14,44 @@
 #include "config.h"
 #include <stdlib.h>
 
+//***********************__USART__*********************************//
+
+unsigned short int U3_bufTxIndex,U3_bufTxMaxIndex;
+unsigned short int U2_bufTxIndex,U2_bufTxMaxIndex;
+char U2_buforRx[300];
+int U2_buforRx_Size;
+int U2_bufRxIndex;
+int usart_data_number;
+unsigned short int U2_buforTx[350];
+unsigned short int U3_buforTx[50];
+
+
+void dynamixel_ustawPozycje(double procent);
+
+void USART3_IRQHandler(void);
+
+void USART2_IRQHandler(void);
+
+void uart3_sendArray(unsigned short int *arr, unsigned short int n);
+
+void uart2_sendArray(char *arr, unsigned short int n);
+
 /*
  * sends message via UART, appends "\r\n"
  */
 void sendMessage(char* msg)
 {
-	char* msgNew = malloc(strlen(msg)+2);
+	char msgNew[300];
 	strcpy(msgNew, msg);
 	strcat(msgNew, "\r\n");
 	usart_data_number = strlen(msgNew);
 
 	while (DMA1_Channel7->CCR & DMA_CCR7_EN)
-		; //wait until DMA disabled after last transfer
+						; //wait until DMA disabled after last transfer
+
 	DMA_Config(msgNew);	//DMA configuration for the next transfer
 
-	free(msgNew);
+
 }
 
 //****************************************************//

@@ -9,36 +9,36 @@
 #define SETTIINGS_H_
 
 //distance in MM between center of robot to the front KTIR line
-double settingDistanceMidToKtir;
+extern double settingDistanceMidToKtir;
 
 //distance from baseline to center of robot at the beggining of the round
-double settingDistanceMidBeginning;
+extern double settingDistanceMidBeginning;
 
 //importance of distance to the target in finding nextCrossroad
-double settingLocationWeightDistance;
+extern double settingLocationWeightDistance;
 
 //importance of last time of visit in finding nextCrossroad
-double settingLocationWeightVisitTime;
+extern double settingLocationWeightVisitTime;
 
 //importance of avoiding driving on our baseline in finding nextCrossroad
-double settingLocationWeightBaseline;
+extern double settingLocationWeightBaseline;
 
 //how many seconds it takes to forget enemy location?
-double settingLocationTimeEnemy;
+extern double settingLocationTimeEnemy;
 
 //importance of avoiding enemy in finding nextCrossroad
-double settingLocationWeightEnemy;
+extern double settingLocationWeightEnemy;
 
 //PWMmax for driving between crossroads
-double settingPIDForwardPWM;
+extern double settingPIDForwardPWM;
 
 //Angle to target to change from GO to ROTATE (degrees)
-double settingAngleToBeginRotate;
+extern double settingAngleToBeginRotate;
 
 //Minimum Sharp reading in cm to detect can
-double settingSharpThresh;
+extern double settingSharpThresh;
 
 //Send uart message every X iterations
-double settingBluetoothInterval;
+extern double settingBluetoothInterval;
 
 #endif /* SETTIINGS_H_ */

@@ -9,6 +9,55 @@
 #include "stm32f10x.h"
 #include "communication.h"
 #include "../global.h"
+#include "stm32f10x_gpio.h"
+
+//ADC
+volatile unsigned int pomiar_adc[2];
+
+//IMU
+unsigned char dane_z_imu[6];
+unsigned char imu[2];
+int gyro_x, gyro_y, gyro_z;
+int gyro_initial_values[3];
+
+void gyro_update_direction(void);
+
+//ULTRADZWIEKI
+unsigned int ultra__[4], ultra_pom[4];
+unsigned int ultra1, ultra2, ultra3;
+char pierwsze_zbocze[4];
+
+//Markery
+double PWM_L, PWM_R, POSX, POSY, dist_L, dist_R;
+
+//KTIRs
+void read_ktirs(void);
+
+//Encoders
+void encodersReset(void);
+void encodersInit(void);
+void encodersRead(void);
+
+
+unsigned int time_old;
+volatile int16_t leftCount;								//speeds
+volatile int16_t rightCount;
+volatile int16_t fwdCount;
+volatile int16_t rotCount;
+//distances
+volatile int32_t leftTotal;
+volatile int32_t rightTotal;
+volatile int32_t fwdTotal;
+volatile int32_t rotTotal;
+
+// local variables
+static volatile int16_t oldLeftEncoder;
+static volatile int16_t oldRightEncoder;
+static volatile int16_t leftEncoder;
+static volatile int16_t rightEncoder;
+static volatile int16_t encoderSum;
+static volatile int16_t encoderDiff;
+
 
 //read selected sensors
 void readSensors(void)

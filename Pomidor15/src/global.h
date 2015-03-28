@@ -6,7 +6,7 @@
 #define GLOBAL_H_
 
 #include<stdbool.h>
-#include<geometry.h>
+#include "geometry.h"
 #include "lowlevel/sensors.h"
 #include "lowlevel/communication.h"
 
@@ -19,23 +19,24 @@
  * Used unit of time is MICROSECONDS
  */
 
-unsigned int getMiliseconds(void);
-unsigned int getMicroseconds(void);
+extern unsigned int getMiliseconds(void);
+extern unsigned int getMicroseconds(void);
 
-int state, prevState, reasonChangeState;
-void (*driveFunction)(void); //pointer to a function which controls motors
-unsigned long loopWaitTime; //time to wait between main loop iteratinos
-unsigned long lastLoopTime; //time of last loop execution in microseconds
-bool carryingCan; //does the robot "have" the can
+extern int state, prevState, reasonChangeState;
+extern void (*driveFunction)(void); //pointer to a function which controls motors
+extern unsigned long loopWaitTime; //time to wait between main loop iteratinos
+extern unsigned long lastLoopTime; //time of last loop execution in microseconds
+extern bool carryingCan; //does the robot "have" the can
 
 //-----------------Location variables------------------//
-PointMM position; //in mm
-double direction; //[-180,180], 90 is NORTH
-unsigned long enemyTimes[5][5]; //enemy detection times in ms
-unsigned long visitTimes[5][5]; //visit times of crossroads in ms
+extern PointMM position; //in mm
+extern double direction; //[-180,180], 90 is NORTH
+extern unsigned long enemyTimes[5][5]; //enemy detection times in ms
+extern unsigned long visitTimes[5][5]; //visit times of crossroads in ms
 
 //-----------------Controllers-------------------//
 
+//struct def for PID controllers
 //struct def for PID controllers
 typedef struct controllerState
 {
@@ -51,7 +52,7 @@ typedef struct controllerState
 	unsigned long lastTimeDiff;
 } ControllerState;
 
-ControllerState controllerForward, controllerBackward, controllerLeftKtir,
+extern ControllerState controllerForward, controllerBackward, controllerLeftKtir,
 		controllerRightKtir, controllerRightWheelSpeed,
 		controllerLeftWheelSpeed;
 
@@ -64,42 +65,42 @@ ControllerState controllerForward, controllerBackward, controllerLeftKtir,
  * For example ktirFront[0] is the "most left" front KTIR, while ktirBack[0]
  * is the "most right" back KTIR. True is BLACK, false means WHITE.
  */
-bool ktirFront[7], ktirRight[3], ktirBack[7], ktirLeft[3];
+extern bool ktirFront[7], ktirRight[3], ktirBack[7], ktirLeft[3];
 
 /* approx cm to the object. 1000 if no object detected or invalid input. */
-int sharp;
+extern int sharp;
 
 /* approx cm to the enemy. Clockwise numeration. ultra[0] is front.
  * 1000 is no enemy detected or reading is not valid */
-int ultra[4];
+extern int ultra[4];
 
 /* encoder redings from the left and right wheel*/
-double velocityLeft, velocityRight; // mm/s
-double totalDistanceLeft, totalDistanceRight; //mm since the restart
+extern double velocityLeft, velocityRight; // mm/s
+extern double totalDistanceLeft, totalDistanceRight; //mm since the restart
 
 /* current direction from gyro. Its value is an angle [-180 .. 180) deg.
  90 is north, 0 is east, -90 is south and +-180 is west. */
-double gyroDirection;
+extern double gyroDirection;
 
 /*
  * true only if start button is pressed
  */
-bool buttonStart;
+extern bool buttonStart;
 
 /*
  * current voltage of battery in volts
  */
-double battery;
+extern double battery;
 
 /*
  * is frame clossed? readonly
  */
-bool frameClosed;
+extern bool frameClosed;
 
 /*
  * current pwm steering signals, readonly
  */
-double pwmLeft, pwmRight;
+extern double pwmLeft, pwmRight;
 
 //-----------------Functions------------------//
 
