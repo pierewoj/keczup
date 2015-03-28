@@ -35,7 +35,6 @@ void read_ktirs(void);
 
 //Encoders
 void encodersReset(void);
-void encodersInit(void);
 void encodersRead(void);
 
 
@@ -55,9 +54,6 @@ static volatile int16_t oldLeftEncoder;
 static volatile int16_t oldRightEncoder;
 static volatile int16_t leftEncoder;
 static volatile int16_t rightEncoder;
-static volatile int16_t encoderSum;
-static volatile int16_t encoderDiff;
-
 
 //read selected sensors
 void readSensors(void)
