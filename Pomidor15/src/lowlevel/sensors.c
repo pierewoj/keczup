@@ -58,7 +58,6 @@ static volatile int16_t rightEncoder;
 //read selected sensors
 void readSensors(void)
 {
-	encodersRead();
 	sharp_update();
 	battery_update();
 	read_ktirs();
@@ -128,11 +127,11 @@ void read_ktirs()
 	//rear sensors
 	ktirBack[0] = false;
 	ktirBack[1] = false;
-	ktirBack[2] = (unsigned short int) GPIO_ReadInputDataBit(GPIOA,
+	ktirBack[4] = (unsigned short int) GPIO_ReadInputDataBit(GPIOA,
 	GPIO_Pin_6);
 	ktirBack[3] = (unsigned short int) GPIO_ReadInputDataBit(GPIOB,
 	GPIO_Pin_8);
-	ktirBack[4] = (unsigned short int) GPIO_ReadInputDataBit(GPIOB,
+	ktirBack[2] = (unsigned short int) GPIO_ReadInputDataBit(GPIOB,
 	GPIO_Pin_9);
 	ktirBack[5] = false;
 	ktirBack[6] = false;

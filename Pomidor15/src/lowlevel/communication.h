@@ -10,6 +10,7 @@
 
 #include <stddef.h>
 #include "stm32f10x.h"
+#include "stdbool.h"
 
 //***********************__USART__*********************************//
 
@@ -21,6 +22,7 @@ extern int U2_bufRxIndex;
 extern int usart_data_number;
 extern unsigned short int U2_buforTx[350];
 extern unsigned short int U3_buforTx[50];
+extern bool flaga;
 
 
 void dynamixel_ustawPozycje(double procent);

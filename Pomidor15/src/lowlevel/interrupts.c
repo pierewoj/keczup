@@ -15,6 +15,7 @@ void TIM1_TRG_COM_TIM17_IRQHandler(void)
 		TIM2->CCR2 = 17;       //about 10 ms high PWM state - ultrasonic trigger
 
 		//normalization of ultrasonic sensors data
+		encodersRead();
 		ultra_data_processing();
 		ultra1 = ultra[0];
 		ultra2 = ultra[1];

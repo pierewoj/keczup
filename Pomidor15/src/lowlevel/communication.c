@@ -13,18 +13,19 @@
 #include "../commPC.h"
 #include "config.h"
 #include <stdlib.h>
+#include "stdbool.h"
 
 //***********************__USART__*********************************//
 
-unsigned short int U3_bufTxIndex,U3_bufTxMaxIndex;
-unsigned short int U2_bufTxIndex,U2_bufTxMaxIndex;
+unsigned short int U3_bufTxIndex, U3_bufTxMaxIndex;
+unsigned short int U2_bufTxIndex, U2_bufTxMaxIndex;
 char U2_buforRx[300];
 int U2_buforRx_Size;
 int U2_bufRxIndex;
 int usart_data_number;
 unsigned short int U2_buforTx[350];
 unsigned short int U3_buforTx[50];
-
+bool flaga = 0;
 
 void dynamixel_ustawPozycje(double procent);
 
@@ -33,8 +34,6 @@ void USART3_IRQHandler(void);
 void USART2_IRQHandler(void);
 
 void uart3_sendArray(unsigned short int *arr, unsigned short int n);
-
-void uart2_sendArray(char *arr, unsigned short int n);
 
 /*
  * sends message via UART, appends "\r\n"
@@ -46,11 +45,15 @@ void sendMessage(char* msg)
 	strcat(msgNew, "\r\n");
 	usart_data_number = strlen(msgNew);
 
-	while (DMA1_Channel7->CCR & DMA_CCR7_EN)
-						; //wait until DMA disabled after last transfer
+	while (DMA1_Channel7->CCR & DMA_CCR7_EN) //wait until DMA disabled after last transfer
+	{
+	}
 
+	while (flaga)		//wait for the end of receiving
+	{
+
+	}
 	DMA_Config(msgNew);	//DMA configuration for the next transfer
-
 
 }
 
@@ -89,16 +92,23 @@ void USART2_IRQHandler(void)
 	//receive data
 	if (USART_GetITStatus(USART2, USART_IT_RXNE))//if data register not empty (receive register)
 	{
+		DMA1_Channel7->CCR &= ~DMA_CCR7_EN;	      //DMA disable
+		DMA1->IFCR |= DMA_IFCR_CTCIF7;
+		USART2->SR &= ~USART_SR_TC;
+
+		flaga = true;
 		U2_buforRx[U2_bufRxIndex] = USART_ReceiveData(USART2);//get register value
 		U2_bufRxIndex++;
 
-		if (U2_buforRx[U2_bufRxIndex - 1] == 10 || U2_bufRxIndex > 50)//end of transmission
+		if (U2_buforRx[U2_bufRxIndex - 1] == '\n' || U2_bufRxIndex > 100)//end of transmission
 		{
 			U2_buforRx_Size = U2_bufRxIndex - 2;
 			U2_bufRxIndex = 0;
+			flaga = false;
 			messageProcessor(U2_buforRx, U2_buforRx_Size);	//carry out a task
 		}
 	}
+
 }
 
 void uart3_sendArray(unsigned short int *arr, unsigned short int n)
@@ -142,7 +152,7 @@ void dynamixel_ustawPozycje(double procent)
  */
 void messageProcessor(char* msg, int msgLength)
 {
-	messageReceived(msg,msgLength);
+	messageReceived(msg, msgLength);
 }
 
 //****************************************************//
