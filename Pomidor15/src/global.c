@@ -97,8 +97,12 @@ void initializeGlobalVariables(void)
 	position.x = 600;
 	position.y = -settingDistanceMidBeginning;
 	direction = 90;
+	sharp = 1000;
 
 	int i, j;
+	for(i=0;i<4;i++)
+		ultra[i]=1000;
+
 	for (i = 0; i < 5; i++)
 		for (j = 0; j < 5; j++)
 		{

@@ -38,7 +38,7 @@ extern double settingAngleToBeginRotate;
 //Minimum Sharp reading in cm to detect can
 extern double settingSharpThresh;
 
-//Send uart message every X iterations
+//Send uart message every X microseconds
 extern double settingBluetoothInterval;
 
 #endif /* SETTIINGS_H_ */

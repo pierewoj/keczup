@@ -23,6 +23,7 @@
 #include "states/stateManual.h"
 #include "stdio.h"
 #include "commPC.h"
+#include "utils/messageQueue.h"
 
 int main(void)
 {
@@ -33,13 +34,17 @@ int main(void)
 	//Initialize global variables
 	changeState( STATE_INIT, REASON_PROGRAM_RESET);
 
-
 	//Endless loop
 	while (1)
 	{
 		//wait loopWaitTime between iterations
 		while (getMicroseconds() - lastLoopTime < loopWaitTime)
 		{
+			if (!(DMA1_Channel7->CCR & DMA_CCR7_EN) && messageQueueSize() > 0 && !flaga)
+					{
+						usart_data_number = strlen(messageQueuePeek());
+						DMA_Config(messageQueuePeek());	//DMA configuration for the next transfer
+					}
 		}
 		lastLoopTime = getMicroseconds();
 
@@ -107,8 +112,8 @@ int main(void)
 #ifdef USE_FULL_ASSERT
 void assert_failed(uint8_t* file, uint32_t line)
 {
-/* Infinite loop */
-/* Use GDB to find out why we're here */
+	/* Infinite loop */
+	/* Use GDB to find out why we're here */
 //while (1);
 }
 #endif

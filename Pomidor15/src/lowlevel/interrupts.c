@@ -5,6 +5,7 @@
  *      Author: Piotrek
  */
 #include "interrupts.h"
+#include "../utils/messageQueue.h"
 
 //interrupt for ultrasonic sensors data processing
 void TIM1_TRG_COM_TIM17_IRQHandler(void)
@@ -113,5 +114,10 @@ void DMA1_Channel7_IRQHandler(void)
 			;   //if TC flag is not set then wait
 		DMA1_Channel7->CCR &= ~DMA_CCR7_EN;	 //DMA disable
 		DMA1->IFCR |= DMA_IFCR_CTCIF7;       //clear TCIF7 flag
+
+		//KUBA \/
+		messageQueuePop();
+		//KUBA /\
+
 	}
 }

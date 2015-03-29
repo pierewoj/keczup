@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "communication.h"
+#include "../utils/messageQueue.h"
 #include "../commPC.h"
 #include "config.h"
 #include <stdlib.h>
@@ -43,18 +44,7 @@ void sendMessage(char* msg)
 	char msgNew[300];
 	strcpy(msgNew, msg);
 	strcat(msgNew, "\r\n");
-	usart_data_number = strlen(msgNew);
-
-	while (DMA1_Channel7->CCR & DMA_CCR7_EN) //wait until DMA disabled after last transfer
-	{
-	}
-
-	while (flaga)		//wait for the end of receiving
-	{
-
-	}
-	DMA_Config(msgNew);	//DMA configuration for the next transfer
-
+	messageQueuePush(msgNew);
 }
 
 //****************************************************//
@@ -66,6 +56,7 @@ void sendMessage(char* msg)
  */
 void USART3_IRQHandler(void)
 {
+
 	if (USART_GetITStatus(USART3, USART_IT_TXE) != RESET)
 	//if transmit register waits for data
 	{

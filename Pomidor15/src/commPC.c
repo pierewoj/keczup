@@ -70,9 +70,9 @@ ControllerState* getController(char* name)
 void printControllerOutput(char* name)
 {
 	ControllerState controller = *getController(name);
-	char msg[200];
+	char msg[100];
 	snprintf(msg, 100, "CONTROLLER_STATE %s ", name);
-	strcat(msg," ");
+	strcat(msg, " ");
 	addDoubleToString(msg, controller.propSignal, 3);
 	addDoubleToString(msg, controller.integralSignal, 3);
 	addDoubleToString(msg, controller.diffSignal, 3);
@@ -82,9 +82,9 @@ void printControllerOutput(char* name)
 void printControllerSettings(char* name)
 {
 	ControllerState controller = *getController(name);
-	char msg[300];
+	char msg[100];
 	snprintf(msg, 200, "CONTROLLER_SETTINGS %s ", name);
-	strcat(msg," ");
+	strcat(msg, " ");
 	addDoubleToString(msg, controller.diffInterval, 3);
 	addDoubleToString(msg, controller.integralMax, 3);
 	addDoubleToString(msg, controller.kp, 5);
@@ -157,7 +157,7 @@ void messageReceived(char* msg, int msgLength)
 	else if (strcmp(type, "GET_CONTROLLER") == 0)
 	{
 		char controllerName[30];
-		sscanf(msg,"%s %s", type, controllerName);
+		sscanf(msg, "%s %s", type, controllerName);
 		printControllerSettings(controllerName);
 	}
 	else if (strcmp(type, "SET_CONTROLLER") == 0)
@@ -209,78 +209,74 @@ void sendGlobal(void)
 	 * after all parts (msg1, msg2...) are created they are concateneted to form
 	 * 'msg' which is sent via UART
 	 */
-	char msg[500];
+	char msg[200];
+	char msgTmp[100];
 	msg[0] = '\0';
 
-	char msg1[100];
-	msg1[0] = '\0';
-	snprintf(msg1, 100, "GLOBAL %s %s %s %s ", ktFront, ktRight, ktBack,
+
+	msgTmp[0]='\0';
+	snprintf(msgTmp, 100, "GLOBAL %s %s %s %s ", ktFront, ktRight, ktBack,
 			ktLeft);
+	strcat(msg, msgTmp);
 
-	char msg2[100];
-	msg2[0] = '\0';
-	snprintf(msg2, 100, "%d %d %d %d %d ", sharp, ultra[0], ultra[1], ultra[2],
+	 msgTmp[0] = '\0';
+	snprintf(msgTmp, 100, "%d %d %d %d %d ", sharp, ultra[0], ultra[1], ultra[2],
 			ultra[3]);
+	strcat(msg, msgTmp);
 
-	char msg3[100];
-	msg3[0] = '\0';
-	addDoubleToString(msg3, battery, 3);
-	addDoubleToString(msg3, pwmRight, 3);
-	addDoubleToString(msg3, pwmLeft, 3);
-	addDoubleToString(msg3, velocityRight, 3);
-	addDoubleToString(msg3, velocityLeft, 3);
+	 msgTmp[0] = '\0';
+	addDoubleToString(msgTmp, battery, 3);
+	addDoubleToString(msgTmp, pwmRight, 3);
+	addDoubleToString(msgTmp, pwmLeft, 3);
+	addDoubleToString(msgTmp, velocityRight, 3);
+	addDoubleToString(msgTmp, velocityLeft, 3);
+	strcat(msg, msgTmp);
 
-	char msg4[100];
-	msg4[0] = '\0';
-	addDoubleToString(msg4, position.x, 3);
-	addDoubleToString(msg4, position.y, 3);
-	addDoubleToString(msg4, direction, 3);
-	addDoubleToString(msg4, 300 * recentTarget.i, 3);
-	addDoubleToString(msg4, 300 * recentTarget.j, 3);
+	 msgTmp[0] = '\0';
+	addDoubleToString(msgTmp, position.x, 3);
+	addDoubleToString(msgTmp, position.y, 3);
+	addDoubleToString(msgTmp, direction, 3);
+	addDoubleToString(msgTmp, 300 * recentTarget.i, 3);
+	addDoubleToString(msgTmp, 300 * recentTarget.j, 3);
+	strcat(msg, msgTmp);
 
-	char msg5[100];
-	msg5[0] = '\0';
-	snprintf(msg5, 100, "%d %d %s ", 300 * nextCrossroad.i,
+	 msgTmp[0] = '\0';
+	snprintf(msgTmp, 100, "%d %d %s ", 300 * nextCrossroad.i,
 			300 * nextCrossroad.j, "NO_ENEMIES");
+	strcat(msg, msgTmp);
 
-	char msg6[100];
-	msg6[0] = '\0';
-	snprintf(msg6, 100, "%d %d %d %d ", state, prevState, reasonChangeState,
+
+
+	snprintf(msgTmp, 100, "%d %d %d %d ", state, prevState, reasonChangeState,
 			getMiliseconds());
+	strcat(msg, msgTmp);
 
-	/*
-	 * Drive function print
-	 */
+	msgTmp[0] = '\0';
 	if (driveFunction == NULL)
-		strcat(msg6, "null ");
+		strcat(msgTmp, "null ");
 	else if (driveFunction == drivePIDForward)
-		strcat(msg6, "drivePIDForward ");
+		strcat(msgTmp, "drivePIDForward ");
 	else if (driveFunction == drivePIDBackward)
-		strcat(msg6, "drivePIDBackward ");
+		strcat(msgTmp, "drivePIDBackward ");
 	else if (driveFunction == driveWheelVelocity)
-		strcat(msg6, "driveWheelVelocity ");
+		strcat(msgTmp, "driveWheelVelocity ");
 	else if (driveFunction == driveSideKtir)
-		strcat(msg6, "driveSideKtir ");
+		strcat(msgTmp, "driveSideKtir ");
 	else if (driveFunction == driveWheelPWM)
-		strcat(msg6, "driveWheelPWM ");
+		strcat(msgTmp, "driveWheelPWM ");
 	else if (driveFunction == driveStopFast)
-		strcat(msg6, "driveStopFasst ");
+		strcat(msgTmp, "driveStopFasst ");
 	else if (driveFunction == driveStopSlow)
-		strcat(msg6, "driveStopSlow ");
+		strcat(msgTmp, "driveStopSlow ");
 	else
-		strcat(msg6, "");
+		strcat(msgTmp, "");
+	strcat(msg, msgTmp);
 
-	char msg7[100];
-	msg7[0] = '\0';
-	snprintf(msg7, 100, "%d %d ", (int) carryingCan, (int) frameClosed);
+	msgTmp[0] = '\0';
+	snprintf(msgTmp, 100, "%d %d ", (int) carryingCan, (int) frameClosed);
+	strcat(msg, msgTmp);
 
-	strcat(msg, msg1);
-	strcat(msg, msg2);
-	strcat(msg, msg3);
-	strcat(msg, msg4);
-	strcat(msg, msg5);
-	strcat(msg, msg6);
-	strcat(msg, msg7);
+
 
 	/*
 	 * send message via UART
@@ -296,26 +292,71 @@ long timeLastSent = 0;
 /*
  * this function needs to be called to send current state to PC
  */
+int stateSending = 0;
 void sendToPC()
 {
 	/*
 	 * will not send if message was sent later than settingBluetoothInterval
 	 * iterations ago
 	 */
-	if (getMicroseconds() - timeLastSent
-			> settingBluetoothInterval * loopWaitTime)
+	double percentSent = (getMicroseconds() - timeLastSent)
+			/ settingBluetoothInterval;
+
+	if (percentSent > 0.1 && stateSending < 1)
+	{
+		sendGlobal();
+		stateSending++;
+	}
+	else if (percentSent > 0.2 && stateSending < 2)
+	{
+
+		stateSending++;
+	}
+	else if (percentSent > 0.3 && stateSending < 3)
+	{
+
+		stateSending++;
+
+	}
+	else if (percentSent > 0.4 && stateSending < 4)
+	{
+		printControllerOutput("controllerLeftKtir");
+		stateSending++;
+
+	}
+	else if (percentSent > 0.5 && stateSending < 5)
+	{
+		printControllerOutput("controllerRightKtir");
+		stateSending++;
+
+	}
+	else if (percentSent > 0.6 && stateSending < 6)
+	{
+		printControllerOutput("controllerLeftWheelSpeed");
+		stateSending++;
+
+	}
+	else if (percentSent > 0.7 && stateSending < 7)
+	{
+		printControllerOutput("controllerRightWheelSpeed");
+		stateSending++;
+	}
+	else if (percentSent > 0.8 && stateSending < 8)
+	{
+		printControllerOutput("controllerForward");
+		stateSending++;
+	}
+	else if (percentSent > 0.9 && stateSending < 9)
+	{
+		printControllerOutput("controllerBackward");
+		stateSending++;
+	}
+	else if (percentSent > 1)
 	{
 		timeLastSent = getMicroseconds();
-
-		sendGlobal();
-		/*
-		printControllerOutput("controllerForward");
-		printControllerOutput("controllerBackward");
-		printControllerOutput("controllerLeftKtir");
-		printControllerOutput("controllerRightKtir");
-		printControllerOutput("controllerLeftWheelSpeed");
-		printControllerOutput("controllerRightWheelSpeed");*/
+		stateSending = 0;
 	}
+
 
 }
 

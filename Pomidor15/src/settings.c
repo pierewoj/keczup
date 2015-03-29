@@ -36,5 +36,5 @@ double settingAngleToBeginRotate = 30;
 //Minimum Sharp reading in cm to detect can
 double settingSharpThresh = 7;
 
-//Send uart message every X iterations
-double settingBluetoothInterval = 100;
+//Send uart messages every X microseconds
+double settingBluetoothInterval = 200*1000;
