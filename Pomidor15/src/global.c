@@ -97,6 +97,7 @@ void initializeGlobalVariables(void)
 	position.x = 600;
 	position.y = -settingDistanceMidBeginning;
 	direction = 90;
+	gyroDirection = 90;
 	sharp = 1000;
 
 	int i, j;

@@ -7,6 +7,6 @@
 
 void stateManual(void)
 {
-	setDriveWheelPWM(0.3,0.3);
+
 }
 

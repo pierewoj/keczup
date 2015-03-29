@@ -5,6 +5,7 @@
  *      Author: Kuba
  */
 #include "lowlevel/communication.h"
+#include "states/state.h"
 #include "global.h"
 #include "strategy.h"
 #include "location.h"
@@ -15,6 +16,107 @@
 #include "pid.h"
 #include "settings.h"
 #include "lowlevel/effectors.h"
+
+/*
+ * pushes new message to the queue of messages (to be sent by UART)
+ * it automatically appends "\r\n" to the msg
+ * IMPORTANT: if queue is full this function will do nothing
+ */
+void sendMessage(char* msg)
+{
+	char msgNew[300];
+	strcpy(msgNew, msg);
+	strcat(msgNew, "\r\n");
+	messageQueuePush(msgNew);
+}
+
+/*
+ * helper variables for sendToPC()
+ * 	last time of sending message, updated by sendToPC()
+ * 	current state of message sending
+ */
+long timeLastSent = 0;
+int stateSending = 0;
+
+/*
+ * this function needs to be called to send current state to PC, should be called
+ * every iteration of the main loop
+ */
+void sendToPC()
+{
+	/*
+	 * this implementation sends messages sends message reguralry over
+	 * "settingBluetoothInterval" time. Instead of pushing all elements to the queue at time
+	 * it sends one message "at the time". For example for settBluetInter = 200*000 micros it
+	 * adds to the queue:
+	 * - sendGLobal() message after first 20ms
+	 * - nothing after first 40ms
+	 * - nothing after first 60ms (because sendGlobal is long, >150chars)
+	 * - ControllerLeftKtir state after first 80ms
+	 * - (...)
+	 *
+	 * (we cannot allocate big enough queue! -> unhandled exception due to memory fault)
+	 *
+	 */
+	double percentSent = (getMicroseconds() - timeLastSent)
+			/ settingBluetoothInterval;
+
+	if (percentSent > 0.1 && stateSending < 1)
+	{
+		sendGlobal();
+		stateSending++;
+	}
+	else if (percentSent > 0.2 && stateSending < 2)
+	{
+
+		stateSending++;
+	}
+	else if (percentSent > 0.3 && stateSending < 3)
+	{
+
+		stateSending++;
+
+	}
+	else if (percentSent > 0.4 && stateSending < 4)
+	{
+		printControllerOutput("controllerLeftKtir");
+		stateSending++;
+
+	}
+	else if (percentSent > 0.5 && stateSending < 5)
+	{
+		printControllerOutput("controllerRightKtir");
+		stateSending++;
+
+	}
+	else if (percentSent > 0.6 && stateSending < 6)
+	{
+		printControllerOutput("controllerLeftWheelSpeed");
+		stateSending++;
+
+	}
+	else if (percentSent > 0.7 && stateSending < 7)
+	{
+		printControllerOutput("controllerRightWheelSpeed");
+		stateSending++;
+	}
+	else if (percentSent > 0.8 && stateSending < 8)
+	{
+		printControllerOutput("controllerForward");
+		stateSending++;
+	}
+	else if (percentSent > 0.9 && stateSending < 9)
+	{
+		printControllerOutput("controllerBackward");
+		stateSending++;
+	}
+	else if (percentSent > 1)
+	{
+		timeLastSent = getMicroseconds();
+		stateSending = 0;
+	}
+
+}
 
 /*
  * helper function, appends d (with 'decimal' decimal places) to msg
@@ -100,23 +202,24 @@ void messageReceived(char* msg, int msgLength)
 {
 	char type[30];
 	type[0] = '\0';
-	sscanf(msg, "%30s", type);
+	if (sscanf(msg, "%30s", type) != 1)
+		return;
 
 	if (strcmp(type, "START_AUTO") == 0)
 	{
-		//NOT IMPLEMENTED
+		changeState(STATE_GO, REASON_BLUETOOTH_COMMAND);
 	}
-	else if (strcmp(type, "STOP_AUT0") == 0)
+	else if (strcmp(type, "STOP_AUTO") == 0)
 	{
-		//NOT IMPLEMENTED
+		changeState(STATE_STOP, REASON_BLUETOOTH_COMMAND);
 	}
 	else if (strcmp(type, "RESET") == 0)
 	{
-		//NOT IMPLEMENTED
+		changeState(STATE_INIT, REASON_BLUETOOTH_COMMAND);
 	}
 	else if (strcmp(type, "MANUAL") == 0)
 	{
-		//NOT IMPLEMENTED
+		changeState(STATE_MANUAL, REASON_BLUETOOTH_COMMAND);
 	}
 	else if (strcmp(type, "OPEN_FRAME") == 0)
 	{
@@ -128,41 +231,69 @@ void messageReceived(char* msg, int msgLength)
 	}
 	else if (strcmp(type, "DRIVE_PID_FORWARD") == 0)
 	{
-		//NOT IMPLEMENTED
+		double PWM;
+		if (sscanf(msg, "%30s %lf", type, &PWM) == 2)
+			setDrivePIDForward(PWM);
 	}
 	else if (strcmp(type, "DRIVE_PID_BACKWARD") == 0)
 	{
-		//NOT IMPLEMENTED
+		double PWM;
+		if (sscanf(msg, "%30s %lf", type, &PWM) == 2)
+			setDrivePIDBackward(PWM);
 	}
 	else if (strcmp(type, "DRIVE_VWHEEL") == 0)
 	{
-		//NOT IMPLEMENTED
+		double VMAX_LEFT, VMAX_RIGHT;
+		if (sscanf(msg, "%s %lf %lf", type, &VMAX_LEFT, &VMAX_RIGHT) == 3)
+			setDriveWheelVelocity(VMAX_LEFT, VMAX_RIGHT);
 	}
 	else if (strcmp(type, "DRIVE_SIDE_KTIR") == 0)
 	{
-		//NOT IMPLEMENTED
+		setDriveSideKtir();
 	}
 	else if (strcmp(type, "DRIVE_PWM") == 0)
 	{
-		//NOT IMPLEMENTED
+		double PWM_L, PWM_R;
+		if (sscanf(msg, "%s %lf %lf", type, &PWM_L, &PWM_R) == 3)
+			setDriveWheelPWM(PWM_L, PWM_R);
 	}
 	else if (strcmp(type, "DRIVE_STOP_FAST") == 0)
 	{
-		//NOT IMPLEMENTED
+		setDriveStopFast();
 	}
 	else if (strcmp(type, "DRIVE_STOP_SLOW") == 0)
 	{
-		//NOT IMPLEMENTED
+		setDriveStopSlow();
 	}
 	else if (strcmp(type, "GET_CONTROLLER") == 0)
 	{
 		char controllerName[30];
-		sscanf(msg, "%s %s", type, controllerName);
-		printControllerSettings(controllerName);
+		if (sscanf(msg, "%30s %30s", type, controllerName) == 2)
+			printControllerSettings(controllerName);
 	}
 	else if (strcmp(type, "SET_CONTROLLER") == 0)
 	{
-		//NOT IMPLEMENTED
+		// SET_CONTROLLER controllerForward 1 3 50 50 50 0 0 0
+		char controllerName[30];
+		double diffInterval, integralMax;
+		double kp, ti, td;
+		bool enabledP, enabledI, enabledD;
+
+		if (sscanf(msg, "%30s %30s %lf %lf %lf %lf %lf %d %d %d", type,
+				controllerName, &diffInterval, &integralMax, &kp, &ti, &td,
+				&enabledP, &enabledI, &enabledD) == 10)
+		{
+			ControllerState *ctrl = getController(controllerName);
+			ctrl->diffInterval = diffInterval;
+			ctrl->integralMax = integralMax;
+			ctrl->kp = kp;
+			ctrl->ti = ti;
+			ctrl->td = td;
+			ctrl->enabledP = enabledP;
+			ctrl->enabledI = enabledI;
+			ctrl->enabledD = enabledD;
+		}
+
 	}
 	else if (strcmp(type, "GET_SETTINGS") == 0)
 	{
@@ -213,18 +344,17 @@ void sendGlobal(void)
 	char msgTmp[100];
 	msg[0] = '\0';
 
-
-	msgTmp[0]='\0';
+	msgTmp[0] = '\0';
 	snprintf(msgTmp, 100, "GLOBAL %s %s %s %s ", ktFront, ktRight, ktBack,
 			ktLeft);
 	strcat(msg, msgTmp);
 
-	 msgTmp[0] = '\0';
-	snprintf(msgTmp, 100, "%d %d %d %d %d ", sharp, ultra[0], ultra[1], ultra[2],
-			ultra[3]);
+	msgTmp[0] = '\0';
+	snprintf(msgTmp, 100, "%d %d %d %d %d ", sharp, ultra[0], ultra[1],
+			ultra[2], ultra[3]);
 	strcat(msg, msgTmp);
 
-	 msgTmp[0] = '\0';
+	msgTmp[0] = '\0';
 	addDoubleToString(msgTmp, battery, 3);
 	addDoubleToString(msgTmp, pwmRight, 3);
 	addDoubleToString(msgTmp, pwmLeft, 3);
@@ -232,7 +362,7 @@ void sendGlobal(void)
 	addDoubleToString(msgTmp, velocityLeft, 3);
 	strcat(msg, msgTmp);
 
-	 msgTmp[0] = '\0';
+	msgTmp[0] = '\0';
 	addDoubleToString(msgTmp, position.x, 3);
 	addDoubleToString(msgTmp, position.y, 3);
 	addDoubleToString(msgTmp, direction, 3);
@@ -240,12 +370,10 @@ void sendGlobal(void)
 	addDoubleToString(msgTmp, 300 * recentTarget.j, 3);
 	strcat(msg, msgTmp);
 
-	 msgTmp[0] = '\0';
+	msgTmp[0] = '\0';
 	snprintf(msgTmp, 100, "%d %d %s ", 300 * nextCrossroad.i,
 			300 * nextCrossroad.j, "NO_ENEMIES");
 	strcat(msg, msgTmp);
-
-
 
 	snprintf(msgTmp, 100, "%d %d %d %d ", state, prevState, reasonChangeState,
 			getMiliseconds());
@@ -276,87 +404,11 @@ void sendGlobal(void)
 	snprintf(msgTmp, 100, "%d %d ", (int) carryingCan, (int) frameClosed);
 	strcat(msg, msgTmp);
 
-
-
 	/*
 	 * send message via UART
 	 */
 	sendMessage(msg);
 }
 
-/*
- * last time of sending message, updated by sendToPC()
- */
-long timeLastSent = 0;
 
-/*
- * this function needs to be called to send current state to PC
- */
-int stateSending = 0;
-void sendToPC()
-{
-	/*
-	 * will not send if message was sent later than settingBluetoothInterval
-	 * iterations ago
-	 */
-	double percentSent = (getMicroseconds() - timeLastSent)
-			/ settingBluetoothInterval;
-
-	if (percentSent > 0.1 && stateSending < 1)
-	{
-		sendGlobal();
-		stateSending++;
-	}
-	else if (percentSent > 0.2 && stateSending < 2)
-	{
-
-		stateSending++;
-	}
-	else if (percentSent > 0.3 && stateSending < 3)
-	{
-
-		stateSending++;
-
-	}
-	else if (percentSent > 0.4 && stateSending < 4)
-	{
-		printControllerOutput("controllerLeftKtir");
-		stateSending++;
-
-	}
-	else if (percentSent > 0.5 && stateSending < 5)
-	{
-		printControllerOutput("controllerRightKtir");
-		stateSending++;
-
-	}
-	else if (percentSent > 0.6 && stateSending < 6)
-	{
-		printControllerOutput("controllerLeftWheelSpeed");
-		stateSending++;
-
-	}
-	else if (percentSent > 0.7 && stateSending < 7)
-	{
-		printControllerOutput("controllerRightWheelSpeed");
-		stateSending++;
-	}
-	else if (percentSent > 0.8 && stateSending < 8)
-	{
-		printControllerOutput("controllerForward");
-		stateSending++;
-	}
-	else if (percentSent > 0.9 && stateSending < 9)
-	{
-		printControllerOutput("controllerBackward");
-		stateSending++;
-	}
-	else if (percentSent > 1)
-	{
-		timeLastSent = getMicroseconds();
-		stateSending = 0;
-	}
-
-
-}
 

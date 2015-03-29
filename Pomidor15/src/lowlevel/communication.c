@@ -36,16 +36,6 @@ void USART2_IRQHandler(void);
 
 void uart3_sendArray(unsigned short int *arr, unsigned short int n);
 
-/*
- * sends message via UART, appends "\r\n"
- */
-void sendMessage(char* msg)
-{
-	char msgNew[300];
-	strcpy(msgNew, msg);
-	strcat(msgNew, "\r\n");
-	messageQueuePush(msgNew);
-}
 
 //****************************************************//
 //********************__USART__***********************//

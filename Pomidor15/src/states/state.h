@@ -22,6 +22,7 @@
 #define REASON_ARRIVED_AT_BASELINE 3
 #define REASON_CAN_DETECTED_SHARP 4
 #define REASON_BUTTON_PRESSED 5
+#define REASON_BLUETOOTH_COMMAND 6
 
 void changeState(int newState, int reason);
 

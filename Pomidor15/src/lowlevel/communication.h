@@ -38,10 +38,6 @@ void uart2_sendArray(char *arr, unsigned short int n);
 //processes a message received by UART. Messages shuold end with '\n'
 void messageProcessor(char* msg, int msgLength);
 
-//sends a message via USART
-void sendMessage(char* msg);
-
-
 
 //************************__I2C_protocol__*************************//
 

@@ -9,5 +9,5 @@ void stateStop(void)
 {
 	setDriveStopSlow();
 	if(buttonStart)
-		changeState(STATE_MANUAL, REASON_BUTTON_PRESSED);
+		changeState(STATE_GO, REASON_BUTTON_PRESSED);
 }
