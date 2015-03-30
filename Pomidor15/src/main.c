@@ -5,6 +5,7 @@
  */
 
 #include <stddef.h>
+#include <string.h>
 #include "stm32f10x.h"
 #include "global.h"
 #include "lowlevel/config.h"
@@ -40,30 +41,8 @@ int main(void)
 		//wait loopWaitTime between iterations
 		while (getMicroseconds() - lastLoopTime < loopWaitTime)
 		{
-			/*
-			 * IMPORTANT NOTE
-			 * During this wait IF checks whether there are some messages in the queue.
-			 *  (  Queue has limited size (due to memory limitations) )
-			 *  If there are some messages and currently DMA for UART is OFF then new message
-			 *  from queue is taken an put in the DMA register.
-			 *	After message is  successfully sent, interrupt for DMA is raised and current message
-			 *	is popped from the queue. (please also see function "sendToPC() in commPc.c")
-			 *
-			 *	BUG DESCRIPTION:
-			 *	There is a loss in messages because of queue max size (pushing new element fails if
-			 *	queue is full). Therefore some messages are not sent at all.
-			 *	Possible solutions:
-			 *		* increasing BTM speed for UART 19200 -> 115200
-			 *		* checking if echo is disabled for BTM (ATE0 ; ATQ1)
-			 *		* waiting till message is sent before pushing new message to the queue
-			 *
-			 */
-			if (!(DMA1_Channel7->CCR & DMA_CCR7_EN) && messageQueueSize() > 0
-					&& !flaga)
-			{
-				usart_data_number = strlen(messageQueuePeek());
-				DMA_Config(messageQueuePeek());	//DMA configuration for the next transfer
-			}
+			trySendRemainingMessages();
+
 		}
 		lastLoopTime = getMicroseconds();
 

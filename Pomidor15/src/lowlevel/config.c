@@ -396,7 +396,7 @@ void USART_Config()
 
 	//USART2 (bluetooth)
 	USART_InitStructure.USART_Mode = USART_Mode_Tx | USART_Mode_Rx;
-	USART_InitStructure.USART_BaudRate = 19200;
+	USART_InitStructure.USART_BaudRate = 115200;
 	USART_Init(USART2, &USART_InitStructure);
 	USART2->CR3 |= USART_CR3_DMAT;
 	USART_Cmd(USART2, ENABLE);

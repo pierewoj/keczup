@@ -5,6 +5,7 @@
  *      Author: Kuba
  */
 #include "lowlevel/communication.h"
+#include "utils/messageQueue.h"
 #include "states/state.h"
 #include "global.h"
 #include "strategy.h"
@@ -16,6 +17,26 @@
 #include "pid.h"
 #include "settings.h"
 #include "lowlevel/effectors.h"
+#include "commPC.h"
+
+/*
+ * This function checks if DMA is off (ready to transfer more messages) and there
+ * are some messages left to be sent (in messageQueue). If those conditions
+ * are met, new message is written to be sent by DMA via UART
+ *
+ * This function can be called as frequently as you want, preferably during wait
+ * time in main loop
+ *
+ */
+void trySendRemainingMessages(void)
+{
+
+	if (!(DMA1_Channel7->CCR & DMA_CCR7_EN) && messageQueueSize() > 0 && !flaga)
+	{
+		usart_data_number = strlen(messageQueuePeek());
+		DMA_Config(messageQueuePeek());	//DMA configuration for the next transfer
+	}
+}
 
 /*
  * pushes new message to the queue of messages (to be sent by UART)
@@ -319,6 +340,49 @@ void printKtir(char* dst, bool* source, int num)
 }
 
 /*
+ * writes enemy position to the dst
+ */
+void printEnemy(char* dst)
+{
+	int i, j, index = 0;
+	for (i = 0; i < 5; i++)
+		for (j = 0; j < 5; j++)
+		{
+			if (getMiliseconds() - enemyTimes[i][j] < settingLocationTimeEnemy)
+			{
+				if (index != 0) //if some positions were printed, add ';'
+				{
+					dst[index] = ';';
+					index++;
+				}
+
+				//i  position of enemy
+				dst[index] = i + '0';
+				index++;
+
+				//position separator
+				dst[index] = ',';
+				index++;
+
+				//j position of enemy
+				dst[index] = j + '0';
+				index++;
+			}
+		}
+
+	//if no enemies were found print "NO_ENEMIES"
+	if (index == 0)
+		sprintf(dst, "NO_ENEMIES ");
+	else
+	{
+		dst[index] = ' ';
+		index++;
+		dst[index] = '\0';
+		index++;
+	}
+}
+
+/*
  * this function constructs a message containing most important variables and
  * sends them via UART
  */
@@ -371,8 +435,12 @@ void sendGlobal(void)
 	strcat(msg, msgTmp);
 
 	msgTmp[0] = '\0';
-	snprintf(msgTmp, 100, "%d %d %s ", 300 * nextCrossroad.i,
-			300 * nextCrossroad.j, "NO_ENEMIES");
+	snprintf(msgTmp, 100, "%d %d ", 300 * nextCrossroad.i,
+			300 * nextCrossroad.j);
+	strcat(msg, msgTmp);
+
+	msgTmp[0] = '\0';
+	printEnemy(msgTmp);
 	strcat(msg, msgTmp);
 
 	snprintf(msgTmp, 100, "%d %d %d %d ", state, prevState, reasonChangeState,
@@ -409,6 +477,4 @@ void sendGlobal(void)
 	 */
 	sendMessage(msg);
 }
-
-
 

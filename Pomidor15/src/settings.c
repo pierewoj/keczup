@@ -37,7 +37,7 @@ double settingAngleToBeginRotate = 30;
 double settingSharpThresh = 7;
 
 //Send uart messages every X microseconds
-double settingBluetoothInterval = 20*1000;
+double settingBluetoothInterval = 100*1000;
 
 //Max speed during rotations
 double settingMaxRotationVelocity = 300;
