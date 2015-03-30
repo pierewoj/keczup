@@ -10,7 +10,6 @@
 #include "lowlevel/sensors.h"
 #include "lowlevel/communication.h"
 
-
 //-----------------State variables------------------//
 
 /* important variables which denote state of FSM.
@@ -52,8 +51,8 @@ typedef struct controllerState
 	unsigned long lastTimeDiff;
 } ControllerState;
 
-extern ControllerState controllerForward, controllerBackward, controllerLeftKtir,
-		controllerRightKtir, controllerRightWheelSpeed,
+extern ControllerState controllerForward, controllerBackward,
+		controllerLeftKtir, controllerRightKtir, controllerRightWheelSpeed,
 		controllerLeftWheelSpeed;
 
 //-----------------Sensors-------------------//
@@ -101,8 +100,6 @@ extern bool frameClosed;
  * current pwm steering signals, readonly
  */
 extern double pwmLeft, pwmRight;
-
-//-----------------Functions------------------//
 
 /*
  * sets the default values of all variables, function called at the

@@ -41,4 +41,6 @@ extern double settingSharpThresh;
 //Send uart message every X microseconds
 extern double settingBluetoothInterval;
 
+//Max speed during rotations
+extern double settingMaxRotationVelocity;
 #endif /* SETTIINGS_H_ */
