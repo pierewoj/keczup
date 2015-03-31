@@ -51,6 +51,13 @@
             Accessor for checking if connection is open
             </summary>
         </member>
+        <member name="M:BluetoothAppPomidor15.Form1.IsInputKey(System.Windows.Forms.Keys)">
+            <summary>
+            Overriding is_inputKey to steer robot manually with arrows and space
+            </summary>
+            <param name="keyData"></param>
+            <returns></returns>
+        </member>
         <member name="F:BluetoothAppPomidor15.Form1.components">
             <summary>
             Required designer variable.
