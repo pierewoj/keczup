@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BluetoothAppPomidor15</name>
+    </assembly>
+    <members>
+        <!-- Badly formed XML comment ignored for member "T:BluetoothAppPomidor15.Connection" -->
+        <member name="M:BluetoothAppPomidor15.Connection.#ctor">
+             <summary>
+             Constructor, starting new background worker which checks conn status
+             </summary>
+             <param name="timeout">time in miliseconds after which conn is closed if no msg arrives
+            </param>
+        </member>
+        <member name="M:BluetoothAppPomidor15.Connection.connectionChecker(System.Object,System.ComponentModel.DoWorkEventArgs)">
+            <summary>
+            Background worker method
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:BluetoothAppPomidor15.Connection.dataReceivedPasser(System.Object,System.IO.Ports.SerialDataReceivedEventArgs)">
+            <summary>
+            Handler invoked when new data arrives on serial port
+            Updates time of message arrival and invokes dataReceived
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:BluetoothAppPomidor15.Connection.Connect(System.Int32,System.String,System.Int32)">
+            <summary>
+            Opens connection for given port name and
+            </summary>
+            <param name="baudRate"></param>
+            <param name="portName"></param>
+            <param name="timeout">number of milliseconds after which conn is closed if no msg received</param>
+        </member>
+        <member name="M:BluetoothAppPomidor15.Connection.Disconnect">
+            <summary>
+            Closes current connection
+            </summary>
+        </member>
+        <member name="M:BluetoothAppPomidor15.Connection.sendMessage(System.String)">
+            <summary>
+            Sends message to serial port if connected
+            </summary>
+            <param name="msg">message to send</param>
+        </member>
+        <member name="P:BluetoothAppPomidor15.Connection.IsConnected">
+            <summary>
+            Accessor for checking if connection is open
+            </summary>
+        </member>
+        <member name="F:BluetoothAppPomidor15.Form1.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:BluetoothAppPomidor15.Form1.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:BluetoothAppPomidor15.Form1.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:BluetoothAppPomidor15.Program.Main">
+            <summary>
+            The main entry point for the application.
+            </summary>
+        </member>
+        <member name="M:BluetoothAppPomidor15.ThreadHelperClass`1.PassData(System.Windows.Forms.Form,`0,System.Action{`0})">
+            <summary>
+            Set text property of various controls
+            </summary>
+            <param name="form">The calling form</param>
+            <param name="ctrl"></param>
+            <param name="text"></param>
+        </member>
+        <member name="T:BluetoothAppPomidor15.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:BluetoothAppPomidor15.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:BluetoothAppPomidor15.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:BluetoothAppPomidor15.Properties.Resources.Cel">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:BluetoothAppPomidor15.Properties.Resources.NastępneSkrzyżowanie">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:BluetoothAppPomidor15.Properties.Resources.Plansza">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:BluetoothAppPomidor15.Properties.Resources.Robot">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:BluetoothAppPomidor15.Properties.Resources.RobotCan">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:BluetoothAppPomidor15.Properties.Resources.RobotCanFrame">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:BluetoothAppPomidor15.Properties.Resources.RobotFrame">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:BluetoothAppPomidor15.Properties.Resources.Wróg">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+    </members>
+</doc>
