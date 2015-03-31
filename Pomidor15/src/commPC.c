@@ -151,12 +151,21 @@ void addDoubleToString(char *msg, double d, int decimal)
 	}
 
 	d = fabs(d);
-	int beforeDot = (int) d;
+	int beforeDot = (int)d;
 	double remainingAfterDot = d - beforeDot;
-	int afterDot = pow(10, decimal) * remainingAfterDot;
+	int afterDot = pow(10., decimal) * remainingAfterDot;
 	char representation[20];
-	snprintf(representation, 20, "%d.%d ", beforeDot, afterDot);
-	strcat(msg, representation);
+
+	char zeros[15]; zeros[0] = '\0';
+	if (afterDot > 0.00000001)
+	{
+		int i = floor(log10((double)afterDot));
+		for (; i < decimal-1; i++)
+			strcat(zeros, "0");
+	}
+
+	sprintf(representation, "%d.%s%d ", beforeDot, zeros,afterDot);
+	strcat(msg,  representation);
 }
 
 /*
@@ -205,14 +214,14 @@ void printControllerOutput(char* name)
 void printControllerSettings(char* name)
 {
 	ControllerState controller = *getController(name);
-	char msg[100];
-	snprintf(msg, 200, "CONTROLLER_SETTINGS %s ", name);
+	char msg[150];
+	snprintf(msg, 150, "CONTROLLER_SETTINGS %s ", name);
 	strcat(msg, " ");
 	addDoubleToString(msg, controller.diffInterval, 3);
 	addDoubleToString(msg, controller.integralMax, 3);
-	addDoubleToString(msg, controller.kp, 5);
-	addDoubleToString(msg, controller.ti, 5);
-	addDoubleToString(msg, controller.td, 5);
+	addDoubleToString(msg, controller.kp, 7);
+	addDoubleToString(msg, controller.ti, 7);
+	addDoubleToString(msg, controller.td, 7);
 	addDoubleToString(msg, controller.enabledP, 0);
 	addDoubleToString(msg, controller.enabledI, 0);
 	addDoubleToString(msg, controller.enabledD, 0);

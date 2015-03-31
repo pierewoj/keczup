@@ -10,7 +10,7 @@
 double settingDistanceMidToKtir = 70;
 
 //distance from baseline to center of robot at the beggining of the round
-double settingDistanceMidBeginning = -70;
+double settingDistanceMidBeginning = 80;
 
 //importance of distance to the target in finding nextCrossroad
 double settingLocationWeightDistance = 10;
