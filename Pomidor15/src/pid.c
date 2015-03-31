@@ -147,8 +147,8 @@ void setDriveWheelVelocity(double velLeft, double velRight)
  */
 void driveSideKtir(void)
 {
-	setLeftPWM(controllerLeftWheelSpeed.output);
-	setRightPWM(controllerRightWheelSpeed.output);
+	setLeftPWM(-controllerLeftKtir.output);
+	setRightPWM(controllerRightKtir.output);
 }
 
 void setDriveSideKtir(void)

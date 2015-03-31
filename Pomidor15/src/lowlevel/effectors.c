@@ -57,13 +57,13 @@ void setLeftPWM(double v)
 
 	if (v > 0)
 	{
-		GPIO_ResetBits(GPIOC, GPIO_Pin_7);
-		GPIO_SetBits(GPIOC, GPIO_Pin_6);
+		GPIO_ResetBits(GPIOC, GPIO_Pin_6);
+		GPIO_SetBits(GPIOC, GPIO_Pin_7);
 	}
 	else
 	{
-		GPIO_ResetBits(GPIOC, GPIO_Pin_6);
-		GPIO_SetBits(GPIOC, GPIO_Pin_7);
+		GPIO_ResetBits(GPIOC, GPIO_Pin_7);
+		GPIO_SetBits(GPIOC, GPIO_Pin_6);
 	}
 
 	if (modul < 1.0000001)

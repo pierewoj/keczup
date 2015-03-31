@@ -19,7 +19,7 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:BluetoothAppPomidor15.Connection.dataReceivedPasser(System.Object,System.IO.Ports.SerialDataReceivedEventArgs)">
+        <member name="M:BluetoothAppPomidor15.Connection.dataReceivedPasser(System.Object)">
             <summary>
             Handler invoked when new data arrives on serial port
             Updates time of message arrival and invokes dataReceived

@@ -323,7 +323,7 @@ void TIMERs_Config(void)
 	TIM4->CR1 |= TIM_CR1_CEN;							// TIMER enable
 
 	//engine's PWM configuration
-	TIM2->PSC = 239;	 // Set prescaler to 240 (PSC + 1)
+	TIM2->PSC = 20;	 // Set prescaler to 21 (PSC + 1) -> PWM Freuency 2 KHz for TIM2->ARR = 1000
 	TIM2->ARR = 1000;	 // Auto reload value 1000
 	TIM2->CCR2 = 0;		//PWM for ultrasonic sensors
 	TIM2->CCR3 = 0;	   // Start PWM duty for channel 3

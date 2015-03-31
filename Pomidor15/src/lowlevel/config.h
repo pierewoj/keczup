@@ -19,7 +19,7 @@
 //Invoked once, at the beginning of the program
 void configurePeripherials(void);
 
-extern unsigned int time__;
+
 
 //STM32 internal peripherials configurations
 void GPIO_Config(void);
