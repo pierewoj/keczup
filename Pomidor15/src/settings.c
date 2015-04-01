@@ -31,7 +31,7 @@ double settingLocationWeightEnemy = 5000;
 double settingPIDForwardPWM = 0.5;
 
 //Angle to target to change from GO to ROTATE (degrees)
-double settingAngleToBeginRotate = 30;
+double settingAngleToBeginRotate = 70;
 
 //Minimum Sharp reading in cm to detect can
 double settingSharpThresh = 7;

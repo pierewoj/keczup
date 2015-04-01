@@ -29,7 +29,6 @@
 int main(void)
 {
 	//Configuration of all peripherials (GPIO, UART, I2C, TIMERS etc)
-	initializeGlobalVariables();
 	configurePeripherials();
 
 	//Initialize global variables

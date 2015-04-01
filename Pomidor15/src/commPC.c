@@ -10,6 +10,7 @@
 #include "global.h"
 #include "strategy.h"
 #include "location.h"
+#include "lowlevel/config.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
