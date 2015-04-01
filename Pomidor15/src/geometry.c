@@ -11,7 +11,7 @@
  * returns the nearest multiple of "mulfipleOf" to "a"
  * tested: http://ideone.com/vPpGfL
  */
-int roundToTheMultipleOf(double a, int multipleOf)
+int roundToTheMultipleOf(const double a, const int multipleOf)
 {
 	if (a > 0)
 	{
@@ -32,7 +32,7 @@ int roundToTheMultipleOf(double a, int multipleOf)
 /*
  * Conversion Point -> PointMM
  */
-PointMM ofPoint(Point p)
+PointMM ofPoint(const Point p)
 {
 	PointMM result;
 	result.x = p.i * 300.;
@@ -43,7 +43,7 @@ PointMM ofPoint(Point p)
 /*
  * Conversion PointMM -> Point
  */
-Point ofPointMM(PointMM p)
+Point ofPointMM(const PointMM p)
 {
 	Point result;
 	result.i = roundToTheMultipleOf(p.x, 300) / 300;
@@ -54,7 +54,7 @@ Point ofPointMM(PointMM p)
 /*
  * Distance between points (Euclidean)
  */
-double distance(PointMM a, PointMM b)
+double distance(const PointMM a, const PointMM b)
 {
 	/*
 	 * hypot is a function from math.h
@@ -67,7 +67,7 @@ double distance(PointMM a, PointMM b)
  * Distance between points in manhattan metric
  * d(a,b) = |a.x-b.x| + |a.y-b.y|
  */
-double distanceManhattan(PointMM a, PointMM b)
+double distanceManhattan(const PointMM a, const PointMM b)
 {
 	return fabs(a.x-b.x) + fabs(a.y-b.y);
 }
@@ -80,12 +80,12 @@ double distanceManhattan(PointMM a, PointMM b)
  * 		the-smallest-difference-between-2-angles
  * Test: http://ideone.com/k8eSoD
  */
-double angleMod(double a, int n)
+double angleMod(const double a, const int n)
 {
 	return a - floor(a / n) * n;
 }
 
-double angleMakeInRange(double a)
+double angleMakeInRange(const double a)
 {
 	return angleMod((a + 180), 360) - 180;
 }
@@ -93,7 +93,7 @@ double angleMakeInRange(double a)
 /*
  * returns difference between angles (to - from)
  */
-double angleDifference(double from, double to)
+double angleDifference(const double from, const double to)
 {
 	return angleMakeInRange(to - from);
 }
@@ -101,12 +101,12 @@ double angleDifference(double from, double to)
 /*
  * returns an angle between [0,1] and vector v
  */
-double vectorAngle(Vector v)
+double vectorAngle(const Vector v)
 {
 	return RAD_TO_DEG * atan2(v.y, v.x);
 }
 
-Vector vectorBetweenPoints(PointMM from, PointMM to)
+Vector vectorBetweenPoints(const PointMM from, const PointMM to)
 {
 	Vector res = {to.x - from.x , to.y - from.y};
 	return res;
@@ -120,21 +120,21 @@ Vector vectorNormalize(Vector v)
 	return v;
 }
 
-PointMM translateByVector(PointMM p, Vector v)
+PointMM translateByVector(PointMM p, const Vector v)
 {
 	p.x += v.x;
 	p.y += v.y;
 	return p;
 }
 
-Vector vectorMultiplyByScalar(Vector v, double s)
+Vector vectorMultiplyByScalar(Vector v, const double s)
 {
 	v.x *= s;
 	v.y *= s;
 	return v;
 }
 
-Vector vectorOfDirection(double a)
+Vector vectorOfDirection(const double a)
 {
 	Vector v = {cos(a), sin(a)};
 	return v;

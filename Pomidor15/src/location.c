@@ -80,15 +80,12 @@ void updateOurPosition(void)
 		direction = roundToTheMultipleOf(direction, 90);
 		direction = angleMakeInRange(direction);
 
-		//position of nearest crossroad
-		PointMM nearestCrossroad = getNearestCrossroad(position);
-
 		//v is a vector from the front ktir line to the middle of robot.
 		Vector v = vectorOfDirection(direction);
 		v = vectorMultiplyByScalar(v, -settingDistanceMidToKtir);
 
 		//position snap
-		position = translateByVector(nearestCrossroad, v);
+		position = translateByVector(nearestCrossroadMM, v);
 	}
 
 }

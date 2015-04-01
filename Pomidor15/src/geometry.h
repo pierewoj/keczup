@@ -32,54 +32,54 @@ typedef struct point
 /*
  * Conversion Point -> PointMM
  */
-PointMM ofPoint(Point p);
+PointMM ofPoint(const Point p);
 
 /*
  * Conversion PointMM -> Point
  */
-Point ofPointMM(PointMM p);
+Point ofPointMM(const PointMM p);
 
 /*
  * returns the nearest multiple of "mulfipleOf" to "a"
  * tested: http://ideone.com/vPpGfL
  */
-int roundToTheMultipleOf(double a, int multipleOf);
+int roundToTheMultipleOf(const double a, const int multipleOf);
 
 /*
  * Distance between points (Euclidean metric)
  */
-double distance(PointMM a, PointMM b);
+double distance(const PointMM a, const PointMM b);
 
 /*
  * Distance between points in manhattan metric
  * d(a,b) = |a.x-b.x| + |a.y-b.y|
  */
-double distanceManhattan(PointMM a, PointMM b);
+double distanceManhattan(const PointMM a, const PointMM b);
 /*
  * Every angle in this program should be [-180; 180].
  * For any angle a it makes sure is within this range.
  */
 
-double angleMakeInRange(double a);
+double angleMakeInRange(const double a);
 
 /*
  * returns difference between angles (to - from)
  */
-double angleDifference(double from, double to);
+double angleDifference(const double from,const  double to);
 
 /*
  * returns an angle between [0,1] and vector v
  */
-double vectorAngle(Vector v);
+double vectorAngle(const Vector v);
 
-Vector vectorBetweenPoints(PointMM from, PointMM to);
+Vector vectorBetweenPoints(const PointMM from, const PointMM to);
 
 Vector vectorNormalize(Vector v);
 
-PointMM translateByVector(PointMM p, Vector v);
+PointMM translateByVector(PointMM p, const Vector v);
 
-Vector vectorMultiplyByScalar(Vector v, double s);
+Vector vectorMultiplyByScalar(Vector v, const double s);
 
-Vector vectorOfDirection(double a);
+Vector vectorOfDirection(const double a);
 
 #endif /* GEOMETRY_H_ */

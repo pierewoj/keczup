@@ -172,7 +172,7 @@ void addDoubleToString(char *msg, double d, int decimal)
 /*
  * returns pointer to controller based on its name
  */
-ControllerState* getController(char* name)
+ControllerState* getController(const char* name)
 {
 	if (strcmp(name, "controllerForward") == 0)
 	{
@@ -200,7 +200,7 @@ ControllerState* getController(char* name)
 	}
 }
 
-void printControllerOutput(char* name)
+void printControllerOutput(const char* name)
 {
 	ControllerState controller = *getController(name);
 	char msg[100];
@@ -212,7 +212,7 @@ void printControllerOutput(char* name)
 	sendMessage(msg);
 }
 
-void printControllerSettings(char* name)
+void printControllerSettings(const char* name)
 {
 	ControllerState controller = *getController(name);
 	char msg[150];
@@ -229,7 +229,7 @@ void printControllerSettings(char* name)
 	sendMessage(msg);
 }
 
-void messageReceived(char* msg, int msgLength)
+void messageReceived(const char* msg, int msgLength)
 {
 	char type[30];
 	type[0] = '\0';
@@ -284,9 +284,9 @@ void messageReceived(char* msg, int msgLength)
 	}
 	else if (strcmp(type, "DRIVE_PWM") == 0)
 	{
-		double PWM_L, PWM_R;
-		if (sscanf(msg, "%s %lf %lf", type, &PWM_L, &PWM_R) == 3)
-			setDriveWheelPWM(PWM_L, PWM_R);
+		double PWML, PWMR;
+		if (sscanf(msg, "%s %lf %lf", type, &PWML, &PWMR) == 3)
+			setDriveWheelPWM(PWML, PWMR);
 	}
 	else if (strcmp(type, "DRIVE_STOP_FAST") == 0)
 	{
@@ -312,7 +312,7 @@ void messageReceived(char* msg, int msgLength)
 
 		if (sscanf(msg, "%30s %30s %lf %lf %lf %lf %lf %d %d %d", type,
 				controllerName, &diffInterval, &integralMax, &kp, &ti, &td,
-				&enabledP, &enabledI, &enabledD) == 10)
+				(int*) &enabledP, (int*) &enabledI,(int*)  &enabledD) == 10)
 		{
 			ControllerState *ctrl = getController(controllerName);
 			ctrl->diffInterval = diffInterval;
@@ -343,7 +343,7 @@ void printKtir(char* dst, bool* source, int num)
 {
 	int i = 0;
 	for (i = 0; i < num; i++)
-		dst[i] = source[i] + '0';
+		dst[i] =  source[i] + '0';
 
 	dst[i] = '\0';
 
