@@ -44,7 +44,7 @@ void stateGo(void)
 	}
 
 	//new can detected
-	else if (sharp < settingSharpThresh)
+	else if (sharp < settingSharpThresh && !carryingCan)
 	{
 		changeState(STATE_TAKE_CAN, REASON_CAN_DETECTED_SHARP);
 	}
@@ -54,5 +54,4 @@ void stateGo(void)
 	{
 		setDrivePIDForward(settingPIDForwardPWM);
 	}
-
 }

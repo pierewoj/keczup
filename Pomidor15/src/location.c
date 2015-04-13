@@ -8,8 +8,8 @@
 Point nextCrossroad;
 
 /*
- * last value of gyroDirection reading. Difference between current and las value
- * is used tu update "direction".
+ * last value of gyroDirection reading. Difference between current and last value
+ * is used to update "direction".
  */
 double lastGyroDirection;
 
@@ -49,14 +49,13 @@ void updateOurPosition(void)
 			&& pointValid(nearestCrossroad))
 		visitTimes[nearestCrossroad.i][nearestCrossroad.j] = getMiliseconds(); //ms
 
-
 	//updating direction
 	direction += angleDifference(lastGyroDirection, gyroDirection);
 	direction = angleMakeInRange(direction);
 
 	//updating position
-	int dR = totalDistanceRight - lastTotalDistanceRight, dL = totalDistanceLeft
-			- lastTotalDistanceLeft;
+	int dR = totalDistanceRight - lastTotalDistanceRight;
+	int dL = totalDistanceLeft - lastTotalDistanceLeft;
 	double dMid = (dR + dL) / 2;
 	position.x += dMid * cos(DEG_TO_RAD * direction);
 	position.y += dMid * sin(DEG_TO_RAD * direction);
@@ -66,7 +65,10 @@ void updateOurPosition(void)
 	lastTotalDistanceLeft = totalDistanceLeft;
 	lastTotalDistanceRight = totalDistanceRight;
 
-	//snap
+	/*
+	 * direction and position are snapped if there is line under more than
+	 * 3 KTIRS (maybe setting for this value??)
+	 */
 	int i, numBlackFrontKtir = 0;
 	for (i = 0; i < 7; i++)
 		if (ktirFront[i])
@@ -78,15 +80,12 @@ void updateOurPosition(void)
 		direction = roundToTheMultipleOf(direction, 90);
 		direction = angleMakeInRange(direction);
 
-		//position of nearest crossroad
-		PointMM nearestCrossroad = getNearestCrossroad(position);
-
 		//v is a vector from the front ktir line to the middle of robot.
 		Vector v = vectorOfDirection(direction);
 		v = vectorMultiplyByScalar(v, -settingDistanceMidToKtir);
 
 		//position snap
-		position = translateByVector(nearestCrossroad, v);
+		position = translateByVector(nearestCrossroadMM, v);
 	}
 
 }
@@ -133,8 +132,8 @@ void updateEnemyPosition(void)
 }
 
 /*
- *	It is a cost function for finding next neighbour
- *	its value is minimized (best neighbour = small value)
+ *	It is a cost function for finding next neighbor
+ *	its value is minimized (best neighbor = small value)
  */
 double countCrossradCost(Point p)
 {
@@ -190,9 +189,9 @@ void updateNextCrossroad(void)
 	if (distance(position, nearestCrossroad) > 50)
 	{
 		//counting position of the other crossroad on the current line
-		Vector v = vectorBetweenPoints(position, nearestCrossroad);
-		v = vectorNormalize(v);
-		v = vectorMultiplyByScalar(v, -300); //300mm in the rev. direction
+		Vector v = vectorBetweenPoints(nearestCrossroad, position);
+		v = vectorNormalize(v); //normalization
+		v = vectorMultiplyByScalar(v, 300); //multiply by 300
 		PointMM otherCrossroad = translateByVector(nearestCrossroad, v);
 
 		addCandidate(candidates, &numCandidates, otherCrossroad);

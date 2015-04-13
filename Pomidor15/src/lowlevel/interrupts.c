@@ -119,9 +119,10 @@ void DMA1_Channel7_IRQHandler(void)
 		DMA1_Channel7->CCR &= ~DMA_CCR7_EN;	 //DMA disable
 		DMA1->IFCR |= DMA_IFCR_CTCIF7;       //clear TCIF7 flag
 
-		//KUBA \/
+		/*
+		 * marking message as sent
+		 */
 		messageQueuePop();
-		//KUBA /\
 
 	}
 }

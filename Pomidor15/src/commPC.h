@@ -48,16 +48,16 @@ void addDoubleToString(char *msg, double d, int decimal);
 /*
  * returns pointer to controller based on its name
  */
-ControllerState* getController(char* name);
+ControllerState* getController(const char* name);
 
-void printControllerOutput(char* name);
+void printControllerOutput(const char* name);
 
-void printControllerSettings(char* name);
+void printControllerSettings(const char* name);
 
 /*
  * function called after new message arrived, decides what action to take
  */
-void messageReceived(char* msg, int msgLength);
+void messageReceived(const char* msg, int msgLength);
 
 /*
  * writes enemy position to the dst

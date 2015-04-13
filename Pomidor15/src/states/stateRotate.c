@@ -23,14 +23,14 @@ void stateRotate(void)
 	}
 	else if (subStateRotate == 1)
 	{
-		int direction = 0;
+		int dir = 0;
 		if (angleToNextCrossroad() > 0)
-			direction = 1;
+			dir = 1;
 		else
-			direction = -1;
+			dir = -1;
 
-		setDriveWheelVelocity(-direction * settingMaxRotationVelocity,
-				direction * settingMaxRotationVelocity);
+		setDriveWheelVelocity(-dir * settingMaxRotationVelocity,
+				dir * settingMaxRotationVelocity);
 
 		if(fabs(angleToNextCrossroad())< 5)
 			subStateRotate ++;

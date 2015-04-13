@@ -38,7 +38,7 @@ void PID(ControllerState* s, bool currentlyRunning)
 
 	//count output from P, I and D
 	s->propSignal = s->enabledP * s->kp * error;
-	if (s->ti != 0)
+	if (fabs(s->ti)>0.001) //it TI is not 0 (cant compare to 0 because float)
 		s->integralSignal = s->enabledI * s->kp / s->ti * s->integral;
 	s->diffSignal = s->enabledD * s->kp * s->td * d;
 
@@ -169,11 +169,11 @@ void driveWheelPWM(void)
 	setRightPWM(driveWheelPWMRight);
 }
 
-void setDriveWheelPWM(double pwmLeft, double pwmRight)
+void setDriveWheelPWM(double _pwmLeft, double _pwmRight)
 {
 	driveFunction = driveWheelPWM;
-	driveWheelPWMLeft = pwmLeft;
-	driveWheelPWMRight = pwmRight;
+	driveWheelPWMLeft = _pwmLeft;
+	driveWheelPWMRight = _pwmRight;
 }
 
 /*

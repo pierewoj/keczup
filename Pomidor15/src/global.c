@@ -5,8 +5,6 @@
 #include "location.h"
 #include "strategy.h"
 
-//-----------------State variables------------------//
-
 /* important variables which denote state of FSM.
  * these variables shouldn't be aceccssed manually, changing states should be
  * done using changeState(int,int) defined in "state.h"
@@ -23,23 +21,25 @@ unsigned long loopWaitTime; //time to wait between main loop iteratinos
 unsigned long lastLoopTime; //time of last loop execution in microseconds
 bool carryingCan; //does the robot "have" the can
 
-//-----------------Location variables------------------//
+/*
+ * Location variables
+ * They are updated in location.c. They are not sensor readings!
+ * These values are updated based on gyroDyrection and encoderSpeeds
+ */
 PointMM position; //in mm
-double direction; //[-180,180], 90 is NORTH
+double direction; //[-180,180], 90 is NORTH.
 unsigned long enemyTimes[5][5]; //enemy detection times in ms
 unsigned long visitTimes[5][5]; //visit times of crossroads in ms
 
-//-----------------Controllers-------------------//
+/*
+ * Controller states, represent controller settings and outputs
+ */
 ControllerState controllerForward, controllerBackward, controllerLeftKtir,
 		controllerRightKtir, controllerRightWheelSpeed,
 		controllerLeftWheelSpeed;
 
-//-----------------Sensors-------------------//
-/* Values are updated either during interrupts or by using
- * readSensors() function defined in "sensors.h"
- */
-
-/* KTIR readings. KTIRs are numerated clockwise looking at the top of the robot.
+/*
+ * KTIR readings. KTIRs are numerated clockwise looking at the top of the robot.
  * For example ktirFront[0] is the "most left" front KTIR, while ktirBack[0]
  * is the "most right" back KTIR. True is BLACK, false means WHITE.
  */
@@ -56,8 +56,12 @@ int ultra[4];
 double velocityLeft, velocityRight; // mm/s
 double totalDistanceLeft, totalDistanceRight; //mm since the restart
 
-/* current direction from gyro. Its value is an angle [-180 .. 180) deg.
- 90 is north, 0 is east, -90 is south and +-180 is west. */
+/*
+ * current direction from gyro. Its value is an angle [-180 .. 180) deg.
+ * 90 is north, 0 is east, -90 is south and +-180 is west.
+ * updated in sensors.c, DO NOT CHANGE IT MANUALLY!! Changes in this value
+ * are used to update "direction" variable
+ */
 double gyroDirection;
 
 /*
@@ -102,8 +106,8 @@ void initializeGlobalVariables(void)
 	sharp = 1000;
 
 	int i, j;
-	for(i=0;i<4;i++)
-		ultra[i]=1000;
+	for (i = 0; i < 4; i++)
+		ultra[i] = 1000;
 
 	for (i = 0; i < 5; i++)
 		for (j = 0; j < 5; j++)
@@ -187,11 +191,17 @@ void initializeGlobalVariables(void)
 
 }
 
+/*
+ * returns current time since uC restart in microseconds (us)
+ */
 unsigned int getMicroseconds(void)
 {
 	return ((((RTC->CNTH) << 16) + RTC->CNTL) * 16); //time - current time value [us]
 }
 
+/*
+ * returns current time since uC restart in miliseconds (ms)
+ */
 unsigned int getMiliseconds(void)
 {
 	return getMicroseconds() / 1000;
