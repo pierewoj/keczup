@@ -20,6 +20,7 @@
 
 extern unsigned int getMiliseconds(void);
 extern unsigned int getMicroseconds(void);
+extern unsigned int time__;
 
 extern int state, prevState, reasonChangeState;
 extern void (*driveFunction)(void); //pointer to a function which controls motors

@@ -13,7 +13,6 @@
 #include "stm32f10x_gpio.h"
 #include "communication.h"
 
- unsigned int time__;
 
 void configurePeripherials(void)
 {
@@ -84,6 +83,7 @@ void RCC_Config(void)
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM17, ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM15, ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6, ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
 	RCC->APB2ENR |= RCC_APB2ENR_ADC1EN;
@@ -175,6 +175,12 @@ void NVIC_Config(void)
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
+	NVIC_InitStructure.NVIC_IRQChannel = TIM1_BRK_TIM15_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 5;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
+
 	NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel7_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 6;
@@ -206,9 +212,9 @@ void GPIO_Config(void)
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOC, &GPIO_InitStructure);
 
-	//PA1 - ultrasonic sensors trigger (PWM)
+	//PA1 - ultrasonic sensors trigger (common GPIO - set and reset after 10 us )
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
@@ -323,16 +329,13 @@ void TIMERs_Config(void)
 	TIM4->CR1 |= TIM_CR1_CEN;							// TIMER enable
 
 	//engine's PWM configuration
-	TIM2->PSC = 20;	 // Set prescaler to 21 (PSC + 1) -> PWM Freuency 2 KHz for TIM2->ARR = 1000
+	TIM2->PSC = 7;	 // Set prescaler to 8 (PSC + 1) -> PWM Frequency = 5.25 KHz for TIM2->ARR = 1000
 	TIM2->ARR = 1000;	 // Auto reload value 1000
-	TIM2->CCR2 = 0;		//PWM for ultrasonic sensors
 	TIM2->CCR3 = 0;	   // Start PWM duty for channel 3
 	TIM2->CCR4 = 1000; // Start PWM duty for channel 4
 	TIM2->CCMR2 = TIM_CCMR2_OC4M_2 | TIM_CCMR2_OC4M_1 | TIM_CCMR2_OC3M_2
-			| TIM_CCMR2_OC3M_1;
-	TIM2->CCMR1 = TIM_CCMR1_OC2M_2 | TIM_CCMR1_OC2M_1; // PWM mode on channel 3 & 4
-	TIM2->CCER = TIM_CCER_CC4E | TIM_CCER_CC3E | TIM_CCER_CC2E; // Enable compare on channel 3 & 4
-	TIM2->DIER |= TIM_DIER_CC2IE;
+			| TIM_CCMR2_OC3M_1;	// PWM mode on channels 3, 4
+	TIM2->CCER = TIM_CCER_CC4E | TIM_CCER_CC3E; // Enable compare on channel 3 & 4
 	TIM2->CR1 = TIM_CR1_CEN;	 // Enable timer
 
 	//ultrasonic sensor echo capturing timer
@@ -353,10 +356,15 @@ void TIMERs_Config(void)
 	TIM3->CNT = 0x0000;			//clear counter
 
 	//ultrasonic sensors data processing timer
-	TIM17->PSC = 39999;	         // Set prescaler to 24 000 (PSC + 1)
+	TIM17->PSC = 39999;	         // Set prescaler to 40000 (PSC + 1)
 	TIM17->ARR = 20;	         // Auto reload value [ms]
 	TIM17->DIER = TIM_DIER_UIE;  // Enable update interrupt (timer level)
 	TIM17->CR1 = TIM_CR1_CEN;    // Enable timer
+
+	TIM15->PSC = 39;	         // Set prescaler to 40 (PSC + 1); one tick-1us
+	TIM15->ARR = 10;	         // Auto reload value [us]
+	TIM15->DIER = TIM_DIER_UIE;  // Enable update interrupt (timer level)
+	TIM15->CR1 = TIM_CR1_CEN;    // Enable timer
 }
 
 //External interrupt configuration - user button

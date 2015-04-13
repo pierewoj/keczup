@@ -7,15 +7,18 @@
 #include "interrupts.h"
 #include "../utils/messageQueue.h"
 
+unsigned short int pwm_tim_count;
 //interrupt for ultrasonic sensors data processing
 void TIM1_TRG_COM_TIM17_IRQHandler(void)
 {
 	if (TIM17->SR & TIM_SR_UIF) // if UIF flag is set
 	{
 		TIM17->SR &= ~TIM_SR_UIF; // clear UIF flag
-		TIM2->CCR2 = 17;       //about 10 ms high PWM state - ultrasonic trigger
 
-		//normalization of ultrasonic sensors data
+		TIM15->CNT = 0;
+		TIM15->CR1 |= TIM_CR1_CEN;
+		GPIO_SetBits(GPIOA, GPIO_Pin_1);
+
 		encodersRead();
 		ultra_data_processing();
 		ultra1 = ultra[0];
@@ -24,13 +27,14 @@ void TIM1_TRG_COM_TIM17_IRQHandler(void)
 	}
 }
 
-void TIM2_IRQHandler(void) //interrupt after each ultrasonic trigger pulse generated
+void TIM1_BRK_TIM15_IRQHandler(void)	//interrupt after each ultrasonic trigger pulse generated
 {
-	if (TIM2->SR & TIM_SR_CC2IF) // if CC2IF flag is set
+	if (TIM15->SR & TIM_SR_UIF) // if UIF flag is set
 	{
-		//Timer 2 reset
-		TIM2->SR &= !(TIM_SR_CC2IF | TIM_SR_CC2OF);			//clear flags
-		TIM2->CCR2 = 0;										//clear counter
+		TIM15->SR &= ~TIM_SR_UIF; // clear UIF flag
+
+		GPIO_ResetBits(GPIOA, GPIO_Pin_1);
+		TIM15->CR1 &= ~TIM_CR1_CEN;	//disable timer
 
 		//Timer 3 -> reset interrupt and overwrite flags, set polarity (high), reset counter
 		TIM3->SR &= !(TIM_SR_CC3IF | TIM_SR_CC3OF | TIM_SR_CC4IF | TIM_SR_CC4OF

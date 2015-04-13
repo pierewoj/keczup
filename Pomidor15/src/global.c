@@ -15,6 +15,7 @@
 
 unsigned int getMiliseconds(void);
 unsigned int getMicroseconds(void);
+unsigned int time__;
 
 int state, prevState, reasonChangeState;
 void (*driveFunction)(void); //pointer to a function which controls motors

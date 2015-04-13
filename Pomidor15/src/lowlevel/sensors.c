@@ -25,7 +25,8 @@ void gyro_update_direction(void);
 //ULTRADZWIEKI
 unsigned int ultra__[4], ultra_pom[4];
 unsigned int ultra1, ultra2, ultra3;
-char pierwsze_zbocze[4];
+char pierwsze_zbocze[4]; //pierwsze_zbocze[i] is set to 1 if rising edge was detected from sensor i,
+//it is cleared after detecting falling edge - OK state; (value 1 implicate wrong detection)
 
 //Markery
 double PWM_L, PWM_R, POSX, POSY, dist_L, dist_R;
@@ -36,7 +37,6 @@ void read_ktirs(void);
 //Encoders
 void encodersReset(void);
 void encodersRead(void);
-
 
 unsigned int time_old;
 volatile int16_t leftCount;								//speeds
@@ -218,7 +218,7 @@ inline void ultra_data_processing(void)
 				+ const_distance_from_the_middle_of_the_robot);
 		//register value to enemy distance [cm] conversion
 
-		if (ultra[a] > 58)	//low-pass filter, high bandwidth - unstable
+		if (ultra[a] > 62)	//low-pass filter, high bandwidth - unstable
 		{
 			ultra[a] = 1000;
 		}
