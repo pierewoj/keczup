@@ -41,3 +41,6 @@ double settingBluetoothInterval = 100*1000;
 
 //Max speed during rotations
 double settingMaxRotationVelocity = 300;
+
+//Robot is at crossroad when distance to is is less than this value
+double settingCrossroadRadius = 60;

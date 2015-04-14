@@ -186,7 +186,7 @@ void updateNextCrossroad(void)
 	addCandidate(candidates, &numCandidates, nearestCrossroad);
 
 	//robot is between crossroads, only 2 candidates.
-	if (distance(position, nearestCrossroad) > 50)
+	if (distance(position, nearestCrossroad) > settingCrossroadRadius)
 	{
 		//counting position of the other crossroad on the current line
 		Vector v = vectorBetweenPoints(nearestCrossroad, position);
@@ -262,5 +262,5 @@ double angleToNextCrossroad(void)
 bool targetReached()
 {
 	double dst = distance(ofPoint(getRecentTarget()), position);
-	return dst < 50;
+	return dst < settingCrossroadRadius;
 }

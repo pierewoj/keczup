@@ -43,4 +43,8 @@ extern double settingBluetoothInterval;
 
 //Max speed during rotations
 extern double settingMaxRotationVelocity;
+
+//Robot is at crossroad when distance to is is less than this value
+double settingCrossroadRadius;
+
 #endif /* SETTIINGS_H_ */
