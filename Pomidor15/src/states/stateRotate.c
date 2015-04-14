@@ -17,7 +17,7 @@ void stateRotate(void)
 	//STOP
 	if (subStateRotate == 0)
 	{
-		setDriveStopSlow();
+		setDriveStopFast();
 		if (fabs(velocityLeft) + fabs(velocityRight) < 50)
 			subStateRotate ++;
 	}
