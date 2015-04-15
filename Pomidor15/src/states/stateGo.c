@@ -11,17 +11,23 @@
 
 void stateGo(void)
 {
-	/*
-	 * updating position of the next crossroad to visit
-	 * if robot is between crossroad, one of 2 nearest crossroads will be chosen
-	 * if robot is on crossroad, one of 5 nearest crossroads will be chosen
-	 */
-	updateNextCrossroad();
-
-	// big angle to the next crossroad, need to rotate on gyro
-	if (fabs(angleToNextCrossroad()) > settingAngleToBeginRotate)
+	// big angle to the next crossroad, rotating
+	if (fabs(angleToNextCrossroad()) > settingAngleToBeginRotate
+			&& distanceToNextCrossroad() > settingCrossroadRadius)
 	{
 		changeState(STATE_ROTATE, REASON_BIG_ANGLE_TO_NEXT_CROSSROAD);
+	}
+
+	//reseting feedback for side KTIR controllers
+	else if (80 < distanceToNextCrossroad() && distanceToNextCrossroad() < 100)
+	{
+		controllerLeftKtir.feedback = 2;
+		controllerRightKtir.feedback = 0;
+	}
+
+	else if (distanceToNextCrossroad() < settingCrossroadRadius)
+	{
+		updateNextCrossroad();
 	}
 
 	else if (targetReached())

@@ -190,7 +190,6 @@ void encodersRead(void)
 	//const = 3.7972 = 1367/360; 360 degrees,
 	//1367/2 = 683.5 ->mean number of impulses per 1 rotate
 	gyroDirection = angleMakeInRange(gyroDirection);
-	direction = gyroDirection;
 
 	//total distance in mm
 	totalDistanceLeft = leftTotal * IMP_DIST;

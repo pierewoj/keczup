@@ -22,6 +22,11 @@ extern Point nextCrossroad;
 void updateOurPosition(void);
 
 /*
+ * returns the nearest crossroad to "point"
+ */
+PointMM getNearestCrossroad(PointMM pos);
+
+/*
  * detects enemy using sonars. That information is used to count path to the
  * target.
  */

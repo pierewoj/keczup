@@ -50,6 +50,7 @@ void sendMessage(char* msg)
 	strcpy(msgNew, msg);
 	strcat(msgNew, "\r\n");
 	messageQueuePush(msgNew);
+	char* s = malloc(1);
 }
 
 /*

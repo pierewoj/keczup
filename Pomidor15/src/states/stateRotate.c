@@ -7,6 +7,7 @@
 #include "../pid.h"
 #include "../settings.h"
 #include "../location.h"
+#include "../geometry.h"
 #include <math.h>
 
 //current state of rotation process
@@ -17,10 +18,22 @@ void stateRotate(void)
 	//STOP
 	if (subStateRotate == 0)
 	{
-		setDriveStopFast();
+
+		setDriveSideKtir();
+
 		if (fabs(velocityLeft) + fabs(velocityRight) < 50)
-			subStateRotate ++;
+		{
+			subStateRotate++;
+
+			//direction snap
+			direction = roundToTheMultipleOf(direction, 90);
+			direction = angleMakeInRange(direction);
+
+			//finding vector from center of robot to its front KTIR line
+			position = getNearestCrossroad(position);
+		}
 	}
+
 	else if (subStateRotate == 1)
 	{
 		int dir = 0;
@@ -32,8 +45,8 @@ void stateRotate(void)
 		setDriveWheelVelocity(-dir * settingMaxRotationVelocity,
 				dir * settingMaxRotationVelocity);
 
-		if(fabs(angleToNextCrossroad())< 5)
-			subStateRotate ++;
+		if (fabs(angleToNextCrossroad()) < 5)
+			subStateRotate++;
 	}
 	else if (subStateRotate == 2)
 	{

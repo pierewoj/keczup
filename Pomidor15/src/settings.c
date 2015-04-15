@@ -28,10 +28,10 @@ double settingLocationTimeEnemy = 5000;
 double settingLocationWeightEnemy = 5000;
 
 //PWMmax for driving between crossroads
-double settingPIDForwardPWM = 0.5;
+double settingPIDForwardPWM = 0.3;
 
 //Angle to target to change from GO to ROTATE (degrees)
-double settingAngleToBeginRotate = 80;
+double settingAngleToBeginRotate = 85;
 
 //Minimum Sharp reading in cm to detect can
 double settingSharpThresh = 7;

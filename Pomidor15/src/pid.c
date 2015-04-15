@@ -6,6 +6,8 @@
  */
 #include "global.h"
 #include "lowlevel/effectors.h"
+#include "location.h"
+#include "geometry.h"
 #include <math.h>
 
 /*
@@ -38,7 +40,7 @@ void PID(ControllerState* s, bool currentlyRunning)
 
 	//count output from P, I and D
 	s->propSignal = s->enabledP * s->kp * error;
-	if (fabs(s->ti)>0.001) //it TI is not 0 (cant compare to 0 because float)
+	if (fabs(s->ti) > 0.001) //it TI is not 0 (cant compare to 0 because float)
 		s->integralSignal = s->enabledI * s->kp / s->ti * s->integral;
 	s->diffSignal = s->enabledD * s->kp * s->td * d;
 
@@ -147,8 +149,37 @@ void setDriveWheelVelocity(double velLeft, double velRight)
  */
 void driveSideKtir(void)
 {
-	setLeftPWM(-controllerLeftKtir.output);
-	setRightPWM(controllerRightKtir.output);
+	double leftVal = -controllerLeftKtir.output, rightVal =
+			controllerRightKtir.output;
+	int dir = roundToTheMultipleOf(angleMakeInRange(direction), 90);
+	if (dir == -180)
+		dir = 180;
+
+	Point cross = ofPointMM(position);
+
+	//right wheel out of board
+	if ((cross.j == 0 && dir == 0) || (cross.i == 4 && dir == 90)
+			|| (cross.j == 4 && dir == 180) || (cross.i == 0 && dir == -90))
+	{
+		setLeftPWM(leftVal);
+		setRightPWM(leftVal);
+	}
+
+	//left wheel out of board
+	else if ((cross.j == 0 && dir == 180) || (cross.i == 4 && dir == -90)
+			|| (cross.j == 4 && dir == 0) || (cross.i == 0 && dir == 90))
+	{
+		setLeftPWM(rightVal);
+		setRightPWM(rightVal);
+	}
+
+	//both wheels on board
+	else
+	{
+		setLeftPWM(leftVal);
+		setRightPWM(rightVal);
+	}
+
 }
 
 void setDriveSideKtir(void)

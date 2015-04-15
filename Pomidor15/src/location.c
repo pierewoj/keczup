@@ -74,7 +74,7 @@ void updateOurPosition(void)
 		if (ktirFront[i])
 			numBlackFrontKtir++;
 
-	if (numBlackFrontKtir > 2)
+	if (numBlackFrontKtir > 10)
 	{
 		//direction snap
 		direction = roundToTheMultipleOf(direction, 90);
@@ -201,44 +201,21 @@ void updateNextCrossroad(void)
 	//nearest crossroad is always a candidate
 	addCandidate(candidates, &numCandidates, nearestCrossroad);
 
-	//robot is between crossroads, only 2 candidates.
-	if (distance(position, nearestCrossroad) > settingCrossroadRadius)
+	Vector neighbourDirections[4] =
 	{
-		//counting position of the other crossroad on the current line
-		Vector v = vectorBetweenPoints(nearestCrossroad, position);
-		v = vectorNormalize(v); //normalization
-		v = vectorMultiplyByScalar(v, 300); //multiply by 300
-		PointMM otherCrossroad = translateByVector(nearestCrossroad, v);
+	{ 0, 300 },
+	{ 300, 0 },
+	{ 0, -300 },
+	{ -300, 0 } };
 
-		addCandidate(candidates, &numCandidates, otherCrossroad);
-	}
-
-	/*
-	 * robot is on a crossroad, add all neighbour crossroads, checking if
-	 * position is valid (for ex if point is not (-500,-600)) is done in
-	 * addCandidate() function
-	 */
-	else
-	{
-		Vector neighbourDirections[4] =
-		{
-		{ 0, 300 },
-		{ 300, 0 },
-		{ 0, -300 },
-		{ -300, 0 } };
-
-		//add all
-		int i;
-		for (i = 0; i < 4; i++)
-			addCandidate(candidates, &numCandidates,
-					translateByVector(nearestCrossroad,
-							neighbourDirections[i]));
-
-	}
+	//add all
+	int i;
+	for (i = 0; i < 4; i++)
+		addCandidate(candidates, &numCandidates,
+				translateByVector(nearestCrossroad, neighbourDirections[i]));
 
 	//finding a candidate for crossroad as the one with the lowest cost
 	double minCost = countCrossradCost(nextCrossroad);
-	int i;
 	for (i = 0; i < numCandidates; i++)
 		if (countCrossradCost(candidates[i]) < minCost)
 		{
