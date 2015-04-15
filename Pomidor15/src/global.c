@@ -93,7 +93,7 @@ double pwmLeft, pwmRight;
 void initializeGlobalVariables(void)
 {
 
-	loopWaitTime = 1000; 			//time to wait between main loop iteratinos
+	loopWaitTime = 5000; 			//time to wait between main loop iteratinos
 	lastLoopTime = 0; 		 	//time of last loop execution in microseconds
 	carryingCan = 0;
 	state = STATE_INIT;

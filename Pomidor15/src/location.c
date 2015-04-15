@@ -74,7 +74,7 @@ void updateOurPosition(void)
 		if (ktirFront[i])
 			numBlackFrontKtir++;
 
-	if (numBlackFrontKtir > 3)
+	if (numBlackFrontKtir > 2)
 	{
 		//direction snap
 		direction = roundToTheMultipleOf(direction, 90);
@@ -102,14 +102,24 @@ void updateOurPosition(void)
  */
 void updateEnemyPosition(void)
 {
+
+	//direction of ultras for direction=0 (east)
 	Vector ultraDirections[4] =
 	{
-	{ 0, 1 },
 	{ 1, 0 },
 	{ 0, -1 },
-	{ -1, 0 } };
+	{ -1, 0 },
+	{ 0, 1 } };
+
+	//rotating ultra directions based on direction of the robot
+	int i;
+	for (i = 0; i < 4; i++)
+	{
+		ultraDirections[i] = rotateByDegrees(ultraDirections[i], direction);
+	}
+
 	Point enemyPositions[4];
-	int i, enemyCount = 0;
+	int enemyCount = 0;
 
 	//check ultra readings and generate list of enemy positions
 	for (i = 0; i < 4; i++)

@@ -40,6 +40,7 @@ int main(void)
 		//wait loopWaitTime between iterations
 		while (getMicroseconds() - lastLoopTime < loopWaitTime)
 		{
+
 			trySendRemainingMessages();
 			if(TIM2->CNT > pwm_tim_count)
 				GPIO_ResetBits(GPIOA, GPIO_Pin_1);

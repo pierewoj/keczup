@@ -46,7 +46,7 @@ void trySendRemainingMessages(void)
  */
 void sendMessage(char* msg)
 {
-	char msgNew[300];
+	char msgNew[250];
 	strcpy(msgNew, msg);
 	strcat(msgNew, "\r\n");
 	messageQueuePush(msgNew);
@@ -414,7 +414,7 @@ void sendGlobal(void)
 	 * after all parts (msg1, msg2...) are created they are concateneted to form
 	 * 'msg' which is sent via UART
 	 */
-	char msg[200];
+	char msg[250];
 	char msgTmp[100];
 	msg[0] = '\0';
 

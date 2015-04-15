@@ -7,7 +7,7 @@
 
 
 //distance in MM between center of robot to the front KTIR line
-double settingDistanceMidToKtir = 70;
+double settingDistanceMidToKtir = 60;
 
 //distance from baseline to center of robot at the beggining of the round
 double settingDistanceMidBeginning = 80;
@@ -31,7 +31,7 @@ double settingLocationWeightEnemy = 5000;
 double settingPIDForwardPWM = 0.5;
 
 //Angle to target to change from GO to ROTATE (degrees)
-double settingAngleToBeginRotate = 70;
+double settingAngleToBeginRotate = 80;
 
 //Minimum Sharp reading in cm to detect can
 double settingSharpThresh = 7;
@@ -43,4 +43,4 @@ double settingBluetoothInterval = 100*1000;
 double settingMaxRotationVelocity = 300;
 
 //Robot is at crossroad when distance to is is less than this value
-double settingCrossroadRadius = 60;
+double settingCrossroadRadius = 50;

@@ -82,4 +82,6 @@ Vector vectorMultiplyByScalar(Vector v, const double s);
 
 Vector vectorOfDirection(const double a);
 
+Vector rotateByDegrees(Vector v, const double deg);
+
 #endif /* GEOMETRY_H_ */

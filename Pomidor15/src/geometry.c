@@ -69,7 +69,7 @@ double distance(const PointMM a, const PointMM b)
  */
 double distanceManhattan(const PointMM a, const PointMM b)
 {
-	return fabs(a.x-b.x) + fabs(a.y-b.y);
+	return fabs(a.x - b.x) + fabs(a.y - b.y);
 }
 
 /*
@@ -108,13 +108,14 @@ double vectorAngle(const Vector v)
 
 Vector vectorBetweenPoints(const PointMM from, const PointMM to)
 {
-	Vector res = {to.x - from.x , to.y - from.y};
+	Vector res =
+	{ to.x - from.x, to.y - from.y };
 	return res;
 }
 
 Vector vectorNormalize(Vector v)
 {
-	double length = hypot(v.x,v.y);
+	double length = hypot(v.x, v.y);
 	v.x /= length;
 	v.y /= length;
 	return v;
@@ -136,9 +137,17 @@ Vector vectorMultiplyByScalar(Vector v, const double s)
 
 Vector vectorOfDirection(const double a)
 {
-	Vector v = {cos(a), sin(a)};
+	Vector v =
+	{ cos(a), sin(a) };
 	return v;
 }
 
+Vector rotateByDegrees(Vector v, const double deg)
+{
+	Vector res = v;
+	res.x = v.x * cos(DEG_TO_RAD * deg) - v.y * sin(DEG_TO_RAD * deg);
+	res.y = v.x * sin(DEG_TO_RAD * deg) + v.y * cos(DEG_TO_RAD * deg);
 
+	return res;
+}
 
