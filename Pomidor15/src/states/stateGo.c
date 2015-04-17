@@ -19,18 +19,18 @@ void stateGo(void)
 	}
 
 	//reseting feedback for side KTIR controllers
-	else if (80 < distanceToNextCrossroad() && distanceToNextCrossroad() < 100)
+	if (80 < distanceToNextCrossroad() && distanceToNextCrossroad() < 100)
 	{
 		controllerLeftKtir.feedback = 2;
 		controllerRightKtir.feedback = 0;
 	}
 
-	else if (distanceToNextCrossroad() < settingCrossroadRadius)
+	if (distanceToNextCrossroad() < settingCrossroadRadius)
 	{
 		updateNextCrossroad();
 	}
 
-	else if (targetReached())
+	if (targetReached())
 	{
 		Point oldTarget = getRecentTarget();
 
@@ -46,18 +46,20 @@ void stateGo(void)
 
 		//if the new target is same as old, STOP
 		if (newTarget.i == oldTarget.i && newTarget.j == oldTarget.j)
+		{
 			setDriveStopFast();
+			return;
+		}
 	}
 
 	//new can detected
-	else if (sharp < settingSharpThresh && !carryingCan)
+	if (sharp < settingSharpThresh && !carryingCan)
 	{
 		changeState(STATE_TAKE_CAN, REASON_CAN_DETECTED_SHARP);
 	}
 
 	//follow the line
-	else
-	{
-		setDrivePIDForward(settingPIDForwardPWM);
-	}
+
+	setDrivePIDForward(settingPIDForwardPWM);
+
 }
