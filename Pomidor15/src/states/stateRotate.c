@@ -24,7 +24,7 @@ void stateRotate(void)
 		if (fabs(velocityLeft) + fabs(velocityRight) < 50)
 		{
 			subStateRotate++;
-			waiter = getMicroseconds();
+			waiter = getMiliseconds();
 			//direction snap
 			direction = roundToTheMultipleOf(direction, 90);
 			direction = angleMakeInRange(direction);
@@ -39,7 +39,7 @@ void stateRotate(void)
 	else if(subStateRotate == 1)
 	{
 		setDriveStopSlow();
-		if(getMicroseconds() - waiter > 2000)
+		if(getMiliseconds() - waiter > 2000)
 		{
 			subStateRotate ++ ;
 		}
