@@ -23,6 +23,9 @@ extern double settingLocationWeightVisitTime;
 //importance of avoiding driving on our baseline in finding nextCrossroad
 extern double settingLocationWeightBaseline;
 
+//importance of changing crossroads (avoiding stuck)
+double settingLocationWeightCurrent;
+
 //how many seconds it takes to forget enemy location?
 extern double settingLocationTimeEnemy;
 

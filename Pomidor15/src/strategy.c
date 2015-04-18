@@ -5,9 +5,10 @@
  *      Author: Kuba
  */
 
-#define STACK_MAX_SIZE 20
-#define STACK_LOOP_SIZE 2
+#define STACK_MAX_SIZE 100
+#define STACK_LOOP_SIZE 8
 #include "strategy.h"
+
 
 /*
  * This structure is a stack + list with cycle (loop)
@@ -110,8 +111,14 @@ void strategyInit(void)
 	//initializing loop
 	struct point t[STACK_LOOP_SIZE] =
 	{
-	{ 1, 2 },
-	{ 3, 2 }, };
+	{ 4, 1 },
+	{ 4, 2 },
+	{ 0, 2 },
+	{ 0, 3 },
+	{ 4, 3 },
+	{ 4, 4 },
+	{ 0, 4 },
+	{ 0, 1 } };
 	int i;
 	for (i = 0; i < STACK_LOOP_SIZE; i++)
 		robotStrategy.loop[i] = t[i];

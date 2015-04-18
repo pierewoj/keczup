@@ -11,11 +11,15 @@
 
 void stateGo(void)
 {
-	// big angle to the next crossroad, rotating
-	if (fabs(angleToNextCrossroad()) > settingAngleToBeginRotate
-			&& distanceToNextCrossroad() > settingCrossroadRadius)
+	//snapping
+	if ((ktirFront[3]  || ktirBack[3]) && (ktirRight[1] || ktirLeft[1]))
 	{
-		changeState(STATE_ROTATE, REASON_BIG_ANGLE_TO_NEXT_CROSSROAD);
+		//direction snap
+		direction = roundToTheMultipleOf(direction, 90);
+		direction = angleMakeInRange(direction);
+
+		//finding vector from center of robot to its front KTIR line
+		position = getNearestCrossroad(position);
 	}
 
 	//reseting feedback for side KTIR controllers
@@ -27,39 +31,30 @@ void stateGo(void)
 
 	if (distanceToNextCrossroad() < settingCrossroadRadius)
 	{
-		updateNextCrossroad();
-	}
-
-	if (targetReached())
-	{
-		Point oldTarget = getRecentTarget();
-
-		//mark this target as reached
-		removeRecentTarget();
-		Point newTarget = getRecentTarget();
-
-		//at baseline with can
-		if (oldTarget.i == 2 && oldTarget.j == 0 && carryingCan)
+		//wyznaczenie nowego celu jak dojechal
+		if (targetReached())
 		{
-			changeState(STATE_LEAVE_CAN, REASON_ARRIVED_AT_BASELINE);
+			removeRecentTarget();
 		}
 
-		//if the new target is same as old, STOP
-		if (newTarget.i == oldTarget.i && newTarget.j == oldTarget.j)
+		//wyznaczanie drogi do celu
+		updateNextCrossroad();
+
+		//sprawdzenie czy kolejne skrzyzowanie sie zmienilo
+		if (distanceToNextCrossroad() < settingCrossroadRadius)
 		{
 			setDriveStopFast();
-			return;
+		}
+
+		// big angle to the next crossroad, rotating
+		if (fabs(angleToNextCrossroad()) > settingAngleToBeginRotate)
+		{
+			changeState(STATE_ROTATE, REASON_BIG_ANGLE_TO_NEXT_CROSSROAD);
 		}
 	}
-
-	//new can detected
-	if (sharp < settingSharpThresh && !carryingCan)
+	else
 	{
-		changeState(STATE_TAKE_CAN, REASON_CAN_DETECTED_SHARP);
+		setDrivePIDForward(settingPIDForwardPWM);
 	}
-
-	//follow the line
-
-	setDrivePIDForward(settingPIDForwardPWM);
 
 }

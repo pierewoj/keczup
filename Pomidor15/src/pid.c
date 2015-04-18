@@ -64,7 +64,18 @@ void updateFeedbackKtir(ControllerState *s, bool *ktir, int numKtir)
 			sum += i;
 		}
 
-	if (numBlack > 0)
+	//for front KTIRS go straight if more than 2 KTIRS
+	if (ktir == ktirFront)
+	{
+		if (numBlack > 2 && ktirFront[3])
+		{
+			s->feedback = 3;
+		}
+		else if (numBlack > 0)
+			s->feedback = sum / numBlack;
+
+	}
+	else if (numBlack > 0)
 		s->feedback = sum / numBlack;
 }
 

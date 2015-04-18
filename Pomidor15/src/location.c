@@ -151,9 +151,13 @@ void updateEnemyPosition(void)
  *	It is a cost function for finding next neighbor
  *	its value is minimized (best neighbor = small value)
  */
-double countCrossradCost(Point p)
+double countCrossradCost(Point p, Point nearestCrossroad)
 {
 	double result = 0;
+
+	//adding penalty for being current crossroad
+	if(p.i == nearestCrossroad.i && p.j == nearestCrossroad.j)
+			result += settingLocationWeightCurrent;
 
 	// distance to the target via this crossroad
 	double distanceToTheTarget = distanceManhattan(position, ofPoint(p))
@@ -162,7 +166,7 @@ double countCrossradCost(Point p)
 
 	// robot should prefer crossroads which were visited ealier
 	double msSinceLastVisit = getMiliseconds() - visitTimes[p.i][p.j];
-	result -= settingLocationWeightVisitTime * msSinceLastVisit;
+	result += settingLocationWeightVisitTime * msSinceLastVisit;
 
 	// avoiding going to our baseline if we are not carrying can
 	if (p.j == 0 && !carryingCan)
@@ -196,10 +200,11 @@ void updateNextCrossroad(void)
 	Point candidates[5];
 	int numCandidates = 0;
 
-	PointMM nearestCrossroad = getNearestCrossroad(position);
+	PointMM nearestCrossroadMM = getNearestCrossroad(position);
+	Point nearestCrossroad = ofPointMM(nearestCrossroadMM);
 
 	//nearest crossroad is always a candidate
-	addCandidate(candidates, &numCandidates, nearestCrossroad);
+	addCandidate(candidates, &numCandidates, nearestCrossroadMM);
 
 	Vector neighbourDirections[4] =
 	{
@@ -212,15 +217,15 @@ void updateNextCrossroad(void)
 	int i;
 	for (i = 0; i < 4; i++)
 		addCandidate(candidates, &numCandidates,
-				translateByVector(nearestCrossroad, neighbourDirections[i]));
+				translateByVector(nearestCrossroadMM, neighbourDirections[i]));
 
 	//finding a candidate for crossroad as the one with the lowest cost
-	double minCost = countCrossradCost(nextCrossroad);
+	double minCost = countCrossradCost(nextCrossroad, nearestCrossroad);
 	for (i = 0; i < numCandidates; i++)
-		if (countCrossradCost(candidates[i]) < minCost)
+		if (countCrossradCost(candidates[i], nearestCrossroad) < minCost)
 		{
 			nextCrossroad = candidates[i];
-			minCost = countCrossradCost(candidates[i]);
+			minCost = countCrossradCost(candidates[i], nearestCrossroad);
 		}
 
 }
@@ -239,7 +244,7 @@ double distanceToNextCrossroad(void)
  */
 double angleToNextCrossroad(void)
 {
-	if (distanceToNextCrossroad() < 50) //Setting?
+	if (distanceToNextCrossroad() < settingCrossroadRadius) //Setting?
 		return 0;
 	else
 	{

@@ -16,22 +16,25 @@ double settingDistanceMidBeginning = 80;
 double settingLocationWeightDistance = 10;
 
 //importance of last time of visit in finding nextCrossroad
-double settingLocationWeightVisitTime = 0.1;
+double settingLocationWeightVisitTime = -0.001;
 
 //importance of avoiding driving on our baseline in finding nextCrossroad
-double settingLocationWeightBaseline = 60000;
+double settingLocationWeightBaseline = 1000000;
+
+//importance of changing crossroads (avoiding stuck)
+double settingLocationWeightCurrent = 50000;
 
 //how many miliseconds it takes to forget enemy location?
 double settingLocationTimeEnemy = 5000;
 
 //importance of avoiding enemy in finding nextCrossroad
-double settingLocationWeightEnemy = 5000;
+double settingLocationWeightEnemy = 500000;
 
 //PWMmax for driving between crossroads
-double settingPIDForwardPWM = 0.3;
+double settingPIDForwardPWM = 0.5;
 
 //Angle to target to change from GO to ROTATE (degrees)
-double settingAngleToBeginRotate = 85;
+double settingAngleToBeginRotate = 50;
 
 //Minimum Sharp reading in cm to detect can
 double settingSharpThresh = 7;

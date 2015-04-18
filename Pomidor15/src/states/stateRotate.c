@@ -12,7 +12,6 @@
 
 //current state of rotation process
 int subStateRotate;
-int waiter;
 void stateRotate(void)
 {
 	//STOP
@@ -21,10 +20,10 @@ void stateRotate(void)
 
 		setDriveSideKtir();
 
-		if (fabs(velocityLeft) + fabs(velocityRight) < 50)
+		if (fabs(velocityLeft) + fabs(velocityRight) < 10)
 		{
 			subStateRotate++;
-			waiter = getMiliseconds();
+
 			//direction snap
 			direction = roundToTheMultipleOf(direction, 90);
 			direction = angleMakeInRange(direction);
@@ -34,18 +33,7 @@ void stateRotate(void)
 		}
 	}
 
-#warning DEBUG
-	//for debug purposes, to see which part of rotation goes wrong
-	else if(subStateRotate == 1)
-	{
-		setDriveStopSlow();
-		if(getMiliseconds() - waiter > 2000)
-		{
-			subStateRotate ++ ;
-		}
-	}
-
-	else if (subStateRotate == 2)
+	else if (subStateRotate == 1)
 	{
 		int dir = 0;
 		if (angleToNextCrossroad() > 0)
@@ -59,10 +47,27 @@ void stateRotate(void)
 		if (fabs(angleToNextCrossroad()) < 5)
 			subStateRotate++;
 	}
-	else if (subStateRotate ==3)
+	else if (subStateRotate == 2)
+	{
+		setDriveSideKtir();
+		if (fabs(velocityLeft) + fabs(velocityRight) < 10)
+		{
+			subStateRotate++;
+
+			//direction snap
+			direction = roundToTheMultipleOf(direction, 90);
+			direction = angleMakeInRange(direction);
+
+			//finding vector from center of robot to its front KTIR line
+			position = getNearestCrossroad(position);
+		}
+
+	}
+	else if (subStateRotate == 3)
 	{
 		subStateRotate = 0;
 		changeState(STATE_GO, REASON_ROTATION_FINISHED);
 	}
+
 }
 

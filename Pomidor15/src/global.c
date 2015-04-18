@@ -170,7 +170,7 @@ void initializeGlobalVariables(void)
 	controllerLeftWheelSpeed.enabledP = 1;
 	controllerLeftWheelSpeed.enabledI = 1;
 	controllerLeftWheelSpeed.enabledD = 0;
-	controllerLeftWheelSpeed.kp = 0.001;
+	controllerLeftWheelSpeed.kp = 0.0021000;
 	controllerLeftWheelSpeed.ti = 200;
 	controllerLeftWheelSpeed.td = 10;
 	controllerLeftWheelSpeed.target = 300;
@@ -181,7 +181,7 @@ void initializeGlobalVariables(void)
 	controllerRightWheelSpeed.enabledP = 1;
 	controllerRightWheelSpeed.enabledI = 1;
 	controllerRightWheelSpeed.enabledD = 0;
-	controllerRightWheelSpeed.kp = 0.001;
+	controllerRightWheelSpeed.kp = 0.0021000;
 	controllerRightWheelSpeed.ti = 200;
 	controllerRightWheelSpeed.td = 10;
 	controllerRightWheelSpeed.target = 300;
@@ -189,6 +189,7 @@ void initializeGlobalVariables(void)
 	controllerRightWheelSpeed.integralMax = 500;
 	controllerRightWheelSpeed.diffInterval = 10;
 
+	openFrame();
 }
 
 /*
