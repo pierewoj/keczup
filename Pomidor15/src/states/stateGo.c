@@ -11,16 +11,7 @@
 
 void stateGo(void)
 {
-	//snapping
-	if ((ktirFront[3]  || ktirBack[3]) && (ktirRight[1] || ktirLeft[1]))
-	{
-		//direction snap
-		direction = roundToTheMultipleOf(direction, 90);
-		direction = angleMakeInRange(direction);
 
-		//finding vector from center of robot to its front KTIR line
-		position = getNearestCrossroad(position);
-	}
 
 	//reseting feedback for side KTIR controllers
 	if (80 < distanceToNextCrossroad() && distanceToNextCrossroad() < 100)
@@ -29,12 +20,22 @@ void stateGo(void)
 		controllerRightKtir.feedback = 0;
 	}
 
+	if(distanceToNextCrossroad() < 100 && sharp < settingSharpThresh && !carryingCan)
+	{
+		changeState(STATE_TAKE_CAN, REASON_CAN_DETECTED_SHARP);
+	}
+
 	if (distanceToNextCrossroad() < settingCrossroadRadius)
 	{
 		//wyznaczenie nowego celu jak dojechal
 		if (targetReached())
 		{
 			removeRecentTarget();
+			if(carryingCan && position.y < 150)
+			{
+				changeState(STATE_LEAVE_CAN, REASON_BASELINE_REACHED);
+				return;
+			}
 		}
 
 		//wyznaczanie drogi do celu

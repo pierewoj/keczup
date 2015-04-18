@@ -26,6 +26,8 @@ void updateOurPosition(void);
  */
 PointMM getNearestCrossroad(PointMM pos);
 
+void snapPositionAndDirection();
+
 /*
  * detects enemy using sonars. That information is used to count path to the
  * target.

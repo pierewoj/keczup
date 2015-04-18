@@ -50,4 +50,13 @@ extern double settingMaxRotationVelocity;
 //Robot is at crossroad when distance to is is less than this value
 double settingCrossroadRadius;
 
+//Distance between cans on our baseline [mm]
+double settingDistanceBetweenCans;
+
+//Distance between center of can and center of robot [mm]
+double settingDistanceCanMiddle;
+
+//Distance between target position in leaving can to start going back [mm]
+double settingDistanceToGoBack;
+
 #endif /* SETTIINGS_H_ */

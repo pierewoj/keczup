@@ -37,7 +37,7 @@ double settingPIDForwardPWM = 0.5;
 double settingAngleToBeginRotate = 50;
 
 //Minimum Sharp reading in cm to detect can
-double settingSharpThresh = 7;
+double settingSharpThresh = 8;
 
 //Send uart messages every X microseconds
 double settingBluetoothInterval = 100*1000;
@@ -47,3 +47,12 @@ double settingMaxRotationVelocity = 300;
 
 //Robot is at crossroad when distance to is is less than this value
 double settingCrossroadRadius = 50;
+
+//Distance between cans on our baseline [mm]
+double settingDistanceBetweenCans = 60;
+
+//Distance between center of can and center of robot [mm]
+double settingDistanceCanMiddle = 100;
+
+//Distance between target position in leaving can to start going back [mm]
+double settingDistanceToGoBack = 30;

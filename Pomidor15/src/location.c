@@ -28,6 +28,16 @@ PointMM getNearestCrossroad(PointMM pos)
 	return res;
 }
 
+void snapPositionAndDirection()
+{
+	//direction snap
+	direction = roundToTheMultipleOf(direction, 90);
+	direction = angleMakeInRange(direction);
+
+	//finding vector from center of robot to its front KTIR line
+	position = getNearestCrossroad(position);
+
+}
 /*
  * true if the crossroad has valid position
  */
@@ -156,8 +166,8 @@ double countCrossradCost(Point p, Point nearestCrossroad)
 	double result = 0;
 
 	//adding penalty for being current crossroad
-	if(p.i == nearestCrossroad.i && p.j == nearestCrossroad.j)
-			result += settingLocationWeightCurrent;
+	if (p.i == nearestCrossroad.i && p.j == nearestCrossroad.j)
+		result += settingLocationWeightCurrent;
 
 	// distance to the target via this crossroad
 	double distanceToTheTarget = distanceManhattan(position, ofPoint(p))
@@ -169,7 +179,7 @@ double countCrossradCost(Point p, Point nearestCrossroad)
 	result += settingLocationWeightVisitTime * msSinceLastVisit;
 
 	// avoiding going to our baseline if we are not carrying can
-	if (p.j == 0 && !carryingCan)
+	if (p.j == 0 && !(carryingCan && p.i == 2))
 		result += settingLocationWeightBaseline;
 
 	// avoiding enemies
