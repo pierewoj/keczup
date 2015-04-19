@@ -7,9 +7,8 @@
 #include <string.h>
 #include "messageQueue.h"
 
-#define NUM_MESSAGES 4
-#define MAX_MSGLEN 250
-
+#define NUM_MESSAGES 1
+#define MAX_MSGLEN 200
 char queue[NUM_MESSAGES][MAX_MSGLEN];
 int nextPopped = 0;
 int nextPushed = 0;

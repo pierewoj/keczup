@@ -37,6 +37,8 @@ int main(void)
 	//Endless loop
 	while (1)
 	{
+
+
 		//wait loopWaitTime between iterations
 		while (getMicroseconds() - lastLoopTime < loopWaitTime)
 		{

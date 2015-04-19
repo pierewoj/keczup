@@ -132,6 +132,174 @@ void updateOurPosition(void)
 
 }
 
+bool visited[5][5];
+
+inline int getMsSinceLastVisit(Point a)
+{
+	return getMiliseconds() - visitTimes[a.i][a.j];
+}
+
+inline bool isEnemy(Point a)
+{
+	return getMiliseconds() - enemyTimes[a.i][a.j] < settingLocationTimeEnemy;
+}
+
+Point queue[25];
+/*
+ * queue last elem is index in array on which next elem will be added
+ */
+int queueFirstElem = 0, queueLastElem = 0;
+
+void queueAddElem(Point a)
+{
+	if (queueLastElem < 25)
+	{
+		queue[queueLastElem] = a;
+		queueLastElem++;
+		visited[a.i][a.j] = true;
+	}
+}
+
+inline int queueSize()
+{
+	return queueLastElem - queueFirstElem;
+}
+
+Point queuePop()
+{
+	queueFirstElem++;
+	return queue[queueFirstElem - 1];
+}
+
+bool solutionFound;
+
+/*
+ * neighbours are added in the order of decreasing time since last visit
+ * neighbourr is only added if visit[i][j] == false
+ */
+void queueAddNeighbours(Point a)
+{
+	int maxMsSinceLastVisit = -10;
+	Point bestResult =
+	{ -1, -1 };
+	Point directions[4] =
+	{
+	{ 0, -1 },
+	{ 0, 1 },
+	{ -1, 0 },
+	{ 1, 0 } };
+	int i;
+
+	/*
+	 * finding not-added neighbour with longest time since last visit
+	 */
+	for (i = 0; i < 4; i++)
+	{
+		Point neighbour;
+		neighbour.i = a.i + directions[i].i;
+		neighbour.j = a.j + directions[i].j;
+
+		if (!pointValid(neighbour))
+			continue;
+
+		//if currently analyzed neighbour is position then current crossroad
+		//is should be the one we go to
+		if (equals(neighbour, ofPointMM(position)))
+		{
+			solutionFound = true;
+			return;
+		}
+		if (getMsSinceLastVisit(neighbour) > maxMsSinceLastVisit
+				&& visited[neighbour.i][neighbour.j] == false
+				&& !isEnemy(neighbour))
+		{
+			maxMsSinceLastVisit = getMsSinceLastVisit(neighbour);
+			bestResult = neighbour;
+		}
+	}
+
+	if (maxMsSinceLastVisit != -10)
+	{
+		queueAddElem(bestResult);
+
+		//try to find next not-visited neighbour
+		queueAddNeighbours(a);
+	}
+	else
+		return;
+}
+
+Point randomTarget[4] =
+{
+{ 0, 1 },
+{ 4, 1 },
+{ 0, 3 },
+{ 4, 3 } };
+int randomTargetIndex = 0;
+
+/*
+ * updates next crossroads based on the location of enemy, can possession,
+ * time of crossroads' visit
+ */
+void updateNextCrossroad(void)
+{
+//clearing visited
+	int i, j;
+	for (i = 0; i < 5; i++)
+		for (j = 0; j < 5; j++)
+		{
+			//do not create path through baseline
+			if (j == 0)
+				visited[i][j] = true;
+			else
+				visited[i][j] = false;
+		}
+	queueFirstElem = 0;
+	queueLastElem = 0;
+	solutionFound = false;
+
+	Point target = getRecentTarget();
+	if (!isEnemy(target))
+		queueAddElem(target);
+
+	while (queueSize() > 0)
+	{
+		//currently analyzed point
+		Point p = queuePop();
+		queueAddNeighbours(p);
+		if (solutionFound)
+		{
+			nextCrossroad = p;
+			return;
+		}
+	}
+
+	//what if no solution has been found?
+	Point canTarget =
+	{ 2, 0 }, endGameTarget =
+	{ 2, 4 };
+
+	/*
+	 * add some random target if carrying can or endgame tactics
+	 */
+	if ((carryingCan && equals(target, canTarget))
+			|| (endGameTacticsEnabled && equals(target, endGameTarget)))
+	{
+		Point random = randomTarget[randomTargetIndex];
+		randomTargetIndex++;
+		randomTargetIndex %= 4;
+		addNewTarget(random.i, random.j);
+	}
+	/*
+	 * otherwise ignore current target and find new one!
+	 */
+	else
+	{
+		removeRecentTarget();
+	}
+
+}
+
 /*
  * detects enemy using sonars. That information is used to count path to the
  * target. Enemy detection times are saved in enemyTimes[][] array.
@@ -181,89 +349,6 @@ void updateEnemyPosition(void)
 		Point enemy = enemyPositions[i];
 		enemyTimes[enemy.i][enemy.j] = getMiliseconds(); //ms
 	}
-}
-
-/*
- *	It is a cost function for finding next neighbor
- *	its value is minimized (best neighbor = small value)
- */
-double countCrossradCost(Point p, Point nearestCrossroad)
-{
-	double result = 0;
-
-	//adding penalty for being current crossroad
-	if (p.i == nearestCrossroad.i && p.j == nearestCrossroad.j)
-		result += settingLocationWeightCurrent;
-
-	// distance to the target via this crossroad
-	double distanceToTheTarget = distanceManhattan(position, ofPoint(p))
-			+ distanceManhattan(ofPoint(p), ofPoint(getRecentTarget()));
-	result += settingLocationWeightDistance * distanceToTheTarget;
-
-	// robot should prefer crossroads which were visited ealier
-	double msSinceLastVisit = getMiliseconds() - visitTimes[p.i][p.j];
-	result += settingLocationWeightVisitTime * msSinceLastVisit;
-
-	// avoiding going to our baseline if we are not carrying can
-	if (p.j == 0 && !(carryingCan && p.i == 2))
-		result += settingLocationWeightBaseline;
-
-	// avoiding enemies
-	if (getMiliseconds() - enemyTimes[p.i][p.j] < settingLocationTimeEnemy)
-		result += settingLocationWeightEnemy;
-
-	return result;
-}
-
-/*
- * helper function used to add candidates for next crossroads to the array
- */
-void addCandidate(Point* candidates, int* numCandidates, PointMM candidate)
-{
-	if (pointValid(ofPointMM(candidate)))
-	{
-		candidates[*numCandidates] = ofPointMM(candidate);
-		(*numCandidates)++;
-	}
-}
-
-/*
- * updates next crossroads based on the location of enemy, can possession,
- * time of crossroads' visit
- */
-void updateNextCrossroad(void)
-{
-	Point candidates[5];
-	int numCandidates = 0;
-
-	PointMM nearestCrossroadMM = getNearestCrossroad(position);
-	Point nearestCrossroad = ofPointMM(nearestCrossroadMM);
-
-	//nearest crossroad is always a candidate
-	addCandidate(candidates, &numCandidates, nearestCrossroadMM);
-
-	Vector neighbourDirections[4] =
-	{
-	{ 0, 300 },
-	{ 300, 0 },
-	{ 0, -300 },
-	{ -300, 0 } };
-
-	//add all
-	int i;
-	for (i = 0; i < 4; i++)
-		addCandidate(candidates, &numCandidates,
-				translateByVector(nearestCrossroadMM, neighbourDirections[i]));
-
-	//finding a candidate for crossroad as the one with the lowest cost
-	double minCost = countCrossradCost(nextCrossroad, nearestCrossroad);
-	for (i = 0; i < numCandidates; i++)
-		if (countCrossradCost(candidates[i], nearestCrossroad) < minCost)
-		{
-			nextCrossroad = candidates[i];
-			minCost = countCrossradCost(candidates[i], nearestCrossroad);
-		}
-
 }
 
 /*

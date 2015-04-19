@@ -6,7 +6,6 @@
  */
 #include "geometry.h"
 #include "math.h"
-
 /*
  * returns the nearest multiple of "mulfipleOf" to "a"
  * tested: http://ideone.com/vPpGfL
@@ -27,6 +26,11 @@ int roundToTheMultipleOf(const double a, const int multipleOf)
 		else
 			return (((int) a) / multipleOf - 1) * multipleOf;
 	}
+}
+
+bool equals(Point a, Point b)
+{
+	return a.i == b.i && a.j == b.j;
 }
 
 /*

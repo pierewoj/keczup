@@ -5,6 +5,8 @@
  *      Author: Kuba
  */
 
+#include <stdbool.h>
+
 #ifndef GEOMETRY_H_
 #define GEOMETRY_H_
 
@@ -28,6 +30,8 @@ typedef struct point
 	int i;
 	int j;
 } Point;
+
+bool equals(Point a, Point b);
 
 /*
  * Conversion Point -> PointMM

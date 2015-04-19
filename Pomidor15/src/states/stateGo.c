@@ -11,8 +11,6 @@
 
 void stateGo(void)
 {
-
-
 	//reseting feedback for side KTIR controllers
 	if (80 < distanceToNextCrossroad() && distanceToNextCrossroad() < 100)
 	{
@@ -20,7 +18,8 @@ void stateGo(void)
 		controllerRightKtir.feedback = 0;
 	}
 
-	if(distanceToNextCrossroad() < 100 && sharp < settingSharpThresh && !carryingCan)
+	if (distanceToNextCrossroad() < 100 && sharp < settingSharpThresh
+			&& !carryingCan)
 	{
 		changeState(STATE_TAKE_CAN, REASON_CAN_DETECTED_SHARP);
 	}
@@ -31,9 +30,10 @@ void stateGo(void)
 		if (targetReached())
 		{
 			Point currentTarget = getRecentTarget();
-
+			Point pos = ofPointMM(position);
 			//end game tactics
-			if(currentTarget.i == 2 && currentTarget.j ==4 && endGameTacticsEnabled)
+			if (currentTarget.i == 2 && currentTarget.j == 4
+					&& endGameTacticsEnabled)
 			{
 				changeState(STATE_STOP, REASON_ALL_CANS_COLLECTED);
 				return;
@@ -43,7 +43,7 @@ void stateGo(void)
 			removeRecentTarget();
 
 			//leaving can
-			if(carryingCan && position.y < 150)
+			if (carryingCan && pos.i == 2 && pos.j == 0)
 			{
 				changeState(STATE_LEAVE_CAN, REASON_BASELINE_REACHED);
 				return;
