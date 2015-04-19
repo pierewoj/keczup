@@ -132,21 +132,40 @@ void updateOurPosition(void)
 
 }
 
+/*
+ * array of elements which have already been visited in BFS in
+ * updateNextCrossroad()
+ */
+Point queue[25];
+
+/*
+ * returns time since last visit for a given crossroad
+ */
 bool visited[5][5];
 
 inline int getMsSinceLastVisit(Point a)
 {
-	return getMiliseconds() - visitTimes[a.i][a.j];
+	if (pointValid(a))
+		return getMiliseconds() - visitTimes[a.i][a.j];
+	else
+		return 0;
 }
 
+/*
+ * returns true if enemy was detected on a given crossroad
+ */
 inline bool isEnemy(Point a)
 {
-	return getMiliseconds() - enemyTimes[a.i][a.j] < settingLocationTimeEnemy;
+	if (pointValid(a))
+		return getMiliseconds() - enemyTimes[a.i][a.j]
+				< settingLocationTimeEnemy;
+	else
+		return true;
+
 }
 
-Point queue[25];
 /*
- * queue last elem is index in array on which next elem will be added
+ * Queue of points for BFS
  */
 int queueFirstElem = 0, queueLastElem = 0;
 
@@ -159,6 +178,7 @@ void queueAddElem(Point a)
 		visited[a.i][a.j] = true;
 	}
 }
+
 
 inline int queueSize()
 {
@@ -229,6 +249,10 @@ void queueAddNeighbours(Point a)
 		return;
 }
 
+/*
+ * array of random targets. used if our base crossrad has enemy or
+ * endGameTactic crosssroad has enemy
+ */
 Point randomTarget[4] =
 {
 { 0, 1 },
@@ -240,6 +264,7 @@ int randomTargetIndex = 0;
 /*
  * updates next crossroads based on the location of enemy, can possession,
  * time of crossroads' visit
+ * algorithm used is BFS
  */
 void updateNextCrossroad(void)
 {
