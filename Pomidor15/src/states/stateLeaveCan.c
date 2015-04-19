@@ -12,16 +12,10 @@
 
 int subStateLeave = 0;
 int directionOfLeavingCan = 1; //(1) - prawo, (-1) - lewo
-int lastPositionLeft = 0;
-int lastPositionRight = 1200;
+int canCountLeft = 0, canCountRight = 0;
 int targetPosition = 0;
 void stateLeaveCan(void)
 {
-	if(lastPositionLeft > 450 || lastPositionRight < 750)
-	{
-		changeState(STATE_STOP, REASON_TOO_MUCH_CANS);
-	}
-
 
 	//adjusting position on KTIRS
 	if (subStateLeave == 0)
@@ -61,39 +55,52 @@ void stateLeaveCan(void)
 		if (fabs(velocityLeft) + fabs(velocityRight) < 10)
 		{
 			subStateLeave++;
-			snapPositionAndDirection();
 			openFrame();
 			carryingCan = 0;
 
 			//setting target position
-			if(directionOfLeavingCan == 1)
+			if (directionOfLeavingCan == 1)
 			{
-				targetPosition = lastPositionRight - settingDistanceCanMiddle;
-				lastPositionRight -= settingDistanceBetweenCans;
+				targetPosition = 1200
+						- canCountRight * settingDistanceBetweenCans
+						- settingDistanceCanMiddle;
+				canCountRight++;
 			}
 			else
 			{
-				targetPosition = lastPositionLeft + settingDistanceCanMiddle;
-				lastPositionLeft += settingDistanceBetweenCans;
+				targetPosition = canCountLeft * settingDistanceBetweenCans
+						+ settingDistanceCanMiddle;
+				canCountLeft++;
 			}
 		}
 	}
 
 	//driving PID forward
-	if(subStateLeave == 3)
+	if (subStateLeave == 3)
 	{
 		setDrivePIDForward(settingPIDForwardPWM);
-		if(fabs(position.x - targetPosition) < settingDistanceToGoBack)
+		if (fabs(position.x - targetPosition) < settingDistanceToGoBack)
 		{
-			subStateLeave ++;
+			subStateLeave++;
+		}
+	}
+
+	//stop
+	if (subStateLeave == 4)
+	{
+		setDriveStopFast();
+
+		if (fabs(velocityLeft) + fabs(velocityRight) < 5)
+		{
+			subStateLeave++;
 		}
 	}
 
 	//driveing PID backward
-	if(subStateLeave == 4)
+	if (subStateLeave == 5)
 	{
 		setDrivePIDBackward(settingPIDForwardPWM);
-		if(fabs(position.x - 600) < settingCrossroadRadius)
+		if (fabs(position.x - 600) < settingCrossroadRadius)
 		{
 			subStateLeave = 0;
 
@@ -101,8 +108,16 @@ void stateLeaveCan(void)
 			controllerLeftKtir.feedback = 0;
 			controllerRightKtir.feedback = 2;
 			changeState(STATE_GO, REASON_LEAVING_CAN_FINISHED);
+
+			/*
+			 * end game tactics
+			 */
+			if (canCountRight >= 4 && canCountLeft >= 4)
+			{
+				addNewTarget(2,4);
+				endGameTacticsEnabled = true;
+			}
 		}
 	}
-
 
 }

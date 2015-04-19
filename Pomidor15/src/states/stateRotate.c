@@ -23,8 +23,6 @@ void stateRotate(void)
 		if (fabs(velocityLeft) + fabs(velocityRight) < 10)
 		{
 			subStateRotate++;
-
-			snapPositionAndDirection();
 		}
 	}
 
@@ -84,8 +82,6 @@ void stateRotate(void)
 		if (fabs(velocityLeft) + fabs(velocityRight) < 10)
 		{
 			subStateRotate++;
-
-			snapPositionAndDirection();
 		}
 
 	}

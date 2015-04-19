@@ -30,7 +30,19 @@ void stateGo(void)
 		//wyznaczenie nowego celu jak dojechal
 		if (targetReached())
 		{
+			Point currentTarget = getRecentTarget();
+
+			//end game tactics
+			if(currentTarget.i == 2 && currentTarget.j ==4 && endGameTacticsEnabled)
+			{
+				changeState(STATE_STOP, REASON_ALL_CANS_COLLECTED);
+				return;
+			}
+
+			//regular behaviour
 			removeRecentTarget();
+
+			//leaving can
 			if(carryingCan && position.y < 150)
 			{
 				changeState(STATE_LEAVE_CAN, REASON_BASELINE_REACHED);

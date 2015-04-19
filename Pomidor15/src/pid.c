@@ -109,6 +109,11 @@ void drivePIDForward(void)
 	setLeftPWM(sl * drivePIDForwardPWMMax);
 	setRightPWM(sr * drivePIDForwardPWMMax);
 
+	if (ktirFront[3] && ktirBack[3])
+	{
+		snapHorizontalVerticalDirection();
+	}
+
 	//snapping
 	if ((ktirFront[3] || ktirBack[3]) && (ktirRight[1] || ktirLeft[1]))
 	{
@@ -136,6 +141,11 @@ void drivePIDBackward(void)
 
 	setLeftPWM(-sl * drivePIDBackwardPWMMax);
 	setRightPWM(-sr * drivePIDBackwardPWMMax);
+
+	if (ktirFront[3] && ktirBack[3])
+	{
+		snapHorizontalVerticalDirection();
+	}
 
 	//snapping
 	if ((ktirFront[3] || ktirBack[3]) && (ktirRight[1] || ktirLeft[1]))

@@ -27,7 +27,7 @@
 #define REASON_CAN_TAKEN 8
 #define REASON_BASELINE_REACHED 9
 #define REASON_LEAVING_CAN_FINISHED 10
-#define REASON_TOO_MUCH_CANS 11
+#define REASON_ALL_CANS_COLLECTED 11
 
 void changeState(int newState, int reason);
 

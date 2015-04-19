@@ -28,6 +28,11 @@ extern unsigned long loopWaitTime; //time to wait between main loop iteratinos
 extern unsigned long lastLoopTime; //time of last loop execution in microseconds
 extern bool carryingCan; //does the robot "have" the can
 
+/*
+ * end game tactics
+ */
+bool endGameTacticsEnabled;
+
 //-----------------Location variables------------------//
 extern PointMM position; //in mm
 extern double direction; //[-180,180], 90 is NORTH

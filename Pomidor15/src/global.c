@@ -22,6 +22,11 @@ unsigned long lastLoopTime; //time of last loop execution in microseconds
 bool carryingCan; //does the robot "have" the can
 
 /*
+ * end game tactics
+ */
+bool endGameTacticsEnabled = false;
+
+/*
  * Location variables
  * They are updated in location.c. They are not sensor readings!
  * These values are updated based on gyroDyrection and encoderSpeeds

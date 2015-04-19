@@ -38,6 +38,32 @@ void snapPositionAndDirection()
 	position = getNearestCrossroad(position);
 
 }
+
+void snapHorizontalVerticalDirection()
+{
+	//snapping direction
+	direction = roundToTheMultipleOf(direction, 90);
+	direction = angleMakeInRange(direction);
+
+	/*
+	 * horizontal = true  when direction is E or W ( <- or -> )
+	 * horizontal = false when direction is N or S ( /\ or \/ )
+	 */
+	bool horizontal = true;
+
+	//setting horizontal to false if robot goes vertical
+	if (fabs(angleDifference(direction, 90)) < 5
+			|| fabs(angleDifference(direction, -90)) < 5)
+	{
+		horizontal = false;
+	}
+
+	if (horizontal)
+		position.y = roundToTheMultipleOf(position.y, 300);
+	else
+		position.x = roundToTheMultipleOf(position.x, 300);
+
+}
 /*
  * true if the crossroad has valid position
  */
