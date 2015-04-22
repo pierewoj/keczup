@@ -48,14 +48,14 @@ void TIM3_IRQHandler(void) //ultrasonic sensor echo capturing timer
 		TIM3->SR &= !(TIM_SR_CC1IF | TIM_SR_CC1OF);
 		if (!(TIM3->CCER & TIM_CCER_CC1P))	//rising edge response
 		{
-			ultra_pom[2] = (TIM3->CCR1);	//capture counter value
-			pierwsze_zbocze[2] = 1;
+			ultra_pom[1] = (TIM3->CCR1);	//capture counter value
+			pierwsze_zbocze[1] = 1;
 		}
 		else								//falling edge response
 		{
-			ultra__[2] = (TIM3->CCR1) - ultra_pom[2];
+			ultra__[1] = (TIM3->CCR1) - ultra_pom[1];
 			//capture counter value (falling edge) and substract previous value (rising edge)
-			pierwsze_zbocze[2] = 0;		//both edges detected - ok
+			pierwsze_zbocze[1] = 0;		//both edges detected - ok
 		}
 		TIM3->CCER ^= TIM_CCER_CC1P;	//change polarity (rising/falling)
 	}
@@ -83,13 +83,13 @@ void TIM3_IRQHandler(void) //ultrasonic sensor echo capturing timer
 		TIM3->SR &= !(TIM_SR_CC3IF | TIM_SR_CC3OF);
 		if (!(TIM3->CCER & TIM_CCER_CC3P))
 		{
-			ultra_pom[1] = (TIM3->CCR3);
-			pierwsze_zbocze[1] = 1;
+			ultra_pom[2] = (TIM3->CCR3);
+			pierwsze_zbocze[2] = 1;
 		}
 		else
 		{
-			ultra__[1] = (TIM3->CCR3) - ultra_pom[1];
-			pierwsze_zbocze[1] = 0;
+			ultra__[2] = (TIM3->CCR3) - ultra_pom[2];
+			pierwsze_zbocze[2] = 0;
 		}
 		TIM3->CCER ^= TIM_CCER_CC3P;
 	}

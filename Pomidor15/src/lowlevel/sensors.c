@@ -106,9 +106,9 @@ void read_ktirs()
 	ktirFront[0] = (GPIOC->IDR & GPIO_Pin_2);
 
 	//left sensors
-	ktirLeft[2] = (GPIOB->IDR & GPIO_Pin_12);
+	ktirLeft[0] = (GPIOB->IDR & GPIO_Pin_12);
 	ktirLeft[1] = (GPIOA->IDR & GPIO_Pin_12);
-	ktirLeft[0] = (GPIOC->IDR & GPIO_Pin_5);
+	ktirLeft[2] = (GPIOC->IDR & GPIO_Pin_5);
 
 	//rear sensors
 	ktirBack[0] = (GPIOA->IDR & GPIO_Pin_4);
