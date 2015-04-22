@@ -30,9 +30,9 @@ void gyro_update_direction(void);
 extern unsigned short int pwm_tim_count;
 extern volatile unsigned int ultra__[4], ultra_pom[4];
 extern volatile char pierwsze_zbocze[4];
+extern unsigned int const_distance_from_the_middle_of_the_robot[4];
 
 #define ultra_distance_max 65535
-#define const_distance_from_the_middle_of_the_robot 10    //(9.55 cm - approx. mean distance)
 #define linear_coefficient_distance 46.4
 
 void ultra_data_processing(void);

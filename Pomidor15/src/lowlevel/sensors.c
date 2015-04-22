@@ -25,6 +25,7 @@ void gyro_update_direction(void);
 //ULTRADZWIEKI
 unsigned volatile int ultra__[4], ultra_pom[4];
 char volatile pierwsze_zbocze[4]; //pierwsze_zbocze[i] is set to 1 if rising edge was detected from sensor i,
+unsigned int const_distance_from_the_middle_of_the_robot[4] = {7,13,7,13};
 
 //it is cleared after detecting falling edge - OK state; (value 1 implicate wrong detection)
 
@@ -186,7 +187,7 @@ inline void ultra_data_processing(void)
 			continue;
 		}
 		ultra[a] = (int) (((ultra__[a]) / linear_coefficient_distance)
-				+ const_distance_from_the_middle_of_the_robot);
+				+ const_distance_from_the_middle_of_the_robot[a]);
 		//register value to enemy distance [cm] conversion
 
 		if (ultra[a] > 93)	//low-pass filter, high bandwidth - unstable
