@@ -66,7 +66,7 @@ void readSensors(void)
 inline void battery_update(void)
 {
 	//Voltage = 3 * 3,3V * register_value/4096
-	battery = pomiar_adc[0] * 0.0026409734856;
+	battery = pomiar_adc[0] * 0.0025217;
 }
 
 //sharp distance updating
