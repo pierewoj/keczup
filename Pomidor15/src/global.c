@@ -131,7 +131,7 @@ void initializeGlobalVariables(void)
 	controllerForward.enabledP = 1;
 	controllerForward.enabledI = 0;
 	controllerForward.enabledD = 1;
-	controllerForward.kp = 0.5;
+	controllerForward.kp = 0.8;
 	controllerForward.ti = 10;
 	controllerForward.td = 2;
 	controllerForward.target = 3.5;
@@ -143,7 +143,7 @@ void initializeGlobalVariables(void)
 	controllerBackward.enabledP = 1;
 	controllerBackward.enabledI = 0;
 	controllerBackward.enabledD = 1;
-	controllerBackward.kp = 0.7;
+	controllerBackward.kp = 0.8;
 	controllerBackward.ti = 10;
 	controllerBackward.td =5;
 	controllerBackward.target = 3.5;
