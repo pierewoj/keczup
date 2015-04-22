@@ -22,6 +22,7 @@
 #include "states/stateTakeCan.h"
 #include "states/stateLeaveCan.h"
 #include "states/stateManual.h"
+#include "states/stateGoPrevious.h"
 #include "stdio.h"
 #include "commPC.h"
 #include "utils/messageQueue.h"
@@ -95,6 +96,10 @@ int main(void)
 			//Steer robot manually using Bluetooth
 		case STATE_MANUAL:
 			stateManual();
+			break;
+
+		case STATE_GO_PREVIOUS :
+			stateGoPrevious();
 			break;
 
 		default:

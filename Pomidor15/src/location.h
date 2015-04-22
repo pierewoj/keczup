@@ -15,6 +15,7 @@
  * current position
  */
 extern Point nextCrossroad;
+extern Point previousCrossroad;
 
 /*
  * updates robot position, direction and performs snap
