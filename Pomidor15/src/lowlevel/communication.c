@@ -23,7 +23,7 @@ unsigned short int U2_bufTxIndex, U2_bufTxMaxIndex;
 char U2_buforRx[300];
 int U2_buforRx_Size;
 int U2_bufRxIndex;
-int usart_data_number;s
+int usart_data_number;
 unsigned short int U3_buforTx[50];
 bool flaga = 0;
 

@@ -21,9 +21,6 @@ void TIM1_TRG_COM_TIM17_IRQHandler(void)
 
 		encodersRead();
 		ultra_data_processing();
-		ultra1 = ultra[0];
-		ultra2 = ultra[1];
-		ultra3 = ultra[3];
 	}
 }
 

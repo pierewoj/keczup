@@ -10,9 +10,9 @@
 #define NUM_MESSAGES 2
 #define MAX_MSGLEN 256
 char queue[NUM_MESSAGES][MAX_MSGLEN];
-int nextPopped = 0;
+int volatile nextPopped = 0;
 int nextPushed = 0;
-int messageCount = 0;
+int volatile messageCount = 0;
 
 char* messageQueuePeek(void)
 {

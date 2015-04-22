@@ -54,11 +54,11 @@ int sharp;
 
 /* approx cm to the enemy. Clockwise numeration. ultra[0] is front.
  * 1000 is no enemy detected or reading is not valid */
-int ultra[4];
+volatile int ultra[4];
 
 /* encoder redings from the left and right wheel*/
-double velocityLeft, velocityRight; // mm/s
-double totalDistanceLeft, totalDistanceRight; //mm since the restart
+double volatile velocityLeft, velocityRight; // mm/s
+double volatile totalDistanceLeft, totalDistanceRight; //mm since the restart
 
 /*
  * current direction from gyro. Its value is an angle [-180 .. 180) deg.
