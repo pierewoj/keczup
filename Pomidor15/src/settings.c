@@ -12,23 +12,8 @@ double settingDistanceMidToKtir = 60;
 //distance from baseline to center of robot at the beggining of the round
 double settingDistanceMidBeginning = 80;
 
-//importance of distance to the target in finding nextCrossroad
-double settingLocationWeightDistance = 10;
-
-//importance of last time of visit in finding nextCrossroad
-double settingLocationWeightVisitTime = -0.001;
-
-//importance of avoiding driving on our baseline in finding nextCrossroad
-double settingLocationWeightBaseline = 1000000;
-
-//importance of changing crossroads (avoiding stuck)
-double settingLocationWeightCurrent = 50000;
-
 //how many miliseconds it takes to forget enemy location?
-double settingLocationTimeEnemy = 5000;
-
-//importance of avoiding enemy in finding nextCrossroad
-double settingLocationWeightEnemy = 500000;
+double settingLocationTimeEnemy = 3000;
 
 //PWMmax for driving between crossroads
 double settingPIDForwardPWM = 0.5;

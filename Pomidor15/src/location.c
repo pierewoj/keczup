@@ -79,7 +79,6 @@ void updateOurPosition(void)
 {
 	//updating time of crossroad visit
 	PointMM nearestCrossroadMM = getNearestCrossroad(position);
-	Point nearestCrossroad = ofPointMM(nearestCrossroadMM);
 
 	//updating direction
 	direction += angleDifference(lastGyroDirection, gyroDirection);
