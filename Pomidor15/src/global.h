@@ -76,11 +76,11 @@ extern int sharp;
 
 /* approx cm to the enemy. Clockwise numeration. ultra[0] is front.
  * 1000 is no enemy detected or reading is not valid */
-extern int ultra[4];
+extern volatile  int ultra[4];
 
 /* encoder redings from the left and right wheel*/
-extern double velocityLeft, velocityRight; // mm/s
-extern double totalDistanceLeft, totalDistanceRight; //mm since the restart
+extern double volatile velocityLeft, velocityRight; // mm/s
+extern double volatile totalDistanceLeft, totalDistanceRight; //mm since the restart
 
 /* current direction from gyro. Its value is an angle [-180 .. 180) deg.
  90 is north, 0 is east, -90 is south and +-180 is west. */

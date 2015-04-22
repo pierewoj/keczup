@@ -15,20 +15,18 @@
 volatile unsigned int pomiar_adc[2];
 
 //IMU
-unsigned char dane_z_imu[6];
-unsigned char imu[2];
-int gyro_x, gyro_y, gyro_z;
-int gyro_initial_values[3];
+unsigned volatile char dane_z_imu[6];
+unsigned volatile char imu[2];
+int volatile gyro_x, gyro_y, gyro_z;
+int volatile gyro_initial_values[3];
 
 void gyro_update_direction(void);
 
 //ULTRADZWIEKI
-unsigned int ultra__[4], ultra_pom[4];
-char pierwsze_zbocze[4]; //pierwsze_zbocze[i] is set to 1 if rising edge was detected from sensor i,
-//it is cleared after detecting falling edge - OK state; (value 1 implicate wrong detection)
+unsigned volatile int ultra__[4], ultra_pom[4];
+char volatile pierwsze_zbocze[4]; //pierwsze_zbocze[i] is set to 1 if rising edge was detected from sensor i,
 
-//Markery
-double PWM_L, PWM_R, POSX, POSY, dist_L, dist_R;
+//it is cleared after detecting falling edge - OK state; (value 1 implicate wrong detection)
 
 //KTIRs
 void read_ktirs(void);
