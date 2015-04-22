@@ -65,6 +65,16 @@ void stateGo(void)
 			changeState(STATE_ROTATE, REASON_BIG_ANGLE_TO_NEXT_CROSSROAD);
 		}
 	}
+	else if (ultra[0] < settingDistanceToRunFromEnemy && ktirBack[3]
+			&& (distance(position, ofPoint(previousCrossroad))
+					+ distance(position, ofPoint(nextCrossroad)) < 400)
+			&& !equals(previousCrossroad, nextCrossroad)
+			&& distance(position, ofPoint(previousCrossroad))
+					> 1.1 * settingCrossroadRadius)
+	{
+		nextCrossroad = previousCrossroad;
+		changeState(STATE_GO_PREVIOUS, REASON_ENEMY_DETECTED_IN_FRONT);
+	}
 	else
 	{
 		setDrivePIDForward(settingPIDForwardPWM);

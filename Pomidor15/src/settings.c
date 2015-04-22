@@ -56,3 +56,6 @@ double settingDistanceCanMiddle = 100;
 
 //Distance between target position in leaving can to start going back [mm]
 double settingDistanceToGoBack = 30;
+
+//Distance from enemy to go to previous crossroad [cm]
+double settingDistanceToRunFromEnemy = 25;

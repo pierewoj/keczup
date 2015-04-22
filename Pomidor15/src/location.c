@@ -6,7 +6,7 @@
 #include "location.h"
 
 Point nextCrossroad;
-
+Point previousCrossroad = {2,0};
 /*
  * last value of gyroDirection reading. Difference between current and last value
  * is used to update "direction".
@@ -268,6 +268,8 @@ void updateNextCrossroad(void)
 		queueAddNeighbours(p);
 		if (solutionFound)
 		{
+			if(! equals(nextCrossroad,p))
+				previousCrossroad = nextCrossroad;
 			nextCrossroad = p;
 			return;
 		}
