@@ -65,7 +65,8 @@ void stateGo(void)
 			changeState(STATE_ROTATE, REASON_BIG_ANGLE_TO_NEXT_CROSSROAD);
 		}
 	}
-	else if (ultra[0] < settingDistanceToRunFromEnemy && ktirBack[3]
+	else if (getMiliseconds() - enemyTimes[nextCrossroad.i][nextCrossroad.j]
+			< settingLocationTimeEnemy && ktirBack[3]
 			&& (distance(position, ofPoint(previousCrossroad))
 					+ distance(position, ofPoint(nextCrossroad)) < 400)
 			&& !equals(previousCrossroad, nextCrossroad)
