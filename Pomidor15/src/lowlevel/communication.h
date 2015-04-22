@@ -20,7 +20,6 @@ extern char U2_buforRx[300];
 extern int U2_buforRx_Size;
 extern int U2_bufRxIndex;
 extern int usart_data_number;
-extern unsigned short int U2_buforTx[350];
 extern unsigned short int U3_buforTx[50];
 extern bool flaga;
 
