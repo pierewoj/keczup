@@ -24,7 +24,6 @@ void gyro_update_direction(void);
 
 //ULTRADZWIEKI
 unsigned int ultra__[4], ultra_pom[4];
-unsigned int ultra1, ultra2, ultra3;
 char pierwsze_zbocze[4]; //pierwsze_zbocze[i] is set to 1 if rising edge was detected from sensor i,
 //it is cleared after detecting falling edge - OK state; (value 1 implicate wrong detection)
 
@@ -61,6 +60,7 @@ void readSensors(void)
 	sharp_update();
 	battery_update();
 	read_ktirs();
+	//gyro_update_direction();
 }
 
 //battery voltage updating
@@ -82,9 +82,6 @@ inline void sharp_update(void)
 //angular velocity updating
 void gyro_update_direction(void)
 {
-	/*
-	 * Gyro disabled
-
 	 __i2c_read(imu_write_address, 0x28, dane_z_imu);
 	 gyro_x = (int16_t) (dane_z_imu[1] << 8 | dane_z_imu[0]);
 	 gyro_y = (int16_t) (dane_z_imu[3] << 8 | dane_z_imu[2]);
@@ -94,57 +91,39 @@ void gyro_update_direction(void)
 	 gyro_x -= gyro_initial_values[0];
 	 gyro_y -= gyro_initial_values[1];
 	 gyro_z -= gyro_initial_values[2];
-	 */
 }
 
 //read line sensors
 void read_ktirs()
 {
 	//front sensors
-	ktirFront[1] = (unsigned short int) GPIO_ReadInputDataBit(GPIOC,
-	GPIO_Pin_5);
-	ktirFront[0] = (unsigned short int) GPIO_ReadInputDataBit(GPIOB,
-	GPIO_Pin_5);
-	ktirFront[3] = (unsigned short int) GPIO_ReadInputDataBit(GPIOA,
-	GPIO_Pin_5);
-	ktirFront[2] = (unsigned short int) GPIO_ReadInputDataBit(GPIOA,
-	GPIO_Pin_4);
-	ktirFront[5] = (unsigned short int) GPIO_ReadInputDataBit(GPIOC,
-	GPIO_Pin_13);
-	ktirFront[4] = (unsigned short int) GPIO_ReadInputDataBit(GPIOB,
-	GPIO_Pin_15);
-	ktirFront[6] = (unsigned short int) GPIO_ReadInputDataBit(GPIOB,
-	GPIO_Pin_14);
+	ktirFront[6] = (GPIOC->IDR & GPIO_Pin_15);
+	ktirFront[5] = (GPIOC->IDR & GPIO_Pin_14);
+	ktirFront[4] = (GPIOA->IDR & GPIO_Pin_15);
+	ktirFront[3] = (GPIOD->IDR & GPIO_Pin_2);
+	ktirFront[2] = (GPIOA->IDR & GPIO_Pin_1);
+	ktirFront[1] = (GPIOC->IDR & GPIO_Pin_3);
+	ktirFront[0] = (GPIOC->IDR & GPIO_Pin_2);
 
 	//left sensors
-	ktirLeft[2] = (unsigned short int) GPIO_ReadInputDataBit(GPIOD,
-	GPIO_Pin_2);
-	ktirLeft[1] = (unsigned short int) GPIO_ReadInputDataBit(GPIOA,
-	GPIO_Pin_11);
-	ktirLeft[0] = (unsigned short int) GPIO_ReadInputDataBit(GPIOC,
-	GPIO_Pin_11);
+	ktirLeft[2] = (GPIOB->IDR & GPIO_Pin_12);
+	ktirLeft[1] = (GPIOA->IDR & GPIO_Pin_12);
+	ktirLeft[0] = (GPIOC->IDR & GPIO_Pin_5);
 
 	//rear sensors
-	ktirBack[0] = false;
-	ktirBack[1] = false;
-	ktirBack[4] = (unsigned short int) GPIO_ReadInputDataBit(GPIOA,
-	GPIO_Pin_6);
-	ktirBack[3] = (unsigned short int) GPIO_ReadInputDataBit(GPIOB,
-	GPIO_Pin_8);
-	ktirBack[2] = (unsigned short int) GPIO_ReadInputDataBit(GPIOB,
-	GPIO_Pin_9);
-	ktirBack[5] = false;
-	ktirBack[6] = false;
+	ktirBack[0] = (GPIOA->IDR & GPIO_Pin_4);
+	ktirBack[1] = (GPIOA->IDR & GPIO_Pin_5);
+	ktirBack[2] = (GPIOC->IDR & GPIO_Pin_4);
+	ktirBack[3] = (GPIOB->IDR & GPIO_Pin_13);
+	ktirBack[4] = (GPIOB->IDR & GPIO_Pin_14);
+	ktirBack[5] = (GPIOA->IDR & GPIO_Pin_10);
+	ktirBack[6] = (GPIOA->IDR & GPIO_Pin_11);
 
 	//right sensors
-	ktirRight[0] = (unsigned short int) GPIO_ReadInputDataBit(GPIOC,
-	GPIO_Pin_12);
-	ktirRight[1] = (unsigned short int) GPIO_ReadInputDataBit(GPIOA,
-	GPIO_Pin_15);
-	ktirRight[2] = (unsigned short int) GPIO_ReadInputDataBit(GPIOA,
-	GPIO_Pin_12);
+	ktirRight[2] = (GPIOB->IDR & GPIO_Pin_3);
+	ktirRight[1] = (GPIOB->IDR & GPIO_Pin_4);
+	ktirRight[0] = (GPIOB->IDR & GPIO_Pin_5);
 }
-
 //encoders reset
 void encodersReset(void)
 {
@@ -203,11 +182,6 @@ inline void ultra_data_processing(void)
 
 	for (a = 0; a < 4; a++)
 	{
-		if (a == 2)		//there is not rear sensor in 1.5 Pomidor version
-		{
-			ultra[a] = 1000;
-			continue;
-		}
 		if (pierwsze_zbocze[a])	//if second edge was not detected - max value
 		{
 			ultra[a] = 1000;

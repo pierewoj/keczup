@@ -13,7 +13,6 @@
 #include "stm32f10x_gpio.h"
 #include "communication.h"
 
-
 void configurePeripherials(void)
 {
 	//STM32 internal peripherials configurations
@@ -30,6 +29,7 @@ void configurePeripherials(void)
 
 	//External devices configurations
 	encodersReset();
+	//gyro_config();
 
 	usart_data_number = 0;
 	time_old = 0;
@@ -84,11 +84,11 @@ void RCC_Config(void)
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM17, ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM15, ENABLE);
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6, ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
 	RCC->APB2ENR |= RCC_APB2ENR_ADC1EN;
 	RCC->AHBENR |= RCC_AHBENR_DMA1EN;
 	RCC->APB1ENR |= RCC_APB1ENR_PWREN | RCC_APB1ENR_BKPEN;
+	//RCC->APB1ENR |= RCC_APB1Periph_I2C1;
 }
 
 /*
@@ -156,13 +156,6 @@ void NVIC_Config(void)
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
-	NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;
-	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init(&NVIC_InitStructure);
-	NVIC_EnableIRQ(TIM2_IRQn);
-
 	NVIC_InitStructure.NVIC_IRQChannel = EXTI0_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 4;
@@ -171,7 +164,7 @@ void NVIC_Config(void)
 
 	NVIC_InitStructure.NVIC_IRQChannel = TIM1_TRG_COM_TIM17_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 5;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 6;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
@@ -183,7 +176,7 @@ void NVIC_Config(void)
 
 	NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel7_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 6;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 7;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 	NVIC_EnableIRQ(TIM3_IRQn);     //w³¹czenie przerwania od TIM3 - (NVIC level)
@@ -206,17 +199,17 @@ void GPIO_Config(void)
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 
-	//adc - gpio configuration: PC0 - VBat, PC3 - analog_distance_sensor
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_3;
+	//adc - gpio configuration: PC0 - VBat, PC1 - analog_distance_sensor
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOC, &GPIO_InitStructure);
 
-	//PA1 - ultrasonic sensors trigger (common GPIO - set and reset after 10 us )
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
+	//PB15 - ultrasonic sensors trigger (PWM)
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(GPIOA, &GPIO_InitStructure);
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
 
 	//PB0, PB1 - ultrasonic sensors echo
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
@@ -261,30 +254,29 @@ void GPIO_Config(void)
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-	//User button configuration
+	//User button configuration PA0
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-	//KTIRs A0/A1/A4/A5/A11/A12/A15
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6
+	//KTIRs A1/A4/A5/A10/A11/A12/A15
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_4 | GPIO_Pin_5
 			| GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_15;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
 	//KTIRs B3/B4/B5/B12/B13/B14
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_12
-			| GPIO_Pin_13 |
-			GPIO_Pin_15 | GPIO_Pin_8 | GPIO_Pin_9;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5
+			| GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 
 	//KTIRs C2/C3/C4/C5/C14/C15
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_11 | GPIO_Pin_12
-			| GPIO_Pin_13;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4
+			| GPIO_Pin_5 | GPIO_Pin_14 | GPIO_Pin_15;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOC, &GPIO_InitStructure);
@@ -310,7 +302,7 @@ void GPIO_Config(void)
 	AFIO->MAPR |= AFIO_MAPR_TIM2_REMAP_PARTIALREMAP2; //channels: 3,4 remapped (to: PB10, PB11)
 	AFIO->MAPR |= AFIO_MAPR_USART3_REMAP_0; //usart rx,tx remapped (to: PC10, PC11)
 	AFIO->MAPR |= AFIO_MAPR_I2C1_REMAP;            //I2C remapped (to: PB8, PB9)
-	//AFIO->MAPR2 |= AFIO_MAPR2_TIM15_REMAP;              //TIM15 remap (to: PB15)
+	GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE);
 }
 
 //
@@ -329,7 +321,7 @@ void TIMERs_Config(void)
 	TIM4->CR1 |= TIM_CR1_CEN;							// TIMER enable
 
 	//engine's PWM configuration
-	TIM2->PSC = 7;	 // Set prescaler to 8 (PSC + 1) -> PWM Frequency = 5.25 KHz for TIM2->ARR = 1000
+	TIM2->PSC = 7;// Set prescaler to 8 (PSC + 1) -> PWM Frequency = 5.25 KHz for TIM2->ARR = 1000
 	TIM2->ARR = 1000;	 // Auto reload value 1000
 	TIM2->CCR3 = 0;	   // Start PWM duty for channel 3
 	TIM2->CCR4 = 1000; // Start PWM duty for channel 4
@@ -342,15 +334,15 @@ void TIMERs_Config(void)
 	TIM3->PSC = 49;                 //prescaler set to 50
 	TIM3->ARR = ultra_distance_max; //max counter value
 	TIM3->CR1 = 0;                  //reset controls register
-	TIM3->CCMR1 |= TIM_CCMR1_CC2S_0; //capture-compare mode CH2
+	TIM3->CCMR1 |= TIM_CCMR1_CC2S_0 | TIM_CCMR1_CC1S_0; //capture-compare mode CH2
 	TIM3->CCMR2 |= TIM_CCMR2_CC3S_0 | TIM_CCMR2_CC4S_0; //capture-compare mode CH3, CH4
 
 	TIM3->CCMR2 |= TIM_CCMR2_IC3F_0 | TIM_CCMR2_IC3F_1 | TIM_CCMR2_IC4F_0
 			| TIM_CCMR2_IC4F_1;	//input capture filter
-	TIM3->CCMR1 |= TIM_CCMR1_IC2F_0 | TIM_CCMR1_IC2F_1;	//input capture filter
-	TIM3->CCER |= TIM_CCER_CC3E | TIM_CCER_CC4E | TIM_CCER_CC2E;
+	TIM3->CCMR1 |= TIM_CCMR1_IC2F_0 | TIM_CCMR1_IC2F_1 | TIM_CCMR1_IC1F_0 | TIM_CCMR1_IC1F_1;	//input capture filter
+	TIM3->CCER |= TIM_CCER_CC3E | TIM_CCER_CC4E | TIM_CCER_CC2E | TIM_CCER_CC1E;
 	//enable capture compare mode
-	TIM3->DIER |= TIM_DIER_CC3IE | TIM_DIER_CC4IE | TIM_DIER_CC2IE;
+	TIM3->DIER |= TIM_DIER_CC3IE | TIM_DIER_CC4IE | TIM_DIER_CC2IE | TIM_DIER_CC1IE;
 	//capture - compare interrupt enable
 	TIM3->CR1 |= TIM_CR1_CEN;	//counter enable
 	TIM3->CNT = 0x0000;			//clear counter
@@ -433,7 +425,7 @@ void ADC_Config(volatile unsigned int *tab)
 	ADC1->CR2 = ADC_CR2_ADON | ADC_CR2_CONT | ADC_CR2_DMA; // Turn on ADC, enable continuos mode, DMA mode
 	ADC1->CR1 = ADC_CR1_SCAN;          //scan mode
 	ADC1->SQR1 = ADC_SEQUENCE_LENGTH(1);         // two channel in sequence
-	ADC1->SQR3 = ADC_SEQ1(10) | ADC_SEQ2(13); // ADC channel 10 is first in sequence, channel 13 is second in sequence and so on...
+	ADC1->SQR3 = ADC_SEQ1(10) | ADC_SEQ2(11); // ADC channel 10 is first in sequence, channel 13 is second in sequence and so on...
 	ADC1->SMPR1 = ADC_SAMPLE_TIME0(SAMPLE_TIME_41_5) | // sample time for first channel
 			ADC_SAMPLE_TIME1(SAMPLE_TIME_41_5); // sample time for second channel in sequence
 

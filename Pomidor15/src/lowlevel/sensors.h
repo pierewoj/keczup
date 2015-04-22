@@ -26,9 +26,7 @@ extern int gyro_initial_values[3];
 void gyro_update_direction(void);
 
 //ULTRADZWIEKI
-extern unsigned short int pwm_tim_count;
 extern unsigned int ultra__[4], ultra_pom[4];
-extern unsigned int ultra1, ultra2, ultra3;
 extern char pierwsze_zbocze[4];
 #define ultra_distance_max 65535
 #define const_distance_from_the_middle_of_the_robot 10    //(9.55 cm - approx. mean distance)
