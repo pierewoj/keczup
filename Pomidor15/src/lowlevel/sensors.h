@@ -33,7 +33,7 @@ extern volatile char pierwsze_zbocze[4];
 
 #define ultra_distance_max 65535
 #define const_distance_from_the_middle_of_the_robot 10    //(9.55 cm - approx. mean distance)
-#define linear_coefficient_distance 46.65
+#define linear_coefficient_distance 46.4
 
 void ultra_data_processing(void);
 

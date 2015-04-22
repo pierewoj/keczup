@@ -151,8 +151,8 @@ void initializeGlobalVariables(void)
 
 	controllerLeftKtir.enabledP = 1;
 	controllerLeftKtir.enabledI = 0;
-	controllerLeftKtir.enabledD = 0;
-	controllerLeftKtir.kp = 0.3;
+	controllerLeftKtir.enabledD = 1;
+	controllerLeftKtir.kp = 0.45;
 	controllerLeftKtir.ti = 10;
 	controllerLeftKtir.td = 2;
 	controllerLeftKtir.target = 1;
@@ -162,8 +162,8 @@ void initializeGlobalVariables(void)
 
 	controllerRightKtir.enabledP = 1;
 	controllerRightKtir.enabledI = 0;
-	controllerRightKtir.enabledD = 0;
-	controllerRightKtir.kp = 0.3;
+	controllerRightKtir.enabledD = 1;
+	controllerRightKtir.kp = 0.45;
 	controllerRightKtir.ti = 10;
 	controllerRightKtir.td = 2;
 	controllerRightKtir.target = 1;
