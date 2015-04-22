@@ -43,7 +43,7 @@ int main(void)
 		//wait loopWaitTime between iterations
 		while (getMicroseconds() - lastLoopTime < loopWaitTime)
 		{
-
+			trySendRemainingMessages();
 		}
 		lastLoopTime = getMicroseconds();
 

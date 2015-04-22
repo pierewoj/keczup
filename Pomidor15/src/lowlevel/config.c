@@ -13,7 +13,6 @@
 #include "stm32f10x_gpio.h"
 #include "communication.h"
 
-
 void configurePeripherials(void)
 {
 	//STM32 internal peripherials configurations
@@ -182,10 +181,11 @@ void NVIC_Config(void)
 	NVIC_Init(&NVIC_InitStructure);
 
 	NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel7_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 6;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
+
 	NVIC_EnableIRQ(TIM3_IRQn);     //w³¹czenie przerwania od TIM3 - (NVIC level)
 
 }
@@ -329,7 +329,7 @@ void TIMERs_Config(void)
 	TIM4->CR1 |= TIM_CR1_CEN;							// TIMER enable
 
 	//engine's PWM configuration
-	TIM2->PSC = 7;	 // Set prescaler to 8 (PSC + 1) -> PWM Frequency = 5.25 KHz for TIM2->ARR = 1000
+	TIM2->PSC = 7;// Set prescaler to 8 (PSC + 1) -> PWM Frequency = 5.25 KHz for TIM2->ARR = 1000
 	TIM2->ARR = 1000;	 // Auto reload value 1000
 	TIM2->CCR3 = 0;	   // Start PWM duty for channel 3
 	TIM2->CCR4 = 1000; // Start PWM duty for channel 4
