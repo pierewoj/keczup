@@ -6,7 +6,8 @@
 #include "location.h"
 
 Point nextCrossroad;
-Point previousCrossroad = {2,0};
+Point previousCrossroad =
+{ 2, 0 };
 /*
  * last value of gyroDirection reading. Difference between current and last value
  * is used to update "direction".
@@ -166,7 +167,6 @@ void queueAddElem(Point a)
 	}
 }
 
-
 inline int queueSize()
 {
 	return queueLastElem - queueFirstElem;
@@ -214,8 +214,7 @@ void queueAddNeighbours(Point a)
 			return;
 		}
 
-		if (visited[neighbour.i][neighbour.j] == false
-				&& !isEnemy(neighbour))
+		if (visited[neighbour.i][neighbour.j] == false && !isEnemy(neighbour))
 		{
 			queueAddElem(neighbour);
 		}
@@ -267,7 +266,7 @@ void updateNextCrossroad(void)
 		queueAddNeighbours(p);
 		if (solutionFound)
 		{
-			if(! equals(nextCrossroad,p))
+			if (!equals(nextCrossroad, p))
 				previousCrossroad = nextCrossroad;
 			nextCrossroad = p;
 			return;
@@ -322,7 +321,7 @@ void updateEnemyPosition(void)
 		ultraDirections[i] = rotateByDegrees(ultraDirections[i], direction);
 	}
 
-	Point enemyPositions[4];
+	Point enemyPositions[10];
 	int enemyCount = 0;
 
 	//check ultra readings and generate list of enemy positions
@@ -336,14 +335,32 @@ void updateEnemyPosition(void)
 
 			PointMM enemyMM = translateByVector(position, v);
 			Point enemyPos = ofPointMM(enemyMM);
+
 			if (pointValid(enemyPos))
 			{
 				enemyPositions[enemyCount] = enemyPos;
 				enemyCount++;
+
+				//counting position of second point
+				Vector fromEnemyToSMeasured = vectorBetweenPoints(
+						ofPoint(enemyPos), enemyMM);
+				double angle = vectorAngle(fromEnemyToSMeasured);
+				angle = roundToTheMultipleOf(angle, 90);
+				Vector roundedVector = vectorOfDirection(angle);
+				roundedVector = vectorMultiplyByScalar(roundedVector, 300);
+				PointMM secondEnemyPosMM = translateByVector(ofPoint(enemyPos),
+						roundedVector);
+				Point secondEnemyPos = ofPointMM(secondEnemyPosMM);
+
+				if (pointValid(secondEnemyPos))
+				{
+					enemyPositions[enemyCount] = secondEnemyPos;
+					enemyCount++;
+				}
 			}
 		}
 
-	//update time for all detected enemies
+//update time for all detected enemies
 	for (i = 0; i < enemyCount; i++)
 	{
 		Point enemy = enemyPositions[i];
