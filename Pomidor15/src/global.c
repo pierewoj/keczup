@@ -154,7 +154,7 @@ void initializeGlobalVariables(void)
 	controllerLeftKtir.enabledP = 1;
 	controllerLeftKtir.enabledI = 0;
 	controllerLeftKtir.enabledD = 0;
-	controllerLeftKtir.kp = 0.2;
+	controllerLeftKtir.kp = 0.3;
 	controllerLeftKtir.ti = 10;
 	controllerLeftKtir.td = 2;
 	controllerLeftKtir.target = 1;
@@ -165,7 +165,7 @@ void initializeGlobalVariables(void)
 	controllerRightKtir.enabledP = 1;
 	controllerRightKtir.enabledI = 0;
 	controllerRightKtir.enabledD = 0;
-	controllerRightKtir.kp = 0.2;
+	controllerRightKtir.kp = 0.3;
 	controllerRightKtir.ti = 10;
 	controllerRightKtir.td = 2;
 	controllerRightKtir.target = 1;
@@ -173,10 +173,10 @@ void initializeGlobalVariables(void)
 	controllerRightKtir.integralMax = 3;
 	controllerRightKtir.diffInterval = 1;
 
-	controllerLeftWheelSpeed.enabledP = 0;
+	controllerLeftWheelSpeed.enabledP = 1;
 	controllerLeftWheelSpeed.enabledI = 1;
 	controllerLeftWheelSpeed.enabledD = 0;
-	controllerLeftWheelSpeed.kp = 0.0015000;
+	controllerLeftWheelSpeed.kp = 0.0010000;
 	controllerLeftWheelSpeed.ti = 50;
 	controllerLeftWheelSpeed.td = 0.01;
 	controllerLeftWheelSpeed.target = 300;
@@ -184,10 +184,10 @@ void initializeGlobalVariables(void)
 	controllerLeftWheelSpeed.integralMax = 500;
 	controllerLeftWheelSpeed.diffInterval = 10;
 
-	controllerRightWheelSpeed.enabledP = 0;
+	controllerRightWheelSpeed.enabledP = 1;
 	controllerRightWheelSpeed.enabledI = 1;
 	controllerRightWheelSpeed.enabledD = 0;
-	controllerRightWheelSpeed.kp = 0.0015000;
+	controllerRightWheelSpeed.kp = 0.0010000;
 	controllerRightWheelSpeed.ti = 50;
 	controllerRightWheelSpeed.td =  0.01;
 	controllerRightWheelSpeed.target = 300;

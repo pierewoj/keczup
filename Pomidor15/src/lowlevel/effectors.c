@@ -27,11 +27,11 @@ void closeFrame(void)
 void setRightPWM(double v)
 {
 	//make sure v is in [-1;1]
-	v = fmin(1,fmax(-1,v));
+	v = fmin(1, fmax(-1, v));
 	double modul = fabs(v);
 
 	//for sending it to PC
-	pwmRight = v;
+	pwmRight= v;
 
 	if (v > 0)
 	{
@@ -45,13 +45,13 @@ void setRightPWM(double v)
 	}
 
 	if (modul < 1.0000001)
-		TIM2->CCR4 = modul * 1000;
+		TIM2->CCR3 = modul * 1000;
 }
 
 void setLeftPWM(double v)
 {
 	//make sure v is in [-1;1]
-	v = fmin(1,fmax(-1,v));
+	v = fmin(1, fmax(-1, v));
 	double modul = fabs(v);
 
 	//for sending it to PC
@@ -69,7 +69,7 @@ void setLeftPWM(double v)
 	}
 
 	if (modul < 1.0000001)
-		TIM2->CCR3 = modul * 1000;
+		TIM2->CCR4 = modul * 1000;
 }
 
 //Motor stop functions using low/high impedance
