@@ -15,7 +15,6 @@
 //***********************__USART__*********************************//
 
 extern unsigned short int U3_bufTxIndex,U3_bufTxMaxIndex;
-extern unsigned short int U2_bufTxIndex,U2_bufTxMaxIndex;
 extern char U2_buforRx[300];
 extern int U2_buforRx_Size;
 extern int U2_bufRxIndex;

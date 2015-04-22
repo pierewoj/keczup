@@ -37,7 +37,6 @@ bool endGameTacticsEnabled;
 extern PointMM position; //in mm
 extern double direction; //[-180,180], 90 is NORTH
 extern unsigned long enemyTimes[5][5]; //enemy detection times in ms
-extern unsigned long visitTimes[5][5]; //visit times of crossroads in ms
 
 //-----------------Controllers-------------------//
 

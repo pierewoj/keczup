@@ -81,10 +81,6 @@ void updateOurPosition(void)
 	PointMM nearestCrossroadMM = getNearestCrossroad(position);
 	Point nearestCrossroad = ofPointMM(nearestCrossroadMM);
 
-	if (distance(position, nearestCrossroadMM) < 50
-			&& pointValid(nearestCrossroad))
-		visitTimes[nearestCrossroad.i][nearestCrossroad.j] = getMiliseconds(); //ms
-
 	//updating direction
 	direction += angleDifference(lastGyroDirection, gyroDirection);
 	direction = angleMakeInRange(direction);
@@ -143,14 +139,6 @@ Point queue[25];
  */
 bool visited[5][5];
 
-inline int getMsSinceLastVisit(Point a)
-{
-	if (pointValid(a))
-		return getMiliseconds() - visitTimes[a.i][a.j];
-	else
-		return 0;
-}
-
 /*
  * returns true if enemy was detected on a given crossroad
  */
@@ -199,9 +187,6 @@ bool solutionFound;
  */
 void queueAddNeighbours(Point a)
 {
-	int maxMsSinceLastVisit = -10;
-	Point bestResult =
-	{ -1, -1 };
 	Point directions[4] =
 	{
 	{ 0, -1 },
@@ -229,24 +214,13 @@ void queueAddNeighbours(Point a)
 			solutionFound = true;
 			return;
 		}
-		if (getMsSinceLastVisit(neighbour) > maxMsSinceLastVisit
-				&& visited[neighbour.i][neighbour.j] == false
+
+		if (visited[neighbour.i][neighbour.j] == false
 				&& !isEnemy(neighbour))
 		{
-			maxMsSinceLastVisit = getMsSinceLastVisit(neighbour);
-			bestResult = neighbour;
+			queueAddElem(neighbour);
 		}
 	}
-
-	if (maxMsSinceLastVisit != -10)
-	{
-		queueAddElem(bestResult);
-
-		//try to find next not-visited neighbour
-		queueAddNeighbours(a);
-	}
-	else
-		return;
 }
 
 /*
