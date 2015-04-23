@@ -23,6 +23,11 @@ extern Point previousCrossroad;
 void updateOurPosition(void);
 
 /*
+ * returns true if enemy was detected on a given crossroad
+ */
+inline bool isEnemy(Point a);
+
+/*
  * returns the nearest crossroad to "point"
  */
 PointMM getNearestCrossroad(PointMM pos);
