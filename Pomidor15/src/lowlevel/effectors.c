@@ -10,13 +10,10 @@
 #include "../global.h"
 #include <math.h>
 
-unsigned int lastTimeFrameChanged = 0;
-
 void openFrame(void)
 {
 	dynamixel_ustawPozycje(0.54);
 	frameClosed = false;
-	lastTimeFrameChanged = getMiliseconds();
 }
 
 //locks the can
@@ -24,7 +21,6 @@ void closeFrame(void)
 {
 	dynamixel_ustawPozycje(0.8);
 	frameClosed = true;
-	lastTimeFrameChanged = getMiliseconds();
 }
 
 //set PWM values controlling engines. Values [-1.0 .. +1.0]. + is forward.

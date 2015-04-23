@@ -11,11 +11,6 @@
 #ifndef EFFECTORS_H_
 #define EFFECTORS_H_
 
-/*
- * time in ms of last change of frame state
- */
-extern unsigned int lastTimeFrameChanged;
-
 //unlocks the can
 void openFrame(void);
 
