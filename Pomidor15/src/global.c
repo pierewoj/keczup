@@ -1,5 +1,6 @@
 #include "global.h"
 #include "lowlevel/sensors.h"
+#include "lowlevel/effectors.h"
 #include "states/state.h"
 #include "settings.h"
 #include "location.h"

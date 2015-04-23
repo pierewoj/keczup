@@ -64,7 +64,7 @@ extern volatile int32_t rotTotal;
 //read all sensors and update sensor values defined in "global.h"
 void readSensors(void);
 
-inline void sharp_update(void);
+void sharp_update(void);
 
-inline void battery_update(void);
+void battery_update(void);
 #endif /* SENSORS_H_ */
