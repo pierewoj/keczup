@@ -8,6 +8,8 @@
 //unlocks the can
 #include "effectors.h"
 #include "../global.h"
+#include "../states/state.h"
+#include "../settings.h"
 #include <math.h>
 
 unsigned int lastTimeFrameChanged = 0;
@@ -31,7 +33,7 @@ void closeFrame(void)
 void setRightPWM(double v)
 {
 	//make sure v is in [-1;1]
-	v = fmin(1,fmax(-1,v));
+	v = fmin(1, fmax(-1, v));
 	double modul = fabs(v);
 
 	//for sending it to PC
@@ -50,15 +52,39 @@ void setRightPWM(double v)
 
 	if (modul < 1.0000001)
 		TIM2->CCR4 = modul * 1000;
+
+	//ANTI BLOCK SYSTEM
+	static int timeOfLastGoodRun = -5000;
+	static int timeOfLastPWM = -5000;
+
+	//if this function was not ran for long time, assume last reading was good
+	if (getMiliseconds() - timeOfLastPWM > settingTimeBlockedToFail / 2)
+		timeOfLastGoodRun = getMiliseconds();
+	timeOfLastPWM = getMiliseconds();
+
+	if (fabs(pwmRight) > settingPWMToBlocked
+			&& fabs(velocityRight) < settingVelocityToBlocked)
+	{
+		//blocked
+	}
+	else
+	{
+		timeOfLastGoodRun = getMiliseconds();
+	}
+
+	if (getMiliseconds() - timeOfLastGoodRun > settingTimeBlockedToFail)
+	{
+		changeState(STATE_FAIL, REASON_WHEEL_BLOCKED);
+	}
 }
 
 void setLeftPWM(double v)
 {
-	//make sure v is in [-1;1]
-	v = fmin(1,fmax(-1,v));
+//make sure v is in [-1;1]
+	v = fmin(1, fmax(-1, v));
 	double modul = fabs(v);
 
-	//for sending it to PC
+//for sending it to PC
 	pwmLeft = v;
 
 	if (v > 0)
@@ -74,6 +100,30 @@ void setLeftPWM(double v)
 
 	if (modul < 1.0000001)
 		TIM2->CCR3 = modul * 1000;
+
+	//ANTI BLOCK SYSTEM
+	static int timeOfLastGoodRun = -5000;
+	static int timeOfLastPWM = -5000;
+
+	//if this function was not ran for long time, assume last reading was good
+	if (getMiliseconds() - timeOfLastPWM > settingTimeBlockedToFail / 2)
+		timeOfLastGoodRun = getMiliseconds();
+	timeOfLastPWM = getMiliseconds();
+
+	if (fabs(pwmLeft) > settingPWMToBlocked
+			&& fabs(velocityLeft) < settingVelocityToBlocked)
+	{
+		//blocked
+	}
+	else
+	{
+		timeOfLastGoodRun = getMiliseconds();
+	}
+
+	if (getMiliseconds() - timeOfLastGoodRun > settingTimeBlockedToFail)
+	{
+		changeState(STATE_FAIL, REASON_WHEEL_BLOCKED);
+	}
 }
 
 //Motor stop functions using low/high impedance
