@@ -57,8 +57,8 @@ void messageProcessor(char* msg, int msgLength);
 #define gyro_CTRL_REG4 0x23
 #define gyro_CTRL_REG1 0x20
 
-void __i2c_write(uint8_t address, uint8_t* data, uint32_t length);
-void __i2c_read(uint8_t address,uint8_t reg_address, uint8_t* data);
+void __i2c_write(uint8_t address, volatile uint8_t* data, volatile uint32_t length);
+void __i2c_read(uint8_t address,uint8_t reg_address, volatile uint8_t* data);
 
 //**********************************__I2C_protocol_END__*************************************//
 
