@@ -25,7 +25,7 @@ void updateOurPosition(void);
 /*
  * returns true if enemy was detected on a given crossroad
  */
-bool isEnemy(Point a);
+inline bool isEnemy(Point a);
 
 /*
  * returns the nearest crossroad to "point"
