@@ -354,7 +354,7 @@ void TIMERs_Config(void)
 
 	//ultrasonic sensors data processing timer
 	TIM17->PSC = 39999;	         // Set prescaler to 40000 (PSC + 1)
-	TIM17->ARR = 20;	         // Auto reload value [ms]
+	TIM17->ARR = 10;	         // Auto reload value [ms]
 	TIM17->DIER = TIM_DIER_UIE;  // Enable update interrupt (timer level)
 	TIM17->CR1 = TIM_CR1_CEN;    // Enable timer
 
