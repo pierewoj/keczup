@@ -136,7 +136,7 @@ void initializeGlobalVariables(void)
 	controllerForward.target = 3.5;
 	controllerForward.lastTimeDiff = getMicroseconds();
 	controllerForward.integralMax = 3;
-	controllerForward.diffInterval = 1;
+	controllerForward.diffInterval = 3;
 	controllerForward.feedback = 3;
 
 	controllerBackward.enabledP = 1;
@@ -151,26 +151,26 @@ void initializeGlobalVariables(void)
 	controllerBackward.diffInterval = 1;
 
 	controllerLeftKtir.enabledP = 1;
-	controllerLeftKtir.enabledI = 0;
+	controllerLeftKtir.enabledI = 1;
 	controllerLeftKtir.enabledD = 1;
-	controllerLeftKtir.kp = 0.45;
-	controllerLeftKtir.ti = 10;
-	controllerLeftKtir.td = 2;
+	controllerLeftKtir.kp = 0.27;
+	controllerLeftKtir.ti = 1000;
+	controllerLeftKtir.td = 3.5;
 	controllerLeftKtir.target = 1;
 	controllerLeftKtir.lastTimeDiff = getMicroseconds();
 	controllerLeftKtir.integralMax = 3;
-	controllerLeftKtir.diffInterval = 1;
+	controllerLeftKtir.diffInterval = 2;
 
 	controllerRightKtir.enabledP = 1;
-	controllerRightKtir.enabledI = 0;
+	controllerRightKtir.enabledI = 1;
 	controllerRightKtir.enabledD = 1;
-	controllerRightKtir.kp = 0.45;
-	controllerRightKtir.ti = 10;
-	controllerRightKtir.td = 2;
+	controllerRightKtir.kp = 0.27;
+	controllerRightKtir.ti = 1000;
+	controllerRightKtir.td = 3.5;
 	controllerRightKtir.target = 1;
 	controllerRightKtir.lastTimeDiff = getMicroseconds();
 	controllerRightKtir.integralMax = 3;
-	controllerRightKtir.diffInterval = 1;
+	controllerRightKtir.diffInterval = 2;
 
 	controllerLeftWheelSpeed.enabledP = 1;
 	controllerLeftWheelSpeed.enabledI = 1;

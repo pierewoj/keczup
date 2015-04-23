@@ -7,7 +7,7 @@
 #include <string.h>
 #include "messageQueue.h"
 
-#define NUM_MESSAGES 2
+#define NUM_MESSAGES 4
 #define MAX_MSGLEN 256
 char queue[NUM_MESSAGES][MAX_MSGLEN];
 int volatile nextPopped = 0;
