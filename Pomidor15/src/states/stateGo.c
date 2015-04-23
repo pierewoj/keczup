@@ -66,7 +66,7 @@ void stateGo(void)
 		//sprawdzenie czy kolejne skrzyzowanie sie zmienilo
 		if (distanceToNextCrossroad() < settingCrossroadRadius)
 		{
-			setDriveStopFast();
+			setDriveSideKtir();
 		}
 
 		// big angle to the next crossroad, rotating
@@ -80,10 +80,10 @@ void stateGo(void)
 				&& (distance(position, ofPoint(previousCrossroad))
 						+ distance(position, ofPoint(nextCrossroad)) < 400)
 				&& !equals(previousCrossroad, nextCrossroad))
-	{
-		nextCrossroad = previousCrossroad;
-		changeState(STATE_GO_PREVIOUS, REASON_ENEMY_DETECTED_IN_FRONT);
-	}
+		{
+			nextCrossroad = previousCrossroad;
+			changeState(STATE_GO_PREVIOUS, REASON_ENEMY_DETECTED_IN_FRONT);
+		}
 	else
 	{
 		setDrivePIDForward(settingPIDForwardPWM);

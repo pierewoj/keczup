@@ -44,3 +44,14 @@ double settingDistanceToGoBack = 30;
 
 //Distance from enemy to go to previous crossroad [cm]
 double settingDistanceToRunFromEnemy = 25;
+
+/*
+ * Engine saving sytem.
+ * Robot will stop if PWM is higher than settingPWMToBlocked and velociuy of any wheel
+ * is lower than settingVelocityToblocked for longer than settingTimeBlockedToFail
+ */
+int settingTimeBlockedToFail = 600;
+
+double settingVelocityToBlocked = 30;
+
+double settingPWMToBlocked = 0.25;
