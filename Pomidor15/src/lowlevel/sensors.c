@@ -10,6 +10,7 @@
 #include "communication.h"
 #include "../global.h"
 #include "stm32f10x_gpio.h"
+#include "effectors.h"
 
 //ADC
 volatile unsigned int pomiar_adc[2];
@@ -198,4 +199,10 @@ inline void ultra_data_processing(void)
 			ultra[a] = 1000;
 		}
 	}
+
+	/*
+	 * ignore ultra if frame state was changed less than 2s ago
+	 */
+	if(getMiliseconds() - lastTimeFrameChanged < 2000)
+		ultra[0] = 1000;
 }
