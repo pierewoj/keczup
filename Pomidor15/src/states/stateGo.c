@@ -11,19 +11,28 @@
 
 void stateGo(void)
 {
-	//reseting feedback for side KTIR controllers
+	/*
+	 * change sideKtir PID feedback so that the robot
+	 * will go to the line in front of him
+	 */
 	if (80 < distanceToNextCrossroad() && distanceToNextCrossroad() < 100)
 	{
-		controllerLeftKtir.feedback = 2;
-		controllerRightKtir.feedback = 0;
+		controllerLeftKtir.feedback = 2; //front left ktir
+		controllerRightKtir.feedback = 0; //front right ktir
 	}
 
+	/*
+	 * taking can
+	 */
 	if (distanceToNextCrossroad() < 100 && sharp < settingSharpThresh
 			&& !carryingCan)
 	{
 		changeState(STATE_TAKE_CAN, REASON_CAN_DETECTED_SHARP);
 	}
 
+	/*
+	 * if we are near to the crossroad
+	 */
 	if (distanceToNextCrossroad() < settingCrossroadRadius)
 	{
 		//wyznaczenie nowego celu jak dojechal
@@ -31,6 +40,7 @@ void stateGo(void)
 		{
 			Point currentTarget = getRecentTarget();
 			Point pos = ofPointMM(position);
+
 			//end game tactics
 			if (currentTarget.i == 2 && currentTarget.j == 4
 					&& endGameTacticsEnabled)
@@ -65,8 +75,8 @@ void stateGo(void)
 			changeState(STATE_ROTATE, REASON_BIG_ANGLE_TO_NEXT_CROSSROAD);
 		}
 	}
-	else if (getMiliseconds() - enemyTimes[nextCrossroad.i][nextCrossroad.j]
-			< settingLocationTimeEnemy && ktirBack[3]
+
+	else if (isEnemy(nextCrossroad) && ktirBack[3]
 			&& (distance(position, ofPoint(previousCrossroad))
 					+ distance(position, ofPoint(nextCrossroad)) < 400)
 			&& !equals(previousCrossroad, nextCrossroad)
