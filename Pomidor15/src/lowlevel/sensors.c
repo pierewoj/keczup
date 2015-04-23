@@ -194,7 +194,7 @@ inline void ultra_data_processing(void)
 
 			//register value to enemy distance [cm] conversion
 
-		if (ultra[a] > 62)	//low-pass filter, high bandwidth - unstable
+		if (ultra[a] > 93)	//low-pass filter, high bandwidth - unstable
 		{
 			ultra[a] = 1000;
 		}

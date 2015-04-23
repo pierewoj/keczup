@@ -23,7 +23,6 @@
 #include "states/stateLeaveCan.h"
 #include "states/stateManual.h"
 #include "states/stateGoPrevious.h"
-#include "states/stateFail.h"
 #include "stdio.h"
 #include "commPC.h"
 #include "utils/messageQueue.h"
@@ -101,10 +100,6 @@ int main(void)
 
 		case STATE_GO_PREVIOUS :
 			stateGoPrevious();
-			break;
-
-		case STATE_FAIL:
-			stateFail();
 			break;
 
 		default:
