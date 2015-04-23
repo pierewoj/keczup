@@ -31,7 +31,7 @@ double settingBluetoothInterval = 100*1000;
 double settingMaxRotationVelocity = 300;
 
 //Robot is at crossroad when distance to is is less than this value
-double settingCrossroadRadius = 65;
+double settingCrossroadRadius = 70;
 
 //Distance between cans on our baseline [mm]
 double settingDistanceBetweenCans = 60;
