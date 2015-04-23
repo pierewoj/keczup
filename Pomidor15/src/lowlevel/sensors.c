@@ -64,14 +64,14 @@ void readSensors(void)
 }
 
 //battery voltage updating
-inline void battery_update(void)
+void battery_update(void)
 {
 	//Voltage = 3 * 3,3V * register_value/4096
 	battery = pomiar_adc[0] * 0.0025217;
 }
 
 //sharp distance updating
-inline void sharp_update(void)
+void sharp_update(void)
 {
 	if (pomiar_adc[1] > 700)
 		sharp = 15068 / (pomiar_adc[1] + 1);

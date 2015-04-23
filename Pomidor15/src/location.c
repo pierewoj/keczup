@@ -4,10 +4,16 @@
 #include "geometry.h"
 #include "math.h"
 #include "location.h"
+#include "stdbool.h"
 
+/*
+ *  next crossroad is the crossroad to be visited next
+ *  previous crossroad is used in state 'goPrevious'
+ */
 Point nextCrossroad;
 Point previousCrossroad =
 { 2, 0 };
+
 /*
  * last value of gyroDirection reading. Difference between current and last value
  * is used to update "direction".
@@ -19,6 +25,7 @@ double lastGyroDirection;
  * current and last values are used to update location.
  */
 long lastTotalDistanceLeft, lastTotalDistanceRight;
+
 /*
  * returns the nearest crossroad to "point"
  */
@@ -29,7 +36,10 @@ PointMM getNearestCrossroad(PointMM pos)
 	return res;
 }
 
-void snapPositionAndDirection()
+/*
+ * snaps direction and BOTH coordinates
+ */
+void snapPositionAndDirection(void)
 {
 	//direction snap
 	direction = roundToTheMultipleOf(direction, 90);
@@ -40,7 +50,10 @@ void snapPositionAndDirection()
 
 }
 
-void snapHorizontalVerticalDirection()
+/*
+ * snaps direction and ONE of coordinates depending on direction of the robot
+ */
+void snapHorizontalVerticalDirection(void)
 {
 	//snapping direction
 	direction = roundToTheMultipleOf(direction, 90);
@@ -65,6 +78,7 @@ void snapHorizontalVerticalDirection()
 		position.x = roundToTheMultipleOf(position.x, 300);
 
 }
+
 /*
  * true if the crossroad has valid position
  */
@@ -78,9 +92,6 @@ bool pointValid(Point p)
  */
 void updateOurPosition(void)
 {
-	//updating time of crossroad visit
-	PointMM nearestCrossroadMM = getNearestCrossroad(position);
-
 	//updating direction
 	direction += angleDifference(lastGyroDirection, gyroDirection);
 	direction = angleMakeInRange(direction);
@@ -157,6 +168,9 @@ inline bool isEnemy(Point a)
  */
 int queueFirstElem = 0, queueLastElem = 0;
 
+/*
+ * Adds one elem to the enemy queue
+ */
 void queueAddElem(Point a)
 {
 	if (queueLastElem < 25)
@@ -167,17 +181,27 @@ void queueAddElem(Point a)
 	}
 }
 
+/*
+ * returns number of elems in queue
+ */
 inline int queueSize()
 {
 	return queueLastElem - queueFirstElem;
 }
 
+/*
+ * removes one element from queue and returns it
+ */
 Point queuePop()
 {
 	queueFirstElem++;
 	return queue[queueFirstElem - 1];
 }
 
+/*
+ * updated in queueAddAllNeighbours()
+ * returns true if currently added neighbour is our position
+ */
 bool solutionFound;
 
 /*
@@ -300,6 +324,16 @@ void updateNextCrossroad(void)
 }
 
 /*
+ * returns true if given point is inside board, this is every coordinate is
+ * in [0;1200]
+ */
+bool isInsideBoard(PointMM pointMM)
+{
+	return pointMM.x > 0 && pointMM.x < 1200
+			&& pointMM.y > 0 && pointMM.y < 1200;
+}
+
+/*
  * detects enemy using sonars. That information is used to count path to the
  * target. Enemy detection times are saved in enemyTimes[][] array.
  */
@@ -336,7 +370,7 @@ void updateEnemyPosition(void)
 			PointMM enemyMM = translateByVector(position, v);
 			Point enemyPos = ofPointMM(enemyMM);
 
-			if (pointValid(enemyPos))
+			if (isInsideBoard(enemyMM))
 			{
 				enemyPositions[enemyCount] = enemyPos;
 				enemyCount++;
@@ -350,11 +384,10 @@ void updateEnemyPosition(void)
 				roundedVector = vectorMultiplyByScalar(roundedVector, 300);
 				PointMM secondEnemyPosMM = translateByVector(ofPoint(enemyPos),
 						roundedVector);
-				Point secondEnemyPos = ofPointMM(secondEnemyPosMM);
 
-				if (pointValid(secondEnemyPos))
+				if (isInsideBoard(secondEnemyPosMM))
 				{
-					enemyPositions[enemyCount] = secondEnemyPos;
+					enemyPositions[enemyCount] = ofPointMM(secondEnemyPosMM);
 					enemyCount++;
 				}
 			}

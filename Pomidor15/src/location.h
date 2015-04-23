@@ -11,8 +11,8 @@
  */
 
 /*
- * position of next crossroad to be visited. Should be accessed directly from
- * current position
+ *  next crossroad is the crossroad to be visited next
+ *  previous crossroad is used in state 'goPrevious'
  */
 extern Point nextCrossroad;
 extern Point previousCrossroad;
@@ -27,9 +27,15 @@ void updateOurPosition(void);
  */
 PointMM getNearestCrossroad(PointMM pos);
 
-void snapPositionAndDirection();
+/*
+ * snaps direction and BOTH coordinates
+ */
+void snapPositionAndDirection(void);
 
-void snapHorizontalVerticalDirection();
+/*
+ * snaps direction and ONE of coordinates depending on direction of the robot
+ */
+void snapHorizontalVerticalDirection(void);
 
 /*
  * detects enemy using sonars. That information is used to count path to the

@@ -146,7 +146,11 @@ void messageProcessor(char* msg, int msgLength)
 
 void __i2c_write(uint8_t address, uint8_t* data, uint32_t length)
 {
+	//ignoring warning for not using value of dummy
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 	uint32_t dummy;
+#pragma GCC diagnostic pop
 
 	I2C1_CR1_START_bb = 1;              // request a start
 	while (I2C1_SR1_SB_bb == 0)
@@ -175,8 +179,12 @@ void __i2c_write(uint8_t address, uint8_t* data, uint32_t length)
 //data - name of the array to store measured values
 void __i2c_read(uint8_t address, uint8_t reg_address, uint8_t* data)
 {
+	//ignoring warning for not using value of dummy
+	#pragma GCC diagnostic push
+	#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+		uint32_t dummy;
+	#pragma GCC diagnostic pop
 
-	uint32_t dummy;
 	uint8_t iter = 0;
 
 	I2C1_CR1_START_bb = 1;
