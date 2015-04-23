@@ -153,7 +153,7 @@ bool visited[5][5];
 /*
  * returns true if enemy was detected on a given crossroad
  */
-inline bool isEnemy(Point a)
+bool isEnemy(Point a)
 {
 	if (pointValid(a))
 		return getMiliseconds() - enemyTimes[a.i][a.j]
