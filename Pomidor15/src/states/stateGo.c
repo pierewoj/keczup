@@ -77,11 +77,9 @@ void stateGo(void)
 	}
 
 	else if (isEnemy(nextCrossroad) && ktirBack[3]
-			&& (distance(position, ofPoint(previousCrossroad))
-					+ distance(position, ofPoint(nextCrossroad)) < 400)
-			&& !equals(previousCrossroad, nextCrossroad)
-			&& distance(position, ofPoint(previousCrossroad))
-					> 1.1 * settingCrossroadRadius)
+				&& (distance(position, ofPoint(previousCrossroad))
+						+ distance(position, ofPoint(nextCrossroad)) < 400)
+				&& !equals(previousCrossroad, nextCrossroad))
 	{
 		nextCrossroad = previousCrossroad;
 		changeState(STATE_GO_PREVIOUS, REASON_ENEMY_DETECTED_IN_FRONT);
