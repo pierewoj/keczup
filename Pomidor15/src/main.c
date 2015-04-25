@@ -40,6 +40,8 @@ int main(void)
 	while (1)
 	{
 
+		if(position.x < -100 || position.x > 1300 || position.y < -100 || position.y > 1300)
+			changeState(STATE_FAIL, REASON_OUT_OF_BOARD);
 
 		//wait loopWaitTime between iterations
 		while (getMicroseconds() - lastLoopTime < loopWaitTime)
