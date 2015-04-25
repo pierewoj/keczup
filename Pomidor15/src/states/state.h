@@ -36,6 +36,8 @@
 #define REASON_UNKNOWN_CONDIDION_TAKING_CAN 15
 #define REASON_LEAVING_CAN_TOO_BIG_DISTANCE 16
 #define REASON_WHEEL_BLOCKED 17
+#define REASON_OUT_OF_BOARD 18
+
 void changeState(int newState, int reason);
 
 #endif /* STATE_H_ */
