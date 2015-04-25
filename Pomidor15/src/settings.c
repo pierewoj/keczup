@@ -22,7 +22,7 @@ double settingPIDForwardPWM = 0.5;
 double settingAngleToBeginRotate = 50;
 
 //Minimum Sharp reading in cm to detect can
-double settingSharpThresh = 8;
+double settingSharpThresh = 10;
 
 //Send uart messages every X microseconds
 double settingBluetoothInterval = 100*1000;

@@ -155,7 +155,7 @@ void initializeGlobalVariables(void)
 	controllerLeftKtir.enabledD = 1;
 	controllerLeftKtir.kp = 0.27;
 	controllerLeftKtir.ti = 1000;
-	controllerLeftKtir.td = 3.5;
+	controllerLeftKtir.td = 2.2;
 	controllerLeftKtir.target = 1;
 	controllerLeftKtir.lastTimeDiff = getMicroseconds();
 	controllerLeftKtir.integralMax = 3;
@@ -166,7 +166,7 @@ void initializeGlobalVariables(void)
 	controllerRightKtir.enabledD = 1;
 	controllerRightKtir.kp = 0.27;
 	controllerRightKtir.ti = 1000;
-	controllerRightKtir.td = 3.5;
+	controllerRightKtir.td = 2.2;
 	controllerRightKtir.target = 1;
 	controllerRightKtir.lastTimeDiff = getMicroseconds();
 	controllerRightKtir.integralMax = 3;
