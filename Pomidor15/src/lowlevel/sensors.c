@@ -192,7 +192,7 @@ inline void ultra_data_processing(void)
 
 		ultra_history[a] = (int) (((ultra__[a]) / linear_coefficient_distance)
 						+ const_distance_from_the_middle_of_the_robot[a]);
-		if(ultra_history[a] < 63)
+		if(ultra_history[a] < 62)
 		{
 			ultra[a] = (int) (((ultra__[a]) / linear_coefficient_distance)
 				+ const_distance_from_the_middle_of_the_robot[a]);
@@ -202,7 +202,7 @@ inline void ultra_data_processing(void)
 					//register value to enemy distance [cm] conversion
 			//register value to enemy distance [cm] conversion
 
-		if (ultra[a] > 63)	//low-pass filter, high bandwidth - unstable
+		if (ultra[a] > 62)	//low-pass filter, high bandwidth - unstable
 		{
 			ultra[a] = 1000;
 		}

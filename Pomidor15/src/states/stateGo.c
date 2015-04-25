@@ -25,7 +25,7 @@ void stateGo(void)
 	 * taking can
 	 */
 	if (distanceToNextCrossroad() < 100 && sharp < settingSharpThresh
-			&& !carryingCan)
+			&& !carryingCan && (ultra[0] == 1000))
 	{
 		changeState(STATE_TAKE_CAN, REASON_CAN_DETECTED_SHARP);
 	}
