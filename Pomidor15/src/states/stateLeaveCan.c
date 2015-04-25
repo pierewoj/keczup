@@ -112,7 +112,7 @@ void stateLeaveCan(void)
 			/*
 			 * end game tactics
 			 */
-			if (canCountRight >= 4 && canCountLeft >= 4)
+			if (canCountRight >= 1 || canCountLeft >= 1)
 			{
 				addNewTarget(2,0);
 				endGameTacticsEnabled = true;
