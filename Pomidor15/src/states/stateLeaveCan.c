@@ -114,8 +114,13 @@ void stateLeaveCan(void)
 			 */
 			if (canCountRight >= 4 && canCountLeft >= 4)
 			{
-				addNewTarget(2,4);
+				addNewTarget(2,0);
 				endGameTacticsEnabled = true;
+
+				/*
+				 *  stopping at our own baseline
+				 */
+				changeState(STATE_FAIL, REASON_ALL_CANS_COLLECTED);
 			}
 		}
 	}
