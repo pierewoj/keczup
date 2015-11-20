@@ -117,6 +117,7 @@ void EXTI0_IRQHandler(void)
 	if ( EXTI->PR & EXTI_PR_PR0)
 	{
 		EXTI->PR |= EXTI_PR_PR0;
+		EXTI->RTSR |= EXTI_RTSR_TR0;
 		buttonStart = !buttonStart;
 		//do not send any message - there is a conflict between DMA and EXTI interrupts
 	}

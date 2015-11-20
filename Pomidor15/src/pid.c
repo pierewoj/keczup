@@ -77,9 +77,9 @@ void updateFeedbackKtir(ControllerState *s, bool *ktir, int numKtir)
 	}
 	else if(ktir == ktirBack)
 	{
-		if(numBlack > 1)
+		if(numBlack > 2 && ktirBack[3])
 			s->feedback = 3;
-		else
+		else if (numBlack > 0)
 			s->feedback = sum / numBlack;
 	}
 	else if (numBlack > 0)
