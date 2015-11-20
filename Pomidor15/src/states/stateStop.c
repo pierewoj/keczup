@@ -5,6 +5,8 @@
 #include "state.h"
 #include "../global.h"
 
+extern bool programMode;
+
 void stateStop(void)
 {
 	setDriveStopFast();

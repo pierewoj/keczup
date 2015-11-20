@@ -27,6 +27,8 @@ bool carryingCan; //does the robot "have" the can
  */
 bool endGameTacticsEnabled = false;
 
+bool programMode = false;
+
 /*
  * Location variables
  * They are updated in location.c. They are not sensor readings!

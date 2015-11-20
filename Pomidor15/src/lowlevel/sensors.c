@@ -181,9 +181,14 @@ inline void ultra_data_processing(void)
 {
 	int a;
 
-	for (a = 0; a < 3; a++)
+	for (a = 0; a < 4; a++)
 	{
 
+		if(a == 2)
+		{
+			ultra[2] = 1002;
+			continue;
+		}
 		if (pierwsze_zbocze[a])	//if second edge was not detected - max value
 		{
 			ultra[a] = 1000;
@@ -207,7 +212,6 @@ inline void ultra_data_processing(void)
 			ultra[a] = 1000;
 		}
 	}
-	ultra[3] = 1001;
 
 	/*
 	 * ignore ultra if frame state was changed less than 2s ago

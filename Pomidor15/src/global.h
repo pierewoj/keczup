@@ -33,6 +33,7 @@ extern bool carryingCan; //does the robot "have" the can
  */
 bool endGameTacticsEnabled;
 
+bool programMode;
 //-----------------Location variables------------------//
 extern PointMM position; //in mm
 extern double direction; //[-180,180], 90 is NORTH

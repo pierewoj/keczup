@@ -14,6 +14,8 @@
 #include "config.h"
 #include "../global.h"
 
+#define TIME_TO_WAIT_FOR_2_PROGRAM_MS	20000
+
 /*
  * TIMERs
  */
