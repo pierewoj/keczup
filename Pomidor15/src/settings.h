@@ -69,8 +69,8 @@ double settingDistanceToRunFromEnemy;
  */
 int settingTimeBlockedToFail;
 
-double settingVelocityToBlocked;
+int settingVelocityToBlocked;
 
-double settingPWMToBlocked;
+int settingPWMToBlocked;
 
 #endif /* SETTIINGS_H_ */
