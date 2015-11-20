@@ -35,6 +35,7 @@ extern volatile unsigned int ultra_history[4];
 
 #define ultra_distance_max 65535
 #define linear_coefficient_distance 46.4
+#define MAX_ULTRA_ENEMY_DETECT 63
 
 void ultra_data_processing(void);
 
@@ -48,7 +49,7 @@ void encodersRead(void);
 
 extern double V_L, V_R;
 #define REV_COUNT 				1021
-#define IMP_DIST				0.1122226619
+#define IMP_DIST				0.11471
 #define ENC_L_TIM              	TIM1                     // timer's macros
 #define ENC_R_TIM              	TIM4
 

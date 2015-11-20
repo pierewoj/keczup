@@ -52,6 +52,6 @@ double settingDistanceToRunFromEnemy = 25;
  */
 int settingTimeBlockedToFail = 600;
 
-int settingVelocityToBlocked = 30;
+double settingVelocityToBlocked = 30;
 
-int settingPWMToBlocked = 0.25;
+double settingPWMToBlocked = 0.25;

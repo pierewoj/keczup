@@ -94,21 +94,21 @@ void TIM3_IRQHandler(void) //ultrasonic sensor echo capturing timer
 		TIM3->CCER ^= TIM_CCER_CC3P;
 	}
 	//left ultrasonic sensor PB1
-	if (TIM3->SR & TIM_SR_CC4IF) // if CC3IF flag is set
-	{
-		TIM3->SR &= !(TIM_SR_CC4IF | TIM_SR_CC4OF);
-		if (!(TIM3->CCER & TIM_CCER_CC4P))
-		{
-			ultra_pom[3] = (TIM3->CCR4);
-			pierwsze_zbocze[3] = 1;
-		}
-		else
-		{
-			ultra__[3] = (TIM3->CCR4) - ultra_pom[3];
-			pierwsze_zbocze[3] = 0;
-		}
-		TIM3->CCER ^= TIM_CCER_CC4P;
-	}
+//	if (TIM3->SR & TIM_SR_CC4IF) // if CC3IF flag is set
+//	{
+//		TIM3->SR &= !(TIM_SR_CC4IF | TIM_SR_CC4OF);
+//		if (!(TIM3->CCER & TIM_CCER_CC4P))
+//		{
+//			ultra_pom[3] = (TIM3->CCR4);
+//			pierwsze_zbocze[3] = 1;
+//		}
+//		else
+//		{
+//			ultra__[3] = (TIM3->CCR4) - ultra_pom[3];
+//			pierwsze_zbocze[3] = 0;
+//		}
+//		TIM3->CCER ^= TIM_CCER_CC4P;
+//	}
 }
 
 //user button interrupt

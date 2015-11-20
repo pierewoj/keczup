@@ -130,9 +130,9 @@ void initializeGlobalVariables(void)
 	controllerForward.enabledP = 1;
 	controllerForward.enabledI = 0;
 	controllerForward.enabledD = 1;
-	controllerForward.kp = 0.8;
+	controllerForward.kp = 0.65;
 	controllerForward.ti = 10;
-	controllerForward.td = 2;
+	controllerForward.td = 3;
 	controllerForward.target = 3.5;
 	controllerForward.lastTimeDiff = getMicroseconds();
 	controllerForward.integralMax = 3;
