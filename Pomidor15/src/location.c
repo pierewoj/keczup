@@ -414,6 +414,7 @@ void updateEnemyPosition(void)
 		}
 		enemyTimes[0][2] = getMiliseconds();
 		enemyTimes[1][2] = getMiliseconds();
+		enemyTimes[2][2] = getMiliseconds();
 	}
 }
 
