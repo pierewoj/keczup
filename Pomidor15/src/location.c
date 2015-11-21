@@ -399,6 +399,19 @@ void updateEnemyPosition(void)
 		Point enemy = enemyPositions[i];
 		enemyTimes[enemy.i][enemy.j] = getMiliseconds(); //ms
 	}
+
+	//do not run to this points (half of the board) 1v1 tactics
+	{
+		int i = 0;
+		int j = 0;
+		for(j = 3 ; j < 5; j++)
+		{
+			for(i = 0 ; i < 5; i++)
+				enemyTimes[i][j] = getMiliseconds();
+		}
+		enemyTimes[0][2] = getMiliseconds();
+		enemyTimes[1][2] = getMiliseconds();
+	}
 }
 
 /*
