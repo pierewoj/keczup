@@ -186,7 +186,7 @@ inline void ultra_data_processing(void)
 
 		if(a == 2)
 		{
-			ultra[2] = 1002;
+			ultra[a] = 1002;
 			continue;
 		}
 		if (pierwsze_zbocze[a])	//if second edge was not detected - max value

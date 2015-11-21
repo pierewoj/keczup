@@ -7,34 +7,20 @@
 #include "interrupts.h"
 #include "../utils/messageQueue.h"
 
-extern bool programMode;
+bool programMode = false;
 
 //interrupt for ultrasonic sensors data processing
 void TIM1_TRG_COM_TIM17_IRQHandler(void)
 {
 	if (TIM17->SR & TIM_SR_UIF) // if UIF flag is set
 	{
-		if(TIM17->ARR == 100)
-		{
-			TIM17->ARR = TIME_TO_WAIT_FOR_2_PROGRAM_MS;
-			TIM17->CNT = 0;
-			NVIC->ISER[EXTI0_IRQn >> 0x05] =
-			      (uint32_t)0x01 << (EXTI0_IRQn & (uint8_t)0x1F);
-			return;
-		}
-		if(TIM17->ARR == TIME_TO_WAIT_FOR_2_PROGRAM_MS)
-		{
-			programMode = true;
-			buttonStart = true;
-			TIM17->ARR = 10;
-			return;
-		}
-
 		TIM17->SR &= ~TIM_SR_UIF; // clear UIF flag
 
 		TIM15->CNT = 0;
-		TIM15->CR1 |= TIM_CR1_CEN;
+		//if(!programMode)
+			TIM15->CR1 |= TIM_CR1_CEN;
 		GPIOB->BSRR = GPIO_Pin_15;	//set PB15 as '1'
+
 
 		encodersRead();
 		ultra_data_processing();
@@ -60,7 +46,7 @@ void TIM1_BRK_TIM15_IRQHandler(void)	//interrupt after each ultrasonic trigger p
 
 void TIM3_IRQHandler(void) //ultrasonic sensor echo capturing timer
 {
-	//front ultrasonic sensor PA6
+	//rear ultrasonic sensor PA6
 	if (TIM3->SR & TIM_SR_CC1IF) // if CC3IF flag is set
 	{
 		TIM3->SR &= !(TIM_SR_CC1IF | TIM_SR_CC1OF);
@@ -77,7 +63,7 @@ void TIM3_IRQHandler(void) //ultrasonic sensor echo capturing timer
 		}
 		TIM3->CCER ^= TIM_CCER_CC1P;	//change polarity (rising/falling)
 	}
-	//rear ultrasonic sensor PA7
+	//front ultrasonic sensor PA7
 //	if (TIM3->SR & TIM_SR_CC2IF) // if CC3IF flag is set
 //	{
 //		TIM3->SR &= !(TIM_SR_CC2IF | TIM_SR_CC2OF);
@@ -135,24 +121,14 @@ void EXTI0_IRQHandler(void)
 	if ( EXTI->PR & EXTI_PR_PR0)
 	{
 		EXTI->PR |= EXTI_PR_PR0;
-		if(EXTI->RTSR & (EXTI_RTSR_TR0))
-		{
-			EXTI->RTSR &= !(EXTI_RTSR_TR0);
-			EXTI->FTSR |= EXTI_FTSR_TR0;
-			NVIC->ICER[EXTI0_IRQn >> 0x05] =
-					(uint32_t)0x01 << (EXTI0_IRQn & (uint8_t)0x1F);
-			TIM17->CNT = 0;
-			TIM17->ARR = 100;
-		}
-		else if(EXTI->FTSR & (EXTI_FTSR_TR0))
-		{
-			if(TIM17->ARR == TIME_TO_WAIT_FOR_2_PROGRAM_MS)
-			{
-				TIM17->ARR = 10;
-				programMode = false;
-				buttonStart = true;
-			}
-		}
+		EXTI->RTSR |= EXTI_RTSR_TR0;
+		buttonStart = !buttonStart;
+
+//		if(!(GPIOA->IDR & GPIO_Pin_7))
+//		{
+//			programMode = true;
+//			TIM15->CR1 &= !(TIM_CR1_CEN);
+//		}
 		//do not send any message - there is a conflict between DMA and EXTI interrupts
 	}
 }

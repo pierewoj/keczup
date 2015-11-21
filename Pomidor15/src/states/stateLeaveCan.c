@@ -14,6 +14,9 @@ int subStateLeave = 0;
 int directionOfLeavingCan = 1; //(1) - prawo, (-1) - lewo
 int canCountLeft = 0, canCountRight = 0;
 int targetPosition = 0;
+
+extern bool programMode;
+
 void stateLeaveCan(void)
 {
 
@@ -112,6 +115,7 @@ void stateLeaveCan(void)
 			/*
 			 * end game tactics
 			 */
+
 			if (canCountRight >= 4 || canCountLeft >= 4)
 			{
 				addNewTarget(2,0);
@@ -123,6 +127,7 @@ void stateLeaveCan(void)
 				changeState(STATE_FAIL, REASON_ALL_CANS_COLLECTED);
 			}
 		}
+
 	}
 
 }

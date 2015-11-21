@@ -6,6 +6,8 @@
 #include "location.h"
 #include "stdbool.h"
 
+extern bool programMode;
+
 /*
  *  next crossroad is the crossroad to be visited next
  *  previous crossroad is used in state 'goPrevious'
@@ -398,6 +400,20 @@ void updateEnemyPosition(void)
 	{
 		Point enemy = enemyPositions[i];
 		enemyTimes[enemy.i][enemy.j] = getMiliseconds(); //ms
+	}
+
+	//do not run to this points (half of the board) 1v1 tactics
+	if(programMode)
+	{
+		int i = 0;
+		int j = 0;
+		for(j = 3 ; j < 5; j++)
+		{
+			for(i = 0 ; i < 5; i++)
+				enemyTimes[i][j] = getMiliseconds();
+		}
+		enemyTimes[2][0] = getMiliseconds();
+		enemyTimes[2][1] = getMiliseconds();
 	}
 }
 
