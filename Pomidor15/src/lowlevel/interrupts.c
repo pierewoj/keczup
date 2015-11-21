@@ -123,12 +123,6 @@ void EXTI0_IRQHandler(void)
 		EXTI->PR |= EXTI_PR_PR0;
 		EXTI->RTSR |= EXTI_RTSR_TR0;
 		buttonStart = !buttonStart;
-
-//		if(!(GPIOA->IDR & GPIO_Pin_7))
-//		{
-//			programMode = true;
-//			TIM15->CR1 &= !(TIM_CR1_CEN);
-//		}
 		//do not send any message - there is a conflict between DMA and EXTI interrupts
 	}
 }
