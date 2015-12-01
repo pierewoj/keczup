@@ -361,6 +361,7 @@ void TIMERs_Config(void)
 	TIM17->DIER = TIM_DIER_UIE;  // Enable update interrupt (timer level)
 	TIM17->CR1 = TIM_CR1_CEN;    // Enable timer
 
+	//Timer for ultra trigger
 	TIM15->PSC = 39;	         // Set prescaler to 40 (PSC + 1); one tick-1us
 	TIM15->ARR = 10;	         // Auto reload value [us]
 	TIM15->DIER = TIM_DIER_UIE;  // Enable update interrupt (timer level)
