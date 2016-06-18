@@ -34,7 +34,7 @@ bool endGameTacticsEnabled = false;
  */
 PointMM position; //in mm
 double direction; //[-180,180], 90 is NORTH.
-unsigned long enemyTimes[5][5]; //enemy detection times in ms
+unsigned long enemyTimes[7][7]; //enemy detection times in ms
 
 /*
  * Controller states, represent controller settings and outputs
@@ -114,13 +114,13 @@ void initializeGlobalVariables(void)
 	for (i = 0; i < 4; i++)
 		ultra[i] = 1000;
 
-	for (i = 0; i < 5; i++)
-		for (j = 0; j < 5; j++)
+	for (i = 0; i < 7; i++)
+		for (j = 0; j < 7; j++)
 		{
 			enemyTimes[i][j] = -60 * 1000;
 		}
 
-	nextCrossroad.i = 2;
+	nextCrossroad.i = 3;
 	nextCrossroad.j = 1;
 	strategyInit();
 

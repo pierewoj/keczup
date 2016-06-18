@@ -14,7 +14,7 @@ extern bool programMode;
  */
 Point nextCrossroad;
 Point previousCrossroad =
-{ 2, 0 };
+{ 3, 0 };
 
 /*
  * last value of gyroDirection reading. Difference between current and last value
@@ -86,7 +86,7 @@ void snapHorizontalVerticalDirection(void)
  */
 bool pointValid(Point p)
 {
-	return ((p.i >= 0) && (p.j >= 0) && (p.i <= 4) && (p.j <= 4));
+	return ((p.i >= 0) && (p.j >= 0) && (p.i <= 6) && (p.j <= 6));
 }
 
 /*
@@ -119,7 +119,7 @@ void updateOurPosition(void)
 		if (ktirFront[i])
 			numBlackFrontKtir++;
 
-	if (numBlackFrontKtir > 10)
+	if (numBlackFrontKtir > 60)
 	{
 		//direction snap
 		direction = roundToTheMultipleOf(direction, 90);
@@ -150,7 +150,7 @@ Point queue[25];
 /*
  * returns time since last visit for a given crossroad
  */
-bool visited[5][5];
+bool visited[7][7];
 
 /*
  * returns true if enemy was detected on a given crossroad
@@ -186,7 +186,7 @@ void queueAddElem(Point a)
 /*
  * returns number of elems in queue
  */
-inline int queueSize()
+int queueSize()
 {
 	return queueLastElem - queueFirstElem;
 }
@@ -254,9 +254,9 @@ void queueAddNeighbours(Point a)
 Point randomTarget[4] =
 {
 { 0, 1 },
-{ 4, 1 },
-{ 0, 3 },
-{ 4, 3 } };
+{ 6, 1 },
+{ 0, 5 },
+{ 6, 5 } };
 int randomTargetIndex = 0;
 
 /*
@@ -268,8 +268,8 @@ void updateNextCrossroad(void)
 {
 //clearing visited
 	int i, j;
-	for (i = 0; i < 5; i++)
-		for (j = 0; j < 5; j++)
+	for (i = 0; i < 7; i++)
+		for (j = 0; j < 7; j++)
 		{
 			//do not create path through baseline
 			if (j == 0)
@@ -301,8 +301,8 @@ void updateNextCrossroad(void)
 
 	//what if no solution has been found?
 	Point canTarget =
-	{ 2, 0 }, endGameTarget =
-	{ 2, 4 };
+	{ 3, 0 }, endGameTarget =
+	{ 3, 6 };
 
 	/*
 	 * add some random target if carrying can or endgame tactics
@@ -341,7 +341,7 @@ bool isInsideBoard(PointMM pointMM)
  */
 void updateEnemyPosition(void)
 {
-
+	return;
 	//direction of ultras for direction=0 (east)
 	Vector ultraDirections[4] =
 	{

@@ -68,7 +68,7 @@ void stateTakeCan(void)
 
 			Point currentPosition = ofPointMM(position);
 			addNewTarget(currentPosition.i, currentPosition.j);
-			addNewTarget(2, 0);
+			addNewTarget(3, 0);
 
 			subStateTakeCan = 0;
 			changeState(STATE_GO, REASON_CAN_TAKEN);

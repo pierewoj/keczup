@@ -6,7 +6,7 @@
  */
 
 #define STACK_MAX_SIZE 100
-#define STACK_LOOP_SIZE 8
+#define STACK_LOOP_SIZE 12
 #include "strategy.h"
 
 
@@ -111,18 +111,21 @@ void strategyInit(void)
 	//initializing loop
 	struct point t[STACK_LOOP_SIZE] =
 	{
-	{ 4, 1 },
-	{ 4, 2 },
+	{ 6, 1 },
+	{ 6, 2 },
 	{ 0, 2 },
 	{ 0, 3 },
-	{ 4, 3 },
-	{ 4, 4 },
+	{ 6, 3 },
+	{ 6, 4 },
 	{ 0, 4 },
+	{ 0, 5 },
+	{ 6, 5 },
+	{ 6, 6 },
+	{ 0, 6 },
 	{ 0, 1 } };
 	int i;
 	for (i = 0; i < STACK_LOOP_SIZE; i++)
 		robotStrategy.loop[i] = t[i];
 
-	addNewTarget(1, 2);
 	addNewTarget(3, 2);
 }

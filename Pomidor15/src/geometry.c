@@ -39,8 +39,8 @@ bool equals(Point a, Point b)
 PointMM ofPoint(const Point p)
 {
 	PointMM result;
-	result.x = p.i * 300.;
-	result.y = p.j * 300.;
+	result.x = p.i * 200.;
+	result.y = p.j * 200.;
 	return result;
 }
 
@@ -50,8 +50,8 @@ PointMM ofPoint(const Point p)
 Point ofPointMM(const PointMM p)
 {
 	Point result;
-	result.i = roundToTheMultipleOf(p.x, 300) / 300;
-	result.j = roundToTheMultipleOf(p.y, 300) / 300;
+	result.i = roundToTheMultipleOf(p.x, 200) / 200;
+	result.j = roundToTheMultipleOf(p.y, 200) / 200;
 	return result;
 }
 

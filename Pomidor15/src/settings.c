@@ -16,7 +16,7 @@ double settingDistanceMidBeginning = 80;
 double settingLocationTimeEnemy = 3000;
 
 //PWMmax for driving between crossroads
-double settingPIDForwardPWM = 0.5;
+double settingPIDForwardPWM = 0.4;
 
 //Angle to target to change from GO to ROTATE (degrees)
 double settingAngleToBeginRotate = 50;

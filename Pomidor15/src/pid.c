@@ -198,16 +198,16 @@ void driveSideKtir(void)
 	Point cross = ofPointMM(position);
 
 	//right wheel out of board
-	if ((cross.j == 0 && dir == 0) || (cross.i == 4 && dir == 90)
-			|| (cross.j == 4 && dir == 180) || (cross.i == 0 && dir == -90))
+	if ((cross.j == 0 && dir == 0) || (cross.i == 6 && dir == 90)
+			|| (cross.j == 6 && dir == 180) || (cross.i == 0 && dir == -90))
 	{
 		setLeftPWM(leftVal);
 		setRightPWM(leftVal);
 	}
 
 	//left wheel out of board
-	else if ((cross.j == 0 && dir == 180) || (cross.i == 4 && dir == -90)
-			|| (cross.j == 4 && dir == 0) || (cross.i == 0 && dir == 90))
+	else if ((cross.j == 0 && dir == 180) || (cross.i == 6 && dir == -90)
+			|| (cross.j == 6 && dir == 0) || (cross.i == 0 && dir == 90))
 	{
 		setLeftPWM(rightVal);
 		setRightPWM(rightVal);

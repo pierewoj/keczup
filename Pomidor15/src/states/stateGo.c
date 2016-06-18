@@ -15,7 +15,7 @@ void stateGo(void)
 	 * change sideKtir PID feedback so that the robot
 	 * will go to the line in front of him
 	 */
-	if (80 < distanceToNextCrossroad() && distanceToNextCrossroad() < 100)
+	if (80 < distanceToNextCrossroad() && distanceToNextCrossroad() < 135)
 	{
 		controllerLeftKtir.feedback = 2; //front left ktir
 		controllerRightKtir.feedback = 0; //front right ktir
@@ -42,7 +42,7 @@ void stateGo(void)
 			Point pos = ofPointMM(position);
 
 			//end game tactics
-			if (currentTarget.i == 2 && currentTarget.j == 4
+			if (currentTarget.i == 3 && currentTarget.j == 6
 					&& endGameTacticsEnabled)
 			{
 				changeState(STATE_STOP, REASON_ALL_CANS_COLLECTED);
@@ -53,7 +53,7 @@ void stateGo(void)
 			removeRecentTarget();
 
 			//leaving can
-			if (carryingCan && pos.i == 2 && pos.j == 0)
+			if (carryingCan && pos.i == 3 && pos.j == 0)
 			{
 				changeState(STATE_LEAVE_CAN, REASON_BASELINE_REACHED);
 				return;

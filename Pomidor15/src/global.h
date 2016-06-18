@@ -36,7 +36,7 @@ bool endGameTacticsEnabled;
 //-----------------Location variables------------------//
 extern PointMM position; //in mm
 extern double direction; //[-180,180], 90 is NORTH
-extern unsigned long enemyTimes[5][5]; //enemy detection times in ms
+extern unsigned long enemyTimes[7][7]; //enemy detection times in ms
 
 //-----------------Controllers-------------------//
 

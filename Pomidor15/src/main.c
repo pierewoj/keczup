@@ -34,7 +34,7 @@ extern bool programMode;
 int main(void)
 {
 	//Configuration of all peripherials (GPIO, UART, I2C, TIMERS etc)
-	configurePeripherials();
+  	configurePeripherials();
 
 	//Initialize global variables
 	changeState( STATE_INIT, REASON_PROGRAM_RESET);
@@ -55,7 +55,7 @@ int main(void)
 		//wait loopWaitTime between iterations
 		while (getMicroseconds() - lastLoopTime < loopWaitTime)
 		{
-			trySendRemainingMessages();
+			//trySendRemainingMessages();
 		}
 		lastLoopTime = getMicroseconds();
 
@@ -138,4 +138,3 @@ void assert_failed(uint8_t* file, uint32_t line)
 //while (1);
 }
 #endif
-
