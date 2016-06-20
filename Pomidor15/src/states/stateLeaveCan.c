@@ -19,7 +19,6 @@ extern bool programMode;
 
 void stateLeaveCan(void)
 {
-
 	//adjusting position on KTIRS
 	if (subStateLeave == 0)
 	{
@@ -47,7 +46,13 @@ void stateLeaveCan(void)
 		else
 			angleLeft = fabs(angleDifference(direction, 180));
 
-		if (angleLeft < 5)
+		//checking if there is line under side ktirs to do PID on it
+		int numKtirRight = ktirRight[0] + ktirRight[1] + ktirRight[2];
+		int numKtirLeft =  ktirLeft[0] +  ktirLeft[1] +  ktirLeft[2];
+
+		if (angleLeft < 10)
+			if((directionOfLeavingCan == 1 && numKtirLeft > 0) ||
+					(directionOfLeavingCan == -1 && numKtirRight > 0))
 			subStateLeave++;
 	}
 
@@ -118,7 +123,7 @@ void stateLeaveCan(void)
 
 			if (canCountRight >= 4 || canCountLeft >= 4)
 			{
-				addNewTarget(2,0);
+				addNewTarget(3,0);
 				endGameTacticsEnabled = true;
 
 				/*

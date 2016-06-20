@@ -67,7 +67,11 @@ void stateTakeCan(void)
 			snapPositionAndDirection();
 
 			Point currentPosition = ofPointMM(position);
-			addNewTarget(currentPosition.i, currentPosition.j);
+
+			//not going back to the first can
+			if(! (currentPosition.i == 3 && currentPosition.j == 2))
+				addNewTarget(currentPosition.i, currentPosition.j);
+
 			addNewTarget(3, 0);
 
 			subStateTakeCan = 0;

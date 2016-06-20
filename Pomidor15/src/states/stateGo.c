@@ -15,7 +15,7 @@ void stateGo(void)
 	 * change sideKtir PID feedback so that the robot
 	 * will go to the line in front of him
 	 */
-	if (80 < distanceToNextCrossroad() && distanceToNextCrossroad() < 135)
+	if (settingCrossroadRadius < distanceToNextCrossroad() && distanceToNextCrossroad() < settingCrossroadRadius + 20)
 	{
 		controllerLeftKtir.feedback = 2; //front left ktir
 		controllerRightKtir.feedback = 0; //front right ktir
@@ -78,7 +78,7 @@ void stateGo(void)
 
 	else if (isEnemy(nextCrossroad) && ktirBack[3]
 				&& (distance(position, ofPoint(previousCrossroad))
-						+ distance(position, ofPoint(nextCrossroad)) < 400)
+						+ distance(position, ofPoint(nextCrossroad)) < 250)
 				&& !equals(previousCrossroad, nextCrossroad))
 		{
 			nextCrossroad = previousCrossroad;
