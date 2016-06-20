@@ -49,7 +49,6 @@ void snapPositionAndDirection(void)
 
 	//finding vector from center of robot to its front KTIR line
 	position = getNearestCrossroad(position);
-
 }
 
 /*
@@ -75,9 +74,9 @@ void snapHorizontalVerticalDirection(void)
 	}
 
 	if (horizontal)
-		position.y = roundToTheMultipleOf(position.y, 300);
+		position.y = roundToTheMultipleOf(position.y, 200);
 	else
-		position.x = roundToTheMultipleOf(position.x, 300);
+		position.x = roundToTheMultipleOf(position.x, 200);
 
 }
 
@@ -118,27 +117,6 @@ void updateOurPosition(void)
 	for (i = 0; i < 7; i++)
 		if (ktirFront[i])
 			numBlackFrontKtir++;
-
-	if (numBlackFrontKtir > 60)
-	{
-		//direction snap
-		direction = roundToTheMultipleOf(direction, 90);
-		direction = angleMakeInRange(direction);
-
-		//finding vector from center of robot to its front KTIR line
-		Vector fromCenterToKtir = vectorOfDirection(direction);
-		fromCenterToKtir = vectorMultiplyByScalar(fromCenterToKtir,
-				settingDistanceMidToKtir);
-
-		//finding position of corssrad nearest to the position of ktirLine
-		PointMM nearestCrossroadToKtirLine = getNearestCrossroad(
-				translateByVector(position, fromCenterToKtir));
-
-		//position is posKtirLine - fromCenterToKtir
-		position = translateByVector(nearestCrossroadToKtirLine,
-				vectorMultiplyByScalar(fromCenterToKtir, -1));
-	}
-
 }
 
 /*
@@ -341,7 +319,6 @@ bool isInsideBoard(PointMM pointMM)
  */
 void updateEnemyPosition(void)
 {
-	return;
 	//direction of ultras for direction=0 (east)
 	Vector ultraDirections[4] =
 	{
@@ -383,7 +360,7 @@ void updateEnemyPosition(void)
 				double angle = vectorAngle(fromEnemyToSMeasured);
 				angle = roundToTheMultipleOf(angle, 90);
 				Vector roundedVector = vectorOfDirection(angle);
-				roundedVector = vectorMultiplyByScalar(roundedVector, 300);
+				roundedVector = vectorMultiplyByScalar(roundedVector, 200);
 				PointMM secondEnemyPosMM = translateByVector(ofPoint(enemyPos),
 						roundedVector);
 
