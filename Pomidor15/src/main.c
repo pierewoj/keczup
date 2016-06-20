@@ -59,6 +59,7 @@ int main(void)
 		}
 		lastLoopTime = getMicroseconds();
 
+		//try to send any remaining messages
 		trySendRemainingMessages();
 
 		//Update sensor readings and controller output
