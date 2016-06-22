@@ -47,9 +47,6 @@ void stateLeaveCan(void)
 			angleLeft = fabs(angleDifference(direction, 180));
 
 		//checking if there is line under side ktirs to do PID on it
-		int numKtirRight = ktirRight[0] + ktirRight[1] + ktirRight[2];
-		int numKtirLeft =  ktirLeft[0] +  ktirLeft[1] +  ktirLeft[2];
-
 		if (angleLeft < 10)
 			if((directionOfLeavingCan == 1 && numKtirLeft > 0) ||
 					(directionOfLeavingCan == -1 && numKtirRight > 0))

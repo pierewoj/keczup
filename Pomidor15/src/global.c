@@ -49,6 +49,7 @@ ControllerState controllerForward, controllerBackward, controllerLeftKtir,
  * is the "most right" back KTIR. True is BLACK, false means WHITE.
  */
 bool ktirFront[7], ktirRight[3], ktirBack[7], ktirLeft[3];
+int numKtirRight, numKtirLeft;
 
 /* approx cm to the object. 1000 if no object detected or invalid input. */
 int sharp;

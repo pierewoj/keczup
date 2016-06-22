@@ -70,6 +70,8 @@ extern ControllerState controllerForward, controllerBackward,
  * is the "most right" back KTIR. True is BLACK, false means WHITE.
  */
 extern bool ktirFront[7], ktirRight[3], ktirBack[7], ktirLeft[3];
+extern int numKtirRight, numKtirLeft;
+
 
 /* approx cm to the object. 1000 if no object detected or invalid input. */
 extern int sharp;

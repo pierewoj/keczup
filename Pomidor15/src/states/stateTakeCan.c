@@ -8,6 +8,7 @@
 #include "../geometry.h"
 #include "../lowlevel/effectors.h"
 #include "../strategy.h"
+#include "../settings.h"
 #include "state.h"
 
 int subStateTakeCan = 0;
@@ -16,8 +17,8 @@ void stateTakeCan(void)
 {
 	if (subStateTakeCan == 0)
 	{
-		setDriveWheelVelocity(200, 200);
-		if (distanceToNextCrossroad() < 50)
+		setDrivePIDForward(settingPIDForwardPWM);
+		if (distanceToNextCrossroad() < 70 && (numKtirLeft > 0 || numKtirRight > 0))
 		{
 			closeFrame();
 			controllerLeftKtir.feedback = 2;

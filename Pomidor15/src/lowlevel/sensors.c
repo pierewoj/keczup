@@ -126,6 +126,9 @@ void read_ktirs()
 	ktirRight[2] = (GPIOB->IDR & GPIO_Pin_3);
 	ktirRight[1] = (GPIOB->IDR & GPIO_Pin_4);
 	ktirRight[0] = (GPIOB->IDR & GPIO_Pin_5);
+
+	numKtirRight = ktirRight[0] + ktirRight[1] + ktirRight[2];
+	numKtirLeft =  ktirLeft[0] +  ktirLeft[1] +  ktirLeft[2];
 }
 //encoders reset
 void encodersReset(void)
