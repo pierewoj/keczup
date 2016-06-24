@@ -138,7 +138,7 @@ void NVIC_Config(void)
 	USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
 	NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
@@ -159,14 +159,14 @@ void NVIC_Config(void)
     //Przerwanie zewnetrzne EXTI od przycisku USER button
 	NVIC_InitStructure.NVIC_IRQChannel = EXTI0_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 4;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
     //Przerwanie od timera TIM17
 	NVIC_InitStructure.NVIC_IRQChannel = TIM1_TRG_COM_TIM17_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 6;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 4;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
@@ -177,17 +177,10 @@ void NVIC_Config(void)
 	NVIC_Init(&NVIC_InitStructure);
 
 	NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel7_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 7;
-
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;
-
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
-
-	NVIC_EnableIRQ(TIM3_IRQn);     //w³¹czenie przerwania od TIM3 - (NVIC level)
-
 }
 
 void GPIO_Config(void)
@@ -355,14 +348,14 @@ void TIMERs_Config(void)
 	TIM3->CCMR1 |= TIM_CCMR1_IC2F_0 | TIM_CCMR1_IC2F_1 | TIM_CCMR1_IC1F_0 | TIM_CCMR1_IC1F_1;	//input capture filter
 	TIM3->CCER |= TIM_CCER_CC3E | TIM_CCER_CC4E | TIM_CCER_CC2E | TIM_CCER_CC1E;
 	//enable capture compare mode
-	TIM3->DIER |= TIM_DIER_CC3IE | TIM_DIER_CC4IE | TIM_DIER_CC2IE | TIM_DIER_CC1IE;
+	TIM3->DIER |= TIM_DIER_CC3IE | TIM_DIER_CC4IE | TIM_DIER_CC1IE;
 	//capture - compare interrupt enable
 	TIM3->CR1 |= TIM_CR1_CEN;	//counter enable
 	TIM3->CNT = 0x0000;			//clear counter
 
 	//ultrasonic sensors data processing timer
 	TIM17->PSC = 39999;	         // Set prescaler to 40000 (PSC + 1)
-	TIM17->ARR = 10;	         // Auto reload value [ms]
+	TIM17->ARR = 20;	         // Auto reload value [ms]
 	TIM17->DIER = TIM_DIER_UIE;  // Enable update interrupt (timer level)
 	TIM17->CR1 = TIM_CR1_CEN;    // Enable timer
 	

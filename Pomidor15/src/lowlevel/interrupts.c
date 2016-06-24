@@ -35,9 +35,8 @@ void TIM1_BRK_TIM15_IRQHandler(void)	//interrupt after each ultrasonic trigger p
 
 		GPIOB->BRR = GPIO_Pin_15;	//set PB15 as '0'
 		TIM15->CR1 &= ~TIM_CR1_CEN;	//disable timer
-		//Timer 3 -> reset interrupt and overwrite flags, set polarity (high), reset counter
-		TIM3->SR &= !(TIM_SR_CC3IF | TIM_SR_CC3OF | TIM_SR_CC4IF | TIM_SR_CC4OF
-				| TIM_SR_CC2IF | TIM_SR_CC2OF | TIM_SR_CC1IF | TIM_SR_CC1OF);
+
+		//Timer 3 change polarity of edge
 		TIM3->CCER &= ~(TIM_CCER_CC3P | TIM_CCER_CC4P | TIM_CCER_CC2P | TIM_CCER_CC1P);
 		//interrupt after rising edge detected
 		TIM3->CNT = 0;	//clear counter register
@@ -49,7 +48,6 @@ void TIM3_IRQHandler(void) //ultrasonic sensor echo capturing timer
 	//rear ultrasonic sensor PA6
 	if (TIM3->SR & TIM_SR_CC1IF) // if CC3IF flag is set
 	{
-		TIM3->SR &= !(TIM_SR_CC1IF | TIM_SR_CC1OF);
 		if (!(TIM3->CCER & TIM_CCER_CC1P))	//rising edge response
 		{
 			ultra_pom[0] = (TIM3->CCR1);	//capture counter value
@@ -62,11 +60,11 @@ void TIM3_IRQHandler(void) //ultrasonic sensor echo capturing timer
 			pierwsze_zbocze[0] = 0;		//both edges detected - ok
 		}
 		TIM3->CCER ^= TIM_CCER_CC1P;	//change polarity (rising/falling)
+		TIM3->SR &= !TIM_SR_CC1OF;
 	}
 	//front ultrasonic sensor PA7
 //	if (TIM3->SR & TIM_SR_CC2IF) // if CC3IF flag is set
 //	{
-//		TIM3->SR &= !(TIM_SR_CC2IF | TIM_SR_CC2OF);
 //		if (!(TIM3->CCER & TIM_CCER_CC2P))	//rising edge response
 //		{
 //			ultra_pom[2] = (TIM3->CCR2);	//capture counter value
@@ -78,13 +76,12 @@ void TIM3_IRQHandler(void) //ultrasonic sensor echo capturing timer
 //			//capture counter value (falling edge) and substract previous value (rising edge)
 //			pierwsze_zbocze[2] = 0;		//both edges detected - ok
 //		}
+//		TIM3->SR &= !TIM_SR_CC2OF;
 //		TIM3->CCER ^= TIM_CCER_CC2P;	//change polarity (rising/falling)
 //	}
 	//right ultrasonic sensor PB0
 	if (TIM3->SR & TIM_SR_CC3IF) // if CC3IF flag is set
 	{
-
-		TIM3->SR &= !(TIM_SR_CC3IF | TIM_SR_CC3OF);
 		if (!(TIM3->CCER & TIM_CCER_CC3P))
 		{
 			ultra_pom[1] = (TIM3->CCR3);
@@ -96,11 +93,11 @@ void TIM3_IRQHandler(void) //ultrasonic sensor echo capturing timer
 			pierwsze_zbocze[1] = 0;
 		}
 		TIM3->CCER ^= TIM_CCER_CC3P;
+		TIM3->SR &= !TIM_SR_CC3OF;
 	}
 	//left ultrasonic sensor PB1
 	if (TIM3->SR & TIM_SR_CC4IF) // if CC3IF flag is set
 	{
-		TIM3->SR &= !(TIM_SR_CC4IF | TIM_SR_CC4OF);
 		if (!(TIM3->CCER & TIM_CCER_CC4P))
 		{
 			ultra_pom[3] = (TIM3->CCR4);
@@ -112,6 +109,7 @@ void TIM3_IRQHandler(void) //ultrasonic sensor echo capturing timer
 			pierwsze_zbocze[3] = 0;
 		}
 		TIM3->CCER ^= TIM_CCER_CC4P;
+		TIM3->SR &= !TIM_SR_CC4OF;
 	}
 }
 
@@ -123,6 +121,7 @@ void EXTI0_IRQHandler(void)
 		EXTI->PR |= EXTI_PR_PR0;
 		EXTI->RTSR |= EXTI_RTSR_TR0;
 		buttonStart = !buttonStart;
+		NVIC_DisableIRQ(EXTI0_IRQn);
 		//do not send any message - there is a conflict between DMA and EXTI interrupts
 	}
 }
