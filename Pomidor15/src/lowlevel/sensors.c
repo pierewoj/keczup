@@ -18,8 +18,8 @@ extern bool programMode;
 volatile unsigned int pomiar_adc[2];
 
 //IMU
-unsigned volatile char dane_z_imu[6];
-unsigned volatile char imu[2];
+unsigned char dane_z_imu[6];
+unsigned char imu[2];
 int volatile gyro_x, gyro_y, gyro_z;
 int volatile gyro_initial_values[3];
 
