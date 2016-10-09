@@ -3,4 +3,4 @@ This is a program that is used to control a robot named "Pomidor" during Ketchup
 Mateusz Graczyk, Jakub Pierewoj, Piotr Poskart, Adam Radomski, Daniel Wlazło
 
 # Detailed description
-Unfortunately, detailed description is currently only availible in Polish: http://www.forbot.pl/forum/topics7/ketchup-house-pomidor-15-vt12520.htm
+Unfortunately, detailed description is currently only available in Polish: http://www.forbot.pl/forum/topics7/ketchup-house-pomidor-15-vt12520.htm
