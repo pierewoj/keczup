@@ -128,6 +128,7 @@ void EXTI0_IRQHandler(void)
 
 void DMA1_Channel7_IRQHandler(void)
 {
+	// transfer complete interrupt
 	if (DMA1->ISR & DMA_ISR_TCIF7)
 	{
 		while (!(USART2->SR & USART_SR_TC))
