@@ -7,8 +7,6 @@
 #include "interrupts.h"
 #include "../utils/messageQueue.h"
 
-bool programMode = false;
-
 //interrupt for ultrasonic sensors data processing
 void TIM1_TRG_COM_TIM17_IRQHandler(void)
 {
@@ -17,8 +15,7 @@ void TIM1_TRG_COM_TIM17_IRQHandler(void)
 		TIM17->SR &= ~TIM_SR_UIF; // clear UIF flag
 
 		TIM15->CNT = 0;
-		if(!programMode)
-			TIM15->CR1 |= TIM_CR1_CEN;
+		//TIM15->CR1 |= TIM_CR1_CEN;
 		GPIOB->BSRR = GPIO_Pin_15;	//set PB15 as '1'
 
 

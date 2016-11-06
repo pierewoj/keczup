@@ -18,8 +18,6 @@
  * TIMERs
  */
 
-bool programMode;
-
 void TIM3_IRQHandler(void) __attribute__ ((interrupt));
 
 void TIM1_TRG_COM_TIM17_IRQHandler(void) __attribute__ ((interrupt));

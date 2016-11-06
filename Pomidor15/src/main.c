@@ -28,9 +28,6 @@
 #include "commPC.h"
 #include "utils/messageQueue.h"
 
-
-extern bool programMode;
-
 int main(void)
 {
 	//Configuration of all peripherials (GPIO, UART, I2C, TIMERS etc)
@@ -38,12 +35,6 @@ int main(void)
 
 	//Initialize global variables
 	changeState( STATE_INIT, REASON_PROGRAM_RESET);
-
-	if(!(GPIOA->IDR & GPIO_Pin_7))
-	{
-		programMode = true;
-		TIM15->CR1 &= !(TIM_CR1_CEN);
-	}
 
 	//Endless loop
 	while (1)

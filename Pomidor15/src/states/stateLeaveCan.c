@@ -15,8 +15,6 @@ int directionOfLeavingCan = 1; //(1) - prawo, (-1) - lewo
 int canCountLeft = 0, canCountRight = 0;
 int targetPosition = 0;
 
-extern bool programMode;
-
 void stateLeaveCan(void)
 {
 

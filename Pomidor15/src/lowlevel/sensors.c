@@ -12,8 +12,6 @@
 #include "stm32f10x_gpio.h"
 #include "effectors.h"
 
-extern bool programMode;
-
 //ADC
 volatile unsigned int pomiar_adc[2];
 
@@ -185,38 +183,7 @@ inline void ultra_data_processing(void)
 
 	for (a = 0; a < 4; a++)
 	{
-		if(!programMode)
-		{
-			if(a == 2)
-			{
-				ultra[a] = 1002;
-				continue;
-			}
-			if (pierwsze_zbocze[a])	//if second edge was not detected - max value
-			{
-				ultra[a] = 1000;
-				continue;
-			}
-
-			ultra_history[a] = (int) (((ultra__[a]) / linear_coefficient_distance)
-							+ const_distance_from_the_middle_of_the_robot[a]);
-			if(ultra_history[a] < MAX_ULTRA_ENEMY_DETECT)
-			{
-				ultra[a] = (int) (((ultra__[a]) / linear_coefficient_distance)
-					+ const_distance_from_the_middle_of_the_robot[a]);
-			}
-			else
-				ultra[a] = 1000;
-						//register value to enemy distance [cm] conversion
-				//register value to enemy distance [cm] conversion
-
-			if (ultra[a] > MAX_ULTRA_ENEMY_DETECT)	//low-pass filter, high bandwidth - unstable
-			{
-				ultra[a] = 1000;
-			}
-		}
-		else
-			ultra[a] = 1000;
+		ultra[a] = 1000;
 	}
 
 	/*
