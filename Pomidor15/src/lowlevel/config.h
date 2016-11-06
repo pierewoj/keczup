@@ -29,6 +29,7 @@ void RCC_Config(void);
 void I2C_Config(void);
 void ADC_Config(volatile unsigned int *tab);
 void TIMERs_Config(void);
+void DMA_SendMessage(char *message);
 void DMA_Config(char *);
 void USART_Config(void);
 void EXTI_Config (void);

@@ -416,6 +416,11 @@ void USART_Config()
 	USART_Cmd(USART2, ENABLE);
 }
 
+void DMA_SendMessage(char *message)
+{
+	DMA_Config(message);
+}
+
 //DMA for USART2 configuration
 void DMA_Config(char *message)
 {

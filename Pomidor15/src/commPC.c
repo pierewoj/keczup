@@ -35,7 +35,8 @@ void trySendRemainingMessages(void)
 	if (!(DMA1_Channel7->CCR & DMA_CCR7_EN) && messageQueueSize() > 0 && !flaga)
 	{
 		usart_data_number = strlen(messageQueuePeek());
-		DMA_Config(messageQueuePeek());	//DMA configuration for the next transfer
+		strcpy(safeArray, messageQueuePeek());
+		DMA_SendMessage(safeArray);	//DMA configuration for the next transfer
 	}
 }
 

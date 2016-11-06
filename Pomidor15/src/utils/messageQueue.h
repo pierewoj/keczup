@@ -8,6 +8,12 @@
 #ifndef UTILS_MESSAGEQUEUE_H_
 #define UTILS_MESSAGEQUEUE_H_
 
+#define NUM_MESSAGES 4
+#define MAX_MSGLEN 256
+
+// safe buffer for DMA to get message from
+extern char safeArray[MAX_MSGLEN];
+
 /*
  * returns current message to be sent
  */
