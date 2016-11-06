@@ -70,4 +70,10 @@ double angleToNextCrossroad(void);
  */
 bool targetReached();
 
+/*
+ * returns number of elems in queue
+ */
+int queueSize();
+
+
 #endif 
